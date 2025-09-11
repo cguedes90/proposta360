@@ -4,6 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - PropostasWin</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    
+    <!-- Meta Tags for SEO and Social -->
+    <meta name="description" content="Painel administrativo do PropostasWin - Crie propostas profissionais de forma rápida e eficiente">
+    <meta name="keywords" content="propostas, dashboard, PropostasWin, negócios, vendas">
+    <meta name="author" content="PropostasWin">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Dashboard - PropostasWin">
+    <meta property="og:description" content="Painel administrativo do PropostasWin - Crie propostas profissionais de forma rápida e eficiente">
+    <meta property="og:type" content="website">
+    <meta property="og:url" id="og-url" content="">
+    <meta property="og:image" id="og-image" content="">
+    <meta property="og:site_name" content="PropostasWin">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dashboard - PropostasWin">
+    <meta name="twitter:description" content="Painel administrativo do PropostasWin - Crie propostas profissionais de forma rápida e eficiente">
+    <meta name="twitter:image" id="twitter-image" content="">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -1163,6 +1188,13 @@
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Dashboard iniciado');
+            
+            // Configurar URLs dinâmicas para meta tags
+            const baseUrl = `${window.location.protocol}//${window.location.host}`;
+            document.getElementById('og-url').setAttribute('content', `${baseUrl}/dashboard`);
+            document.getElementById('og-image').setAttribute('content', `${baseUrl}/og-image.svg`);
+            document.getElementById('twitter-image').setAttribute('content', `${baseUrl}/og-image.svg`);
+            
             checkAuth();
         });
 
@@ -1174,6 +1206,13 @@
             if (token && user) {
                 currentUser = JSON.parse(user);
                 authToken = token;
+                
+                // Redirecionar super admin para painel admin
+                if (currentUser.role === 'super_admin') {
+                    window.location.href = '/admin';
+                    return;
+                }
+                
                 showDashboard();
             } else {
                 showAuth();
@@ -1236,7 +1275,13 @@
                     authToken = data.token;
                     
                     showAlert('Login realizado com sucesso!', 'success');
-                    setTimeout(() => showDashboard(), 1000);
+                    
+                    // Redirecionar super admin para painel admin
+                    if (data.user.role === 'super_admin') {
+                        setTimeout(() => { window.location.href = '/admin'; }, 1000);
+                    } else {
+                        setTimeout(() => showDashboard(), 1000);
+                    }
                 } else {
                     showAlert(data.error || 'Erro no login', 'error');
                 }

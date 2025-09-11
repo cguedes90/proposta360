@@ -19,7 +19,7 @@ const createProposal = async (req, res) => {
     }
 
     const proposalsThisMonth = await User.getProposalsThisMonth(user.id);
-    const proposalsLimit = user.plan === 'premium' ? 70 : 1;
+    const proposalsLimit = user.plan === 'premium' ? 50 : 1;
 
     if (proposalsThisMonth >= proposalsLimit) {
       return res.status(403).json({ 
