@@ -1,0 +1,92 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Decorative Elements -->
+  <circle cx="100" cy="100" r="40" fill="white" opacity="0.1"/>
+  <circle cx="1100" cy="530" r="60" fill="white" opacity="0.1"/>
+  <rect x="950" y="50" width="200" height="4" rx="2" fill="white" opacity="0.2"/>
+  <rect x="50" y="500" width="150" height="4" rx="2" fill="white" opacity="0.2"/>
+  
+  <!-- Main Content Area -->
+  <rect x="150" y="120" width="900" height="390" rx="20" fill="white" opacity="0.95"/>
+  
+  <!-- Logo/Icon -->
+  <circle cx="250" cy="220" r="50" fill="#2563eb"/>
+  <rect x="220" y="200" width="40" height="48" rx="4" fill="white" opacity="0.9"/>
+  <rect x="225" y="210" width="30" height="3" rx="1.5" fill="#2563eb" opacity="0.8"/>
+  <rect x="225" y="220" width="25" height="3" rx="1.5" fill="#2563eb" opacity="0.6"/>
+  <rect x="225" y="230" width="28" height="3" rx="1.5" fill="#2563eb" opacity="0.6"/>
+  
+  <!-- Check Mark -->
+  <circle cx="270" cy="200" r="12" fill="#16a34a"/>
+  <path d="M264 200l4 4 8-8" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Title -->
+  <text x="350" y="200" fill="#1e293b" font-family="Arial, sans-serif" font-size="48" font-weight="bold">PropostasWin</text>
+  <text x="350" y="240" fill="#64748b" font-family="Arial, sans-serif" font-size="28" font-weight="400">Propostas que Facilitam a Decisão de Compra</text>
+  
+  <!-- Features List -->
+  <g transform="translate(350, 280)">
+    <circle cx="8" cy="8" r="4" fill="#16a34a"/>
+    <text x="25" y="13" fill="#475569" font-family="Arial, sans-serif" font-size="22" font-weight="500">Sistema completo de captura de leads</text>
+  </g>
+  
+  <g transform="translate(350, 320)">
+    <circle cx="8" cy="8" r="4" fill="#16a34a"/>
+    <text x="25" y="13" fill="#475569" font-family="Arial, sans-serif" font-size="22" font-weight="500">Painel administrativo avançado</text>
+  </g>
+  
+  <g transform="translate(350, 360)">
+    <circle cx="8" cy="8" r="4" fill="#16a34a"/>
+    <text x="25" y="13" fill="#475569" font-family="Arial, sans-serif" font-size="22" font-weight="500">Propostas interativas e inteligentes</text>
+  </g>
+  
+  <g transform="translate(350, 400)">
+    <circle cx="8" cy="8" r="4" fill="#16a34a"/>
+    <text x="25" y="13" fill="#475569" font-family="Arial, sans-serif" font-size="22" font-weight="500">Analytics e métricas detalhadas</text>
+  </g>
+  
+  <!-- CTA Button -->
+  <rect x="350" y="440" width="200" height="50" rx="25" fill="#2563eb"/>
+  <text x="450" y="472" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="600" text-anchor="middle">Começar Agora</text>
+  
+  <!-- Dashboard Preview -->
+  <rect x="700" y="160" width="300" height="200" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <rect x="720" y="180" width="260" height="30" rx="6" fill="#2563eb" opacity="0.1"/>
+  <text x="730" y="200" fill="#2563eb" font-family="Arial, sans-serif" font-size="16" font-weight="600">Dashboard Analytics</text>
+  
+  <!-- Mini Charts -->
+  <rect x="720" y="220" width="80" height="50" rx="4" fill="white" stroke="#e2e8f0"/>
+  <rect x="810" y="220" width="80" height="50" rx="4" fill="white" stroke="#e2e8f0"/>
+  <rect x="900" y="220" width="80" height="50" rx="4" fill="white" stroke="#e2e8f0"/>
+  
+  <!-- Mini Chart Content -->
+  <text x="730" y="235" fill="#64748b" font-family="Arial, sans-serif" font-size="10">Leads</text>
+  <text x="740" y="255" fill="#1e293b" font-family="Arial, sans-serif" font-size="20" font-weight="bold">247</text>
+  
+  <text x="820" y="235" fill="#64748b" font-family="Arial, sans-serif" font-size="10">Conversão</text>
+  <text x="830" y="255" fill="#16a34a" font-family="Arial, sans-serif" font-size="20" font-weight="bold">68%</text>
+  
+  <text x="910" y="235" fill="#64748b" font-family="Arial, sans-serif" font-size="10">Revenue</text>
+  <text x="920" y="255" fill="#2563eb" font-family="Arial, sans-serif" font-size="20" font-weight="bold">$15K</text>
+  
+  <!-- Table Preview -->
+  <rect x="720" y="290" width="260" height="60" rx="4" fill="white" stroke="#e2e8f0"/>
+  <rect x="720" y="290" width="260" height="20" rx="4" fill="#f8fafc"/>
+  <text x="730" y="305" fill="#64748b" font-family="Arial, sans-serif" font-size="12" font-weight="600">Leads Recentes</text>
+  
+  <!-- Table Rows -->
+  <circle cx="735" cy="325" r="6" fill="#16a34a"/>
+  <text x="750" y="330" fill="#1e293b" font-family="Arial, sans-serif" font-size="12">João Silva - Empresa LTDA</text>
+  
+  <circle cx="735" cy="340" r="6" fill="#f59e0b"/>
+  <text x="750" y="345" fill="#1e293b" font-family="Arial, sans-serif" font-size="12">Maria Santos - Tech Corp</text>
+</svg>

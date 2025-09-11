@@ -8,7 +8,7 @@ class EmailService {
       secure: false, // true for 465, false for other ports
       auth: {
         user: 'contato@inovamentelabs.com.br',
-        pass: 'ngWU3eg3rPky'
+        pass: 'RhK9YTxG8wue'
       },
       tls: {
         rejectUnauthorized: false
