@@ -110,6 +110,7 @@ app.use((error, req, res, next) => {
   });
 });
 
+// Para desenvolvimento local
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
@@ -126,6 +127,9 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
+// Para Vercel (serverless)
+module.exports = app;
+
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('🛑 Recebido SIGTERM, parando serviços...');
@@ -138,5 +142,3 @@ process.on('SIGINT', () => {
   followUpService.stop();
   process.exit(0);
 });
-
-module.exports = app;
