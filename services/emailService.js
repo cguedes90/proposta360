@@ -525,6 +525,90 @@ class EmailService {
       .replace(/&gt;/g, '>')
       .trim();
   }
+
+  async sendVisitorNotification(ownerEmail, data) {
+    const { proposalTitle, visitorName, visitorCompany, visitorPosition, notificationType, dashboardUrl } = data;
+    
+    const isNewVisitor = notificationType === 'new_visitor';
+    const subject = isNewVisitor ? 
+      '🎯 Novo visitante na sua proposta!' : 
+      '👀 Proposta sendo visualizada!';
+    
+    const visitorInfo = visitorCompany ? `${visitorName} da ${visitorCompany}` : visitorName;
+    const positionInfo = visitorPosition ? ` (${visitorPosition})` : '';
+    
+    const action = isNewVisitor ? 'se cadastrou para ver' : 'está visualizando';
+
+    const html = `
+        <style>
+            .container { max-width: 600px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+            .header { background: linear-gradient(135deg, #2563eb, #1d4ed8); padding: 30px; text-align: center; color: white; border-radius: 12px 12px 0 0; }
+            .content { background: white; padding: 30px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .visitor-card { background: #f8fafc; border-left: 4px solid #2563eb; padding: 20px; margin: 20px 0; border-radius: 8px; }
+            .cta-button { display: inline-block; background: #2563eb; color: #ffffff !important; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; border: none; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: all 0.3s ease; }
+            .footer { background: #1e293b; color: #94a3b8; padding: 30px; text-align: center; font-size: 14px; border-radius: 0 0 12px 12px; }
+            .icon { font-size: 24px; margin-right: 10px; }
+            .highlight { color: #2563eb; font-weight: 600; }
+        </style>
+        
+        <div class="container">
+            <div class="header">
+                <h1><span class="icon">${isNewVisitor ? '🎯' : '👀'}</span> Proposta360</h1>
+                <p>${subject}</p>
+            </div>
+            
+            <div class="content">
+                <h2 style="color: #1e293b; margin-bottom: 20px;">
+                    ${isNewVisitor ? 'Nova pessoa interessada!' : 'Atividade na sua proposta!'}
+                </h2>
+                
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                    <strong class="highlight">${visitorInfo}${positionInfo}</strong> ${action} sua proposta 
+                    <strong>"${proposalTitle}"</strong>.
+                </p>
+                
+                <div class="visitor-card">
+                    <h3 style="margin-bottom: 15px; color: #1e293b;">📋 Dados do visitante:</h3>
+                    <p><strong>Nome:</strong> ${visitorName}</p>
+                    ${visitorCompany ? `<p><strong>Empresa:</strong> ${visitorCompany}</p>` : ''}
+                    ${visitorPosition ? `<p><strong>Cargo:</strong> ${visitorPosition}</p>` : ''}
+                    <p><strong>Status:</strong> ${isNewVisitor ? '🆕 Novo visitante' : '👁️ Visualizando agora'}</p>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="${dashboardUrl}" class="cta-button">
+                        📊 Ver Analytics no Dashboard
+                    </a>
+                </div>
+                
+                ${isNewVisitor ? 
+                    '<p style="background: #ecfccb; padding: 15px; border-radius: 8px; border-left: 4px solid #84cc16;"><strong>💡 Dica:</strong> Este é o momento perfeito para entrar em contato! Pessoas que acabaram de se cadastrar estão mais propensas a responder.</p>' :
+                    '<p style="background: #fef3c7; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;"><strong>⏰ Ação recomendada:</strong> Considere entrar em contato agora, enquanto a proposta está sendo analisada!</p>'
+                }
+            </div>
+            
+            <div class="footer">
+                <p>Proposta360 - Transformando propostas em negócios</p>
+                <p style="font-size: 12px; opacity: 0.8;">Você está recebendo este email porque é o criador desta proposta.</p>
+            </div>
+        </div>
+    `;
+
+    const mailOptions = {
+      from: `"Proposta360" <${this.config.auth.user}>`,
+      to: ownerEmail,
+      subject,
+      html
+    };
+
+    try {
+      await this.transporter.sendMail(mailOptions);
+      console.log(`Email de notificação de visitante enviado para: ${ownerEmail}`);
+    } catch (error) {
+      console.error('Erro ao enviar email de notificação de visitante:', error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new EmailService();

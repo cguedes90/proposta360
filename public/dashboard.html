@@ -1902,7 +1902,7 @@
 
         // Compartilhar proposta
         async function shareProposal(publicLink) {
-            const url = `${window.location.origin}/proposta/${publicLink}`;
+            const url = `https://proposta360.vercel.app/welcome?id=${publicLink}&return=/proposta/${publicLink}`;
             
             if (navigator.clipboard) {
                 try {
@@ -1977,74 +1977,200 @@
                     return;
                 }
 
-                // Buscar dados da proposta
-                const response = await fetch(`/api/proposals/${proposalId}`, {
+                // Remover modal existente
+                let modal = document.getElementById('analyticsModal');
+                if (modal) {
+                    modal.remove();
+                }
+
+                // Mostrar loading
+                const loadingModal = `
+                    <div class="modal" id="analyticsModal" style="display: flex;">
+                        <div class="modal-content" style="max-width: 800px; width: 90vw;">
+                            <div class="modal-header">
+                                <h3><i class="fas fa-chart-line"></i> Analytics da Proposta</h3>
+                                <button class="close-modal" onclick="closeModal('analyticsModal')">&times;</button>
+                            </div>
+                            <div class="modal-body" style="text-align: center; padding: 2rem;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
+                                <p style="margin-top: 1rem;">Carregando analytics...</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', loadingModal);
+
+                // Buscar analytics da proposta
+                let analytics;
+                try {
+                    const analyticsResponse = await fetch(`/api/tracking/analytics/${proposalId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    if (analyticsResponse.ok) {
+                        analytics = await analyticsResponse.json();
+                    } else {
+                        // Se não conseguir buscar analytics, usar dados vazios
+                        analytics = {
+                            stats: {
+                                unique_visitors: 0,
+                                total_interactions: 0,
+                                avg_time_spent: 0,
+                                avg_scroll_percentage: 0
+                            },
+                            visitors: [],
+                            timeline: []
+                        };
+                    }
+                } catch (error) {
+                    console.log('Analytics não disponível, usando dados vazios');
+                    analytics = {
+                        stats: {
+                            unique_visitors: 0,
+                            total_interactions: 0,
+                            avg_time_spent: 0,
+                            avg_scroll_percentage: 0
+                        },
+                        visitors: [],
+                        timeline: []
+                    };
+                }
+
+                // Buscar dados básicos da proposta
+                const proposalResponse = await fetch(`/api/proposals/${proposalId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
 
-                if (!response.ok) {
-                    throw new Error('Erro ao carregar dados da proposta');
-                }
-
-                const result = await response.json();
+                const result = await proposalResponse.json();
                 const proposal = result.proposal;
 
-                // Mostrar modal com informações básicas
-                const modalHtml = `
-                    <div class="modal" id="analyticsModal" style="display: flex;">
-                        <div class="modal-content" style="max-width: 600px;">
-                            <div class="modal-header">
-                                <h3>Analytics - ${proposal.title}</h3>
-                                <button class="close-modal" onclick="closeModal('analyticsModal')">&times;</button>
+                // Atualizar modal com os dados
+                const modalContent = document.querySelector('#analyticsModal .modal-content');
+                modalContent.innerHTML = `
+                    <div class="modal-header">
+                        <h3><i class="fas fa-chart-line"></i> Analytics - ${proposal.title}</h3>
+                        <button class="close-modal" onclick="closeModal('analyticsModal')">&times;</button>
+                    </div>
+                    <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+                        <!-- Estatísticas principais -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                            <div class="stat-card">
+                                <div class="stat-value">${analytics.stats.unique_visitors || 0}</div>
+                                <div class="stat-label"><i class="fas fa-users"></i> Visitantes Únicos</div>
                             </div>
-                            <div class="modal-body">
-                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
-                                    <div class="stat-card">
-                                        <div class="stat-value">${proposal.view_count || 0}</div>
-                                        <div class="stat-label">Visualizações</div>
-                                    </div>
-                                    <div class="stat-card">
-                                        <div class="stat-value">${proposal.status === 'published' ? 'Publicada' : 'Rascunho'}</div>
-                                        <div class="stat-label">Status</div>
-                                    </div>
-                                </div>
-                                <div style="margin-bottom: 1rem;">
-                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Link Público:</label>
-                                    <div style="display: flex; gap: 0.5rem;">
-                                        <input type="text" value="${window.location.origin}/proposta/${proposal.public_link}" 
-                                               style="flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;" readonly>
-                                        <button class="btn btn-outline" onclick="copyToClipboard('${window.location.origin}/proposta/${proposal.public_link}')">
-                                            <i class="fas fa-copy"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Informações:</label>
-                                    <p><strong>Criada em:</strong> ${new Date(proposal.created_at).toLocaleDateString('pt-BR')}</p>
-                                    <p><strong>Última atualização:</strong> ${new Date(proposal.updated_at).toLocaleDateString('pt-BR')}</p>
-                                    <p><strong>ID:</strong> ${proposal.id}</p>
-                                </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${analytics.stats.total_interactions || 0}</div>
+                                <div class="stat-label"><i class="fas fa-mouse"></i> Interações</div>
                             </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-secondary" onclick="closeModal('analyticsModal')">Fechar</button>
+                            <div class="stat-card">
+                                <div class="stat-value">${analytics.stats.avg_time_spent ? Math.round(analytics.stats.avg_time_spent / 60) : 0}min</div>
+                                <div class="stat-label"><i class="fas fa-clock"></i> Tempo Médio</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${analytics.stats.avg_scroll_percentage ? Math.round(analytics.stats.avg_scroll_percentage) : 0}%</div>
+                                <div class="stat-label"><i class="fas fa-scroll"></i> Scroll Médio</div>
                             </div>
                         </div>
+
+                        <!-- Visitantes -->
+                        ${analytics.visitors && analytics.visitors.length > 0 ? `
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-users" style="color: var(--success);"></i>
+                                Visitantes (${analytics.visitors.length})
+                            </h4>
+                            <div style="max-height: 300px; overflow-y: auto;">
+                                ${analytics.visitors.map(visitor => `
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.5rem; background: ${visitor.max_scroll_percentage > 80 ? '#f0f9ff' : '#f9fafb'};">
+                                        <div>
+                                            <div style="font-weight: 600; color: var(--text-primary);">
+                                                ${visitor.full_name}
+                                                ${visitor.company ? `<span style="color: var(--text-secondary); font-weight: normal;"> - ${visitor.company}</span>` : ''}
+                                            </div>
+                                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                                                ${visitor.position ? `${visitor.position} • ` : ''}
+                                                ${new Date(visitor.first_visit_at).toLocaleDateString('pt-BR')}
+                                            </div>
+                                        </div>
+                                        <div style="text-align: right; font-size: 0.85rem;">
+                                            <div style="color: var(--primary); font-weight: 600;">
+                                                ${visitor.total_time_spent ? Math.round(visitor.total_time_spent / 60) : 0}min
+                                            </div>
+                                            <div style="color: var(--text-secondary);">
+                                                ${visitor.max_scroll_percentage || 0}% scroll
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ` : `
+                        <div style="text-align: center; padding: 2rem; background: #f9fafb; border-radius: 8px; margin-bottom: 2rem;">
+                            <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
+                            <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem;">Nenhuma visualização ainda</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Compartilhe sua proposta para começar a receber dados!</p>
+                        </div>
+                        `}
+
+                        <!-- Link de compartilhamento -->
+                        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">
+                                <i class="fas fa-link"></i> Link de Compartilhamento:
+                            </label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" value="https://proposta360.vercel.app/welcome?id=${proposal.public_link}&return=/proposta/${proposal.public_link}" 
+                                       style="flex: 1; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem;" readonly>
+                                <button class="btn btn-outline" onclick="copyToClipboard('https://proposta360.vercel.app/welcome?id=${proposal.public_link}&return=/proposta/${proposal.public_link}')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem; margin-bottom: 0;">
+                                Os visitantes precisarão se cadastrar antes de ver a proposta, e você receberá notificações em tempo real.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline" onclick="refreshAnalytics('${proposalId}')">
+                            <i class="fas fa-refresh"></i> Atualizar
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeModal('analyticsModal')">Fechar</button>
                     </div>
                 `;
 
-                // Adicionar modal ao body se não existir
-                let modal = document.getElementById('analyticsModal');
-                if (modal) {
-                    modal.remove();
-                }
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-
             } catch (error) {
                 console.error('Erro ao carregar analytics:', error);
-                showAlert('Erro ao carregar analytics: ' + error.message, 'error');
+                
+                // Mostrar erro no modal
+                const modalContent = document.querySelector('#analyticsModal .modal-content');
+                if (modalContent) {
+                    modalContent.innerHTML = `
+                        <div class="modal-header">
+                            <h3><i class="fas fa-chart-line"></i> Analytics da Proposta</h3>
+                            <button class="close-modal" onclick="closeModal('analyticsModal')">&times;</button>
+                        </div>
+                        <div class="modal-body" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: var(--error); margin-bottom: 1rem;"></i>
+                            <p>Erro ao carregar analytics</p>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">${error.message}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeModal('analyticsModal')">Fechar</button>
+                        </div>
+                    `;
+                } else {
+                    showAlert('Erro ao carregar analytics: ' + error.message, 'error');
+                }
             }
+        }
+
+        // Atualizar analytics
+        async function refreshAnalytics(proposalId) {
+            closeModal('analyticsModal');
+            await viewAnalytics(proposalId);
         }
 
         // Copiar para área de transferência
@@ -2175,8 +2301,8 @@
                 </div>
             `).join('');
             
-            // Re-inicializar drag and drop para novos elementos
-            setTimeout(() => initializeDragAndDrop(), 100);
+            // Re-configurar drag para novos elementos
+            setTimeout(() => setupElementsDrag(), 100);
         }
         
         // Configurar event listeners do builder
@@ -2194,23 +2320,42 @@
         }
         
         // Sistema de drag and drop
+        let dragDropInitialized = false;
+        
         function initializeDragAndDrop() {
             const canvas = document.getElementById('proposalCanvas');
             if (!canvas) return;
             
-            // Drag dos elementos da sidebar
+            // Inicializar drag dos elementos da sidebar (apenas uma vez)
+            setupElementsDrag();
+            
+            // Configurar drop no canvas (apenas uma vez)
+            if (!dragDropInitialized) {
+                setupCanvasDrop(canvas);
+                dragDropInitialized = true;
+            }
+        }
+        
+        function setupElementsDrag() {
+            // Remover listeners existentes e adicionar novos para elementos atuais
             document.querySelectorAll('.element-item').forEach(item => {
-                item.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', item.dataset.elementType);
-                    item.style.opacity = '0.5';
+                // Clonar o elemento para remover todos os event listeners
+                const newItem = item.cloneNode(true);
+                item.parentNode.replaceChild(newItem, item);
+                
+                // Adicionar novos listeners
+                newItem.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', newItem.dataset.elementType);
+                    newItem.style.opacity = '0.5';
                 });
                 
-                item.addEventListener('dragend', (e) => {
-                    item.style.opacity = '1';
+                newItem.addEventListener('dragend', (e) => {
+                    newItem.style.opacity = '1';
                 });
             });
-            
-            // Drop no canvas
+        }
+        
+        function setupCanvasDrop(canvas) {
             canvas.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 canvas.classList.add('drag-over');

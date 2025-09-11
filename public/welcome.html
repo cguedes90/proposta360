@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo - Proposta360</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --error: #dc2626;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --background: #f9fafb;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .welcome-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .welcome-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .welcome-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .welcome-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .proposal-info {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary);
+            margin: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .proposal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .proposal-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-container {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-input.error {
+            border-color: var(--error);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .brand-footer {
+            text-align: center;
+            padding: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            background: var(--background);
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="welcome-header">
+            <h1><i class="fas fa-document-text"></i> Proposta360</h1>
+            <p>Você está prestes a visualizar uma proposta exclusiva!</p>
+        </div>
+
+        <div class="proposal-info">
+            <div class="proposal-title" id="proposalTitle">Carregando proposta...</div>
+            <div class="proposal-subtitle">Para continuar, precisamos de algumas informações:</div>
+        </div>
+
+        <div class="form-container">
+            <form id="visitorForm">
+                <div class="form-group">
+                    <label class="form-label" for="fullName">Nome Completo *</label>
+                    <input type="text" id="fullName" name="fullName" class="form-input" required>
+                    <div class="error-message" id="fullNameError">Por favor, informe seu nome completo</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cpf">CPF *</label>
+                    <input type="text" id="cpf" name="cpf" class="form-input" required>
+                    <div class="error-message" id="cpfError">Por favor, informe um CPF válido</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="position">Cargo/Função</label>
+                    <input type="text" id="position" name="position" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="company">Empresa</label>
+                    <input type="text" id="company" name="company" class="form-input">
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">
+                    <i class="fas fa-arrow-right"></i> Acessar Proposta
+                </button>
+            </form>
+
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner fa-spin"></i> Processando...
+            </div>
+        </div>
+
+        <div class="brand-footer">
+            Powered by <strong>Proposta360</strong> - Transformando propostas em negócios
+        </div>
+    </div>
+
+    <script>
+        // Obter parâmetros da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const proposalId = urlParams.get('id');
+        const returnUrl = urlParams.get('return') || `/proposta/${proposalId}`;
+
+        // Carregar informações da proposta
+        async function loadProposalInfo() {
+            try {
+                const response = await fetch(`/api/proposals/public/${proposalId}`);
+                if (response.ok) {
+                    const proposal = await response.json();
+                    document.getElementById('proposalTitle').textContent = proposal.title;
+                } else {
+                    document.getElementById('proposalTitle').textContent = 'Proposta Comercial';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar proposta:', error);
+                document.getElementById('proposalTitle').textContent = 'Proposta Comercial';
+            }
+        }
+
+        // Máscara para CPF
+        function applyCPFMask(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{3})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+                .replace(/(-\d{2})\d+?$/, '$1');
+        }
+
+        // Validar CPF
+        function validateCPF(cpf) {
+            cpf = cpf.replace(/[^\d]+/g, '');
+            if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
+            
+            let sum = 0;
+            let remainder;
+            
+            for (let i = 1; i <= 9; i++) {
+                sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+            }
+            
+            remainder = (sum * 10) % 11;
+            if ((remainder === 10) || (remainder === 11)) remainder = 0;
+            if (remainder !== parseInt(cpf.substring(9, 10))) return false;
+            
+            sum = 0;
+            for (let i = 1; i <= 10; i++) {
+                sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+            }
+            
+            remainder = (sum * 10) % 11;
+            if ((remainder === 10) || (remainder === 11)) remainder = 0;
+            if (remainder !== parseInt(cpf.substring(10, 11))) return false;
+            
+            return true;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProposalInfo();
+
+            // Máscara CPF
+            const cpfInput = document.getElementById('cpf');
+            cpfInput.addEventListener('input', (e) => {
+                e.target.value = applyCPFMask(e.target.value);
+            });
+
+            // Submit do formulário
+            document.getElementById('visitorForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(e.target);
+                const data = {
+                    fullName: formData.get('fullName').trim(),
+                    cpf: formData.get('cpf').replace(/[^\d]/g, ''),
+                    position: formData.get('position').trim(),
+                    company: formData.get('company').trim(),
+                    proposalId: proposalId
+                };
+
+                // Validações
+                let hasError = false;
+                
+                // Nome obrigatório
+                if (!data.fullName) {
+                    showError('fullName', 'Por favor, informe seu nome completo');
+                    hasError = true;
+                } else {
+                    hideError('fullName');
+                }
+
+                // CPF obrigatório e válido
+                if (!data.cpf) {
+                    showError('cpf', 'Por favor, informe seu CPF');
+                    hasError = true;
+                } else if (!validateCPF(data.cpf)) {
+                    showError('cpf', 'Por favor, informe um CPF válido');
+                    hasError = true;
+                } else {
+                    hideError('cpf');
+                }
+
+                if (hasError) return;
+
+                // Mostrar loading
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('loading').classList.add('active');
+
+                try {
+                    // Registrar visitante
+                    const response = await fetch('/api/proposals/register-visitor', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        // Redirecionar para a proposta com token de acesso
+                        const result = await response.json();
+                        localStorage.setItem('visitorToken', result.token);
+                        window.location.href = returnUrl + `?visitor=${result.token}`;
+                    } else {
+                        throw new Error('Erro ao registrar visitante');
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    alert('Erro ao processar suas informações. Tente novamente.');
+                } finally {
+                    document.getElementById('submitBtn').disabled = false;
+                    document.getElementById('loading').classList.remove('active');
+                }
+            });
+        });
+
+        function showError(fieldName, message) {
+            const field = document.getElementById(fieldName);
+            const error = document.getElementById(fieldName + 'Error');
+            field.classList.add('error');
+            error.textContent = message;
+            error.classList.add('show');
+        }
+
+        function hideError(fieldName) {
+            const field = document.getElementById(fieldName);
+            const error = document.getElementById(fieldName + 'Error');
+            field.classList.remove('error');
+            error.classList.remove('show');
+        }
+    </script>
+</body>
+</html>

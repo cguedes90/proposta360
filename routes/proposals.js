@@ -11,6 +11,7 @@ const {
   reorderSections
 } = require('../controllers/proposalController');
 const { authenticateToken } = require('../middleware/auth');
+const TrackingController = require('../controllers/trackingController');
 
 const router = express.Router();
 
@@ -58,6 +59,21 @@ const sectionOrderValidation = [
     .isInt({ min: 0 })
     .withMessage('orderIndex deve ser um número inteiro não negativo')
 ];
+
+// Rotas públicas (antes da autenticação)
+router.post('/register-visitor', TrackingController.registerVisitor);
+router.get('/public/:proposalId', async (req, res) => {
+  try {
+    const Proposal = require('../models/Proposal');
+    const proposal = await Proposal.findByPublicLink(req.params.proposalId);
+    if (!proposal) {
+      return res.status(404).json({ error: 'Proposta não encontrada' });
+    }
+    res.json({ title: proposal.title, id: proposal.id });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro interno' });
+  }
+});
 
 router.use(authenticateToken);
 
