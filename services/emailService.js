@@ -67,7 +67,7 @@ class EmailService {
             .features { background: #f8fafc; padding: 30px; border-radius: 12px; margin: 30px 0; }
             .feature { display: flex; align-items: center; margin-bottom: 15px; }
             .feature-icon { background: #2563eb; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 12px; }
-            .cta-button { display: inline-block; background: #2563eb; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; }
+            .cta-button { display: inline-block; background: #2563eb; color: #ffffff !important; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; border: none; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: all 0.3s ease; }
             .footer { background: #1e293b; color: #94a3b8; padding: 30px; text-align: center; font-size: 14px; }
             .plan-badge { background: ${user.plan === 'premium' ? '#16a34a' : '#64748b'}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
         </style>
