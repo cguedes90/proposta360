@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 const User = require('../models/User');
 const Lead = require('../models/Lead');
 const db = require('../config/database');
+const emailService = require('../services/emailService');
 
 // Middleware para verificar se é super admin
 const requireSuperAdmin = (req, res, next) => {
@@ -264,6 +265,57 @@ const deleteLead = async (req, res) => {
   }
 };
 
+const convertLeadToUser = async (req, res) => {
+  try {
+    const { leadId } = req.params;
+    const { password, plan = 'free' } = req.body;
+
+    // Buscar o lead
+    const lead = await Lead.findById(leadId);
+    if (!lead) {
+      return res.status(404).json({ error: 'Lead não encontrado' });
+    }
+
+    // Verificar se já existe usuário com este email
+    const existingUser = await User.findByEmail(lead.email);
+    if (existingUser) {
+      return res.status(400).json({ error: 'Já existe um usuário com este email' });
+    }
+
+    // Criar o usuário
+    const user = await User.create({
+      name: lead.name,
+      email: lead.email,
+      password: password,
+      plan: plan
+    });
+
+    // Atualizar o status do lead para 'converted'
+    await Lead.updateStatus(leadId, 'converted', 'Convertido para usuário');
+
+    // Enviar email de boas-vindas (não crítico - não deve falhar a conversão)
+    try {
+      await emailService.sendWelcomeEmail(user);
+      console.log('📧 Email de boas-vindas enviado para:', user.email);
+    } catch (emailError) {
+      console.error('❌ Erro ao enviar email de boas-vindas (não crítico):', emailError.message);
+    }
+
+    res.json({
+      message: 'Lead convertido para usuário com sucesso',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        plan: user.plan
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao converter lead para usuário:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+};
+
 module.exports = {
   requireSuperAdmin,
   getDashboardStats,
@@ -273,5 +325,6 @@ module.exports = {
   getAllLeads,
   updateLeadStatus,
   deleteUser,
-  deleteLead
+  deleteLead,
+  convertLeadToUser
 };

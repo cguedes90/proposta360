@@ -15,8 +15,8 @@ const contactLeadValidation = [
     .withMessage('Email deve ser válido'),
   body('phone')
     .optional()
-    .isMobilePhone('pt-BR')
-    .withMessage('Telefone deve estar no formato brasileiro'),
+    .matches(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/)
+    .withMessage('Telefone deve estar no formato (XX) XXXXX-XXXX'),
   body('company')
     .optional()
     .trim()
@@ -43,12 +43,12 @@ const registrationLeadValidation = [
     .withMessage('Email deve ser válido'),
   body('phone')
     .optional()
-    .isMobilePhone('pt-BR')
-    .withMessage('Telefone deve estar no formato brasileiro'),
+    .matches(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/)
+    .withMessage('Telefone deve estar no formato (XX) XXXXX-XXXX'),
   body('whatsapp')
     .optional()
-    .isMobilePhone('pt-BR')
-    .withMessage('WhatsApp deve estar no formato brasileiro'),
+    .matches(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/)
+    .withMessage('WhatsApp deve estar no formato (XX) XXXXX-XXXX'),
   body('company')
     .optional()
     .trim()

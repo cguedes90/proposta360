@@ -31,7 +31,7 @@ class EmailService {
   async sendEmail({ to, subject, html, text }) {
     try {
       const mailOptions = {
-        from: '"PropostasWin" <contato@inovamentelabs.com.br>',
+        from: '"Proposta360" <contato@inovamentelabs.com.br>',
         to,
         subject,
         html,
@@ -55,7 +55,7 @@ class EmailService {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bem-vindo ao PropostasWin!</title>
+        <title>Bem-vindo ao Proposta360!</title>
         <style>
             body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; background: #f8fafc; }
             .container { max-width: 600px; margin: 0 auto; background: white; }
@@ -75,7 +75,7 @@ class EmailService {
     <body>
         <div class="container">
             <div class="header">
-                <div class="logo">🚀 PropostasWin</div>
+                <div class="logo">🚀 Proposta360</div>
                 <div>Propostas que Facilitam a Decisão de Compra</div>
             </div>
             
@@ -156,9 +156,12 @@ class EmailService {
             </div>
             
             <div class="footer">
-                <div>PropostasWin - Propostas que facilitam a decisão de compra</div>
+                <div>Proposta360 - Propostas que facilitam a decisão de compra</div>
                 <div style="margin-top: 10px;">
                     <a href="mailto:contato@inovamentelabs.com.br" style="color: #94a3b8;">contato@inovamentelabs.com.br</a>
+                </div>
+                <div style="margin-top: 10px;">
+                    <a href="https://www.inovamentelabs.com.br" style="color: #94a3b8; text-decoration: none;">Desenvolvido por InovaMente Labs</a>
                 </div>
             </div>
         </div>
@@ -168,7 +171,7 @@ class EmailService {
 
     return await this.sendEmail({
       to: user.email,
-      subject: '🎉 Bem-vindo ao PropostasWin - Sua conta foi criada!',
+      subject: '🎉 Bem-vindo ao Proposta360 - Sua conta foi criada!',
       html
     });
   }
@@ -183,7 +186,7 @@ class EmailService {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Reset de Senha - PropostasWin</title>
+        <title>Reset de Senha - Proposta360</title>
         <style>
             body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; background: #f8fafc; }
             .container { max-width: 600px; margin: 0 auto; background: white; }
@@ -200,7 +203,7 @@ class EmailService {
     <body>
         <div class="container">
             <div class="header">
-                <div class="logo">🔐 PropostasWin</div>
+                <div class="logo">🔐 Proposta360</div>
                 <div>Solicitação de Reset de Senha</div>
             </div>
             
@@ -212,7 +215,7 @@ class EmailService {
                 </p>
                 
                 <p class="text">
-                    Recebemos uma solicitação para redefinir a senha da sua conta no PropostasWin. 
+                    Recebemos uma solicitação para redefinir a senha da sua conta no Proposta360. 
                     Se você fez esta solicitação, clique no botão abaixo para criar uma nova senha.
                 </p>
                 
@@ -244,9 +247,12 @@ class EmailService {
             </div>
             
             <div class="footer">
-                <div>PropostasWin - Propostas que facilitam a decisão de compra</div>
+                <div>Proposta360 - Propostas que facilitam a decisão de compra</div>
                 <div style="margin-top: 10px;">
                     <a href="mailto:contato@inovamentelabs.com.br" style="color: #94a3b8;">contato@inovamentelabs.com.br</a>
+                </div>
+                <div style="margin-top: 10px;">
+                    <a href="https://www.inovamentelabs.com.br" style="color: #94a3b8; text-decoration: none;">Desenvolvido por InovaMente Labs</a>
                 </div>
             </div>
         </div>
@@ -256,7 +262,7 @@ class EmailService {
 
     return await this.sendEmail({
       to: user.email,
-      subject: '🔐 Reset de Senha - PropostasWin',
+      subject: '🔐 Reset de Senha - Proposta360',
       html
     });
   }
@@ -307,7 +313,7 @@ class EmailService {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${notificationTitle} - PropostasWin</title>
+        <title>${notificationTitle} - Proposta360</title>
         <style>
             body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; background: #f8fafc; }
             .container { max-width: 600px; margin: 0 auto; background: white; }
@@ -325,7 +331,7 @@ class EmailService {
     <body>
         <div class="container">
             <div class="header">
-                <div class="logo">🚀 PropostasWin</div>
+                <div class="logo">🚀 Proposta360</div>
                 <div>Notificação de Proposta</div>
             </div>
             
@@ -370,9 +376,12 @@ class EmailService {
             </div>
             
             <div class="footer">
-                <div>PropostasWin - Propostas que facilitam a decisão de compra</div>
+                <div>Proposta360 - Propostas que facilitam a decisão de compra</div>
                 <div style="margin-top: 10px;">
                     <a href="mailto:contato@inovamentelabs.com.br" style="color: #94a3b8;">contato@inovamentelabs.com.br</a>
+                </div>
+                <div style="margin-top: 10px;">
+                    <a href="https://www.inovamentelabs.com.br" style="color: #94a3b8; text-decoration: none;">Desenvolvido por InovaMente Labs</a>
                 </div>
                 <div style="margin-top: 15px; font-size: 12px;">
                     Para parar de receber estas notificações, 
@@ -421,7 +430,10 @@ class EmailService {
           
           <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
           <p style="color: #9ca3af; font-size: 12px;">
-            PropostasWin - Sistema automatizado
+            Proposta360 - Sistema automatizado
+          </p>
+          <p style="color: #9ca3af; font-size: 12px; margin-top: 10px;">
+            <a href="https://www.inovamentelabs.com.br" style="color: #9ca3af; text-decoration: none;">Desenvolvido por InovaMente Labs</a>
           </p>
         </div>
       `
@@ -455,7 +467,10 @@ class EmailService {
           
           <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
           <p style="color: #9ca3af; font-size: 12px;">
-            PropostasWin - Sistema automatizado
+            Proposta360 - Sistema automatizado
+          </p>
+          <p style="color: #9ca3af; font-size: 12px; margin-top: 10px;">
+            <a href="https://www.inovamentelabs.com.br" style="color: #9ca3af; text-decoration: none;">Desenvolvido por InovaMente Labs</a>
           </p>
         </div>
       `
@@ -490,7 +505,10 @@ class EmailService {
           
           <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
           <p style="color: #9ca3af; font-size: 12px;">
-            PropostasWin - Sistema automatizado
+            Proposta360 - Sistema automatizado
+          </p>
+          <p style="color: #9ca3af; font-size: 12px; margin-top: 10px;">
+            <a href="https://www.inovamentelabs.com.br" style="color: #9ca3af; text-decoration: none;">Desenvolvido por InovaMente Labs</a>
           </p>
         </div>
       `

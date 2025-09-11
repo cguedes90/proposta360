@@ -515,10 +515,10 @@
                 <h1 id="page-title">Dashboard</h1>
                 <div class="user-info">
                     <span id="admin-name">Super Admin</span>
-                    <a href="/dashboard" class="logout-btn">
+                    <button onclick="logout()" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
                         Sair
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -759,6 +759,45 @@
         </div>
     </div>
 
+    <!-- Convert Lead Modal -->
+    <div id="convert-lead-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Converter Lead em Usuário</h3>
+                <button class="close-modal" onclick="closeModal('convert-lead-modal')">&times;</button>
+            </div>
+            <form id="convert-lead-form">
+                <input type="hidden" id="convert-lead-id">
+                <div class="form-group">
+                    <label for="convert-lead-name">Nome:</label>
+                    <input type="text" id="convert-lead-name" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="convert-lead-email">Email:</label>
+                    <input type="email" id="convert-lead-email" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="convert-lead-password">Senha inicial:</label>
+                    <input type="password" id="convert-lead-password" required minlength="6" placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="form-group">
+                    <label for="convert-lead-plan">Plano:</label>
+                    <select id="convert-lead-plan" required>
+                        <option value="free">Free</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                </div>
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 6px; margin: 1rem 0; font-size: 0.875rem; color: #64748b;">
+                    <strong>Atenção:</strong> Após a conversão, o lead será marcado como "convertido" e um usuário será criado no sistema. O lead receberá um email de boas-vindas.
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('convert-lead-modal')">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="saveLeadConversion()">Converter para Usuário</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Configurar URLs dinâmicas para meta tags
         const baseUrl = `${window.location.protocol}//${window.location.host}`;
@@ -775,6 +814,13 @@
             window.location.href = '/dashboard';
         }
 
+        // Logout function
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            window.location.href = '/dashboard';
+        }
+        
         // API functions
         async function apiCall(endpoint, options = {}) {
             const defaultOptions = {
@@ -1010,6 +1056,11 @@
                             <button class="btn btn-sm btn-primary" onclick="editLead('${lead.id}', '${lead.name}', '${lead.email}', '${lead.status}', '${lead.notes || ''}')">
                                 <i class="fas fa-edit"></i>
                             </button>
+                            ${lead.status !== 'converted' ? `
+                            <button class="btn btn-sm btn-success" onclick="convertLead('${lead.id}', '${lead.name}', '${lead.email}')">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                            ` : ''}
                             <button class="btn btn-sm btn-danger" onclick="deleteLead('${lead.id}', '${lead.name}')">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -1078,6 +1129,47 @@
             } catch (error) {
                 console.error('Error deleting lead:', error);
                 alert('Erro ao excluir lead: ' + error.message);
+            }
+        }
+
+        function convertLead(id, name, email) {
+            document.getElementById('convert-lead-id').value = id;
+            document.getElementById('convert-lead-name').value = name;
+            document.getElementById('convert-lead-email').value = email;
+            document.getElementById('convert-lead-password').value = '';
+            document.getElementById('convert-lead-plan').value = 'free';
+            
+            document.getElementById('convert-lead-modal').classList.add('active');
+        }
+
+        async function saveLeadConversion() {
+            const leadId = document.getElementById('convert-lead-id').value;
+            const password = document.getElementById('convert-lead-password').value;
+            const plan = document.getElementById('convert-lead-plan').value;
+            const name = document.getElementById('convert-lead-name').value;
+
+            if (!password || password.length < 6) {
+                alert('A senha deve ter pelo menos 6 caracteres');
+                return;
+            }
+
+            if (!confirm(`Tem certeza que deseja converter o lead "${name}" em usuário? Esta ação não pode ser desfeita.`)) {
+                return;
+            }
+
+            try {
+                const result = await apiCall(`/api/admin/leads/${leadId}/convert`, {
+                    method: 'POST',
+                    body: JSON.stringify({ password, plan })
+                });
+
+                alert('Lead convertido para usuário com sucesso!');
+                closeModal('convert-lead-modal');
+                loadLeads(currentLeadsPage);
+
+            } catch (error) {
+                console.error('Error converting lead:', error);
+                alert('Erro ao converter lead: ' + error.message);
             }
         }
 

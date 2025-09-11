@@ -1577,11 +1577,111 @@
             input.value = value;
         }
 
-        // Mask for CEP
+        // Mask for CEP and auto-fill address
         function maskCEP(input) {
             let value = input.value.replace(/\D/g, '');
             value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
             input.value = value;
+            
+            // Auto-fill address when CEP is complete
+            if (value.length === 9) {
+                searchCEP(value);
+            }
+        }
+        
+        // Search CEP using ViaCEP API
+        async function searchCEP(cep) {
+            try {
+                const cleanCEP = cep.replace(/\D/g, '');
+                if (cleanCEP.length !== 8) return;
+                
+                const response = await fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`);
+                const data = await response.json();
+                
+                if (data.erro) {
+                    showCEPError('CEP não encontrado');
+                    return;
+                }
+                
+                // Fill address fields
+                document.getElementById('reg-address').value = 
+                    `${data.logradouro}${data.bairro ? ', ' + data.bairro : ''}`;
+                document.getElementById('reg-city').value = data.localidade || '';
+                document.getElementById('reg-state').value = data.uf || '';
+                
+                // Show success feedback
+                showCEPSuccess('Endereço preenchido automaticamente!');
+                
+            } catch (error) {
+                console.error('Erro ao buscar CEP:', error);
+                showCEPError('Erro ao buscar CEP. Verifique sua conexão.');
+            }
+        }
+        
+        // Show CEP success message
+        function showCEPSuccess(message) {
+            const cepInput = document.getElementById('reg-cep');
+            cepInput.style.borderColor = '#16a34a';
+            
+            // Remove any existing feedback
+            removeCEPFeedback();
+            
+            const feedback = document.createElement('div');
+            feedback.className = 'cep-feedback success';
+            feedback.textContent = message;
+            feedback.style.cssText = `
+                color: #16a34a;
+                font-size: 0.875rem;
+                margin-top: 0.25rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            `;
+            feedback.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            cepInput.parentNode.appendChild(feedback);
+            
+            // Remove feedback after 3 seconds
+            setTimeout(() => {
+                removeCEPFeedback();
+                cepInput.style.borderColor = '';
+            }, 3000);
+        }
+        
+        // Show CEP error message
+        function showCEPError(message) {
+            const cepInput = document.getElementById('reg-cep');
+            cepInput.style.borderColor = '#dc2626';
+            
+            // Remove any existing feedback
+            removeCEPFeedback();
+            
+            const feedback = document.createElement('div');
+            feedback.className = 'cep-feedback error';
+            feedback.textContent = message;
+            feedback.style.cssText = `
+                color: #dc2626;
+                font-size: 0.875rem;
+                margin-top: 0.25rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            `;
+            feedback.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            cepInput.parentNode.appendChild(feedback);
+            
+            // Remove feedback after 3 seconds
+            setTimeout(() => {
+                removeCEPFeedback();
+                cepInput.style.borderColor = '';
+            }, 3000);
+        }
+        
+        // Remove CEP feedback
+        function removeCEPFeedback() {
+            const existingFeedback = document.querySelector('.cep-feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
         }
 
         // Apply masks

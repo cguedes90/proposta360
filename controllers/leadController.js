@@ -36,7 +36,7 @@ const createContactLead = async (req, res) => {
           <p><strong>Mensagem:</strong></p>
           <p>${message}</p>
           <hr>
-          <p><small>PropostasWin - Sistema de Captura de Leads</small></p>
+          <p><small>Proposta360 - Sistema de Captura de Leads</small></p>
         `
       });
     } catch (emailError) {
@@ -94,11 +94,11 @@ const createRegistrationLead = async (req, res) => {
       plan_interest
     });
 
-    // Enviar email de agradecimento para o lead
+    // Enviar email de agradecimento para o lead (não crítico - não deve falhar o cadastro)
     try {
       await emailService.sendEmail({
         to: email,
-        subject: '🎉 Pré-cadastro realizado com sucesso - PropostasWin',
+        subject: '🎉 Pré-cadastro realizado com sucesso - Proposta360',
         html: `
           <!DOCTYPE html>
           <html>
@@ -113,14 +113,14 @@ const createRegistrationLead = async (req, res) => {
           </head>
           <body>
               <div class="header">
-                  <h1>🚀 PropostasWin</h1>
+                  <h1>🚀 Proposta360</h1>
                   <p>Pré-cadastro Realizado com Sucesso!</p>
               </div>
               
               <div class="content">
                   <h2>Olá, ${name}!</h2>
                   
-                  <p>Obrigado pelo seu interesse no PropostasWin! Recebemos seu pré-cadastro com sucesso.</p>
+                  <p>Obrigado pelo seu interesse no Proposta360! Recebemos seu pré-cadastro com sucesso.</p>
                   
                   <p><strong>Seus dados:</strong></p>
                   <ul>
@@ -136,18 +136,20 @@ const createRegistrationLead = async (req, res) => {
               </div>
               
               <div class="footer">
-                  <p>PropostasWin - Propostas que facilitam a decisão de compra</p>
+                  <p>Proposta360 - Propostas que facilitam a decisão de compra</p>
                   <p>contato@inovamentelabs.com.br</p>
+                  <p><a href="https://www.inovamentelabs.com.br" style="color: #666; text-decoration: none;">Desenvolvido por InovaMente Labs</a></p>
               </div>
           </body>
           </html>
         `
       });
+      console.log('📧 Email de agradecimento enviado para:', email);
     } catch (emailError) {
-      console.error('❌ Erro ao enviar email de agradecimento:', emailError);
+      console.error('❌ Erro ao enviar email de agradecimento (não crítico):', emailError.message);
     }
 
-    // Notificar admin sobre novo pré-cadastro
+    // Notificar admin sobre novo pré-cadastro (não crítico - não deve falhar o cadastro)
     try {
       await emailService.sendEmail({
         to: 'contato@inovamentelabs.com.br',
@@ -166,11 +168,12 @@ const createRegistrationLead = async (req, res) => {
           <p><strong>CEP:</strong> ${cep || 'Não informado'}</p>
           <p><strong>Plano de interesse:</strong> ${plan_interest === 'premium' ? 'Premium' : 'Free'}</p>
           <hr>
-          <p><small>PropostasWin - Sistema de Pré-Cadastro</small></p>
+          <p><small>Proposta360 - Sistema de Pré-Cadastro</small></p>
         `
       });
+      console.log('📧 Email de notificação admin enviado');
     } catch (emailError) {
-      console.error('❌ Erro ao enviar notificação de pré-cadastro:', emailError);
+      console.error('❌ Erro ao enviar notificação de pré-cadastro (não crítico):', emailError.message);
     }
 
     res.status(201).json({

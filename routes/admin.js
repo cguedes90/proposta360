@@ -10,7 +10,8 @@ const {
   getAllLeads,
   updateLeadStatus,
   deleteUser,
-  deleteLead
+  deleteLead,
+  convertLeadToUser
 } = require('../controllers/adminController');
 
 const router = express.Router();
@@ -43,6 +44,16 @@ const updateLeadStatusValidation = [
     .withMessage('Notas devem ter no máximo 1000 caracteres')
 ];
 
+const convertLeadValidation = [
+  body('password')
+    .isLength({ min: 6 })
+    .withMessage('Senha deve ter pelo menos 6 caracteres'),
+  body('plan')
+    .optional()
+    .isIn(['free', 'premium'])
+    .withMessage('Plano deve ser "free" ou "premium"')
+];
+
 // Rotas do dashboard
 router.get('/stats', getDashboardStats);
 
@@ -55,6 +66,7 @@ router.delete('/users/:userId', deleteUser);
 // Rotas de leads
 router.get('/leads', getAllLeads);
 router.put('/leads/:leadId/status', updateLeadStatusValidation, updateLeadStatus);
+router.post('/leads/:leadId/convert', convertLeadValidation, convertLeadToUser);
 router.delete('/leads/:leadId', deleteLead);
 
 module.exports = router;
