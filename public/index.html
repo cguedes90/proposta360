@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropostasWin - Propostas que Facilitam a Decisão de Compra</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--primary);
+        }
+
+        .header-cta {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .header-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0 6rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Problem Section */
+        .problem-section {
+            padding: 6rem 0;
+            background: var(--surface);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .problem-card {
+            background: var(--background);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--danger);
+        }
+
+        .problem-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--danger);
+        }
+
+        .problem-card p {
+            color: var(--text-secondary);
+        }
+
+        /* Solution Section */
+        .solution-section {
+            padding: 6rem 0;
+            background: var(--background);
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .solution-text h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .solution-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .solution-benefits {
+            list-style: none;
+        }
+
+        .solution-benefits li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .solution-benefits i {
+            color: var(--success);
+            font-size: 1.25rem;
+        }
+
+        .solution-demo {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 6rem 0;
+            background: var(--surface);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature-icon {
+            width: 4rem;
+            height: 4rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+        }
+
+        /* How it Works */
+        .how-it-works {
+            padding: 6rem 0;
+            background: var(--background);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 3rem;
+            height: 3rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .step p {
+            color: var(--text-secondary);
+        }
+
+        /* Social Proof */
+        .social-proof {
+            padding: 6rem 0;
+            background: var(--surface);
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 6rem 0;
+            background: var(--background);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
+            margin-top: 3rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .contact-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .contact-item h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-item p {
+            color: var(--text-secondary);
+        }
+
+        .contact-form {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--surface);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-button {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .submit-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .submit-button:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            color: var(--primary);
+            padding: 1.25rem 3rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: #94a3b8;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 1rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.25rem;
+            }
+
+            .solution-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-form {
+                padding: 2rem;
+            }
+
+            .header-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <i class="fas fa-file-signature"></i>
+                    PropostasWin
+                </a>
+                <nav class="header-nav">
+                    <a href="#como-funciona">Como Funciona</a>
+                    <a href="#recursos">Recursos</a>
+                    <a href="#resultados">Resultados</a>
+                    <a href="#contato">Contato</a>
+                </nav>
+                <a href="/dashboard" class="header-cta">Acessar Plataforma</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Propostas que Facilitam a Decisão de Compra</h1>
+            <p class="hero-subtitle">Transforme propostas tradicionais em experiências interativas e envolventes</p>
+            <p class="hero-description">
+                Dê mais controle ao seu cliente com propostas modulares, rastreamento em tempo real 
+                e métricas detalhadas que aceleram o fechamento de negócios.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="#demonstracao" class="hero-cta">
+                    <i class="fas fa-play"></i>
+                    Ver Demonstração
+                </a>
+                <a href="#cadastro" class="hero-cta" style="background: var(--success); color: white;">
+                    <i class="fas fa-user-plus"></i>
+                    Fazer Pré-Cadastro
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <div class="container">
+            <h2 class="section-title">Por que suas propostas não estão convertendo?</h2>
+            <p class="section-subtitle">
+                Identificamos os principais problemas que impedem suas propostas de fecharem negócios
+            </p>
+            
+            <div class="problems-grid">
+                <div class="problem-card">
+                    <h3><i class="fas fa-file-pdf"></i> Propostas Estáticas</h3>
+                    <p>PDFs tradicionais não engajam o cliente e dificultam a compreensão da proposta.</p>
+                </div>
+                
+                <div class="problem-card">
+                    <h3><i class="fas fa-eye-slash"></i> Falta de Transparência</h3>
+                    <p>Você não sabe se o cliente leu a proposta, quais seções despertaram interesse ou quando tomará a decisão.</p>
+                </div>
+                
+                <div class="problem-card">
+                    <h3><i class="fas fa-question-circle"></i> Processo Confuso</h3>
+                    <p>Cliente fica perdido com informações excessivas e não sabe como aceitar ou fazer perguntas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution-section">
+        <div class="container">
+            <div class="solution-grid">
+                <div class="solution-text">
+                    <h2>A Solução: Propostas Inteligentes</h2>
+                    <p>
+                        Criamos uma plataforma que transforma suas propostas em experiências 
+                        interativas e inteligentes, facilitando a decisão de compra.
+                    </p>
+                    
+                    <ul class="solution-benefits">
+                        <li>
+                            <i class="fas fa-check"></i>
+                            Propostas modulares com vídeos, imagens e textos personalizáveis
+                        </li>
+                        <li>
+                            <i class="fas fa-check"></i>
+                            Aceite ou recusa com 1 clique diretamente na proposta
+                        </li>
+                        <li>
+                            <i class="fas fa-check"></i>
+                            Rastreamento completo de interações e métricas detalhadas
+                        </li>
+                        <li>
+                            <i class="fas fa-check"></i>
+                            Canal direto para dúvidas e feedback do cliente
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="solution-demo">
+                    <h3>Veja uma Proposta Real</h3>
+                    <p>Exemplo de como seus clientes verão e interagirão com as propostas</p>
+                    <a href="/proposta/demo" class="hero-cta" style="margin-top: 1rem;">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Proposta Demo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="recursos">
+        <div class="container">
+            <h2 class="section-title">Recursos que Fazem a Diferença</h2>
+            <p class="section-subtitle">
+                Tudo que você precisa para criar propostas que convertem
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Editor Visual</h3>
+                    <p>Crie propostas profissionais com nosso editor drag-and-drop. Adicione vídeos, imagens, tabelas de preços e muito mais.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Analytics Completo</h3>
+                    <p>Veja quando, onde e por quanto tempo seus clientes visualizaram cada seção da proposta.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>100% Responsivo</h3>
+                    <p>Suas propostas ficam perfeitas em qualquer dispositivo: computador, tablet ou celular.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-signature"></i>
+                    </div>
+                    <h3>Assinatura Digital</h3>
+                    <p>Cliente pode aceitar e assinar digitalmente direto na proposta, agilizando o fechamento.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Notificações em Tempo Real</h3>
+                    <p>Receba alertas instantâneos quando o cliente abrir, interagir ou tomar decisões na proposta.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <h3>Compartilhamento Inteligente</h3>
+                    <p>Envie por email, WhatsApp ou link direto. Controle de acesso e versionamento automático.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works -->
+    <section class="how-it-works" id="como-funciona">
+        <div class="container">
+            <h2 class="section-title">Como Funciona</h2>
+            <p class="section-subtitle">
+                Em 3 passos simples, suas propostas estarão convertendo muito mais
+            </p>
+            
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Crie sua Proposta</h3>
+                    <p>Use nosso editor visual para montar propostas profissionais com vídeos, imagens e conteúdo personalizado.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Envie ao Cliente</h3>
+                    <p>Compartilhe por email, WhatsApp ou link direto. O cliente recebe uma experiência totalmente interativa.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Acompanhe e Feche</h3>
+                    <p>Monitore todas as interações em tempo real e receba notificações quando houver interesse ou decisão.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof" id="resultados">
+        <div class="container">
+            <h2 class="section-title">Resultados Comprovados</h2>
+            <p class="section-subtitle">
+                Empresas que usam o PropostasWin aumentaram significativamente suas conversões
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">3.2x</span>
+                    <div class="stat-label">Mais Conversões</div>
+                </div>
+                
+                <div class="stat-card">
+                    <span class="stat-number">65%</span>
+                    <div class="stat-label">Menos Tempo para Fechar</div>
+                </div>
+                
+                <div class="stat-card">
+                    <span class="stat-number">89%</span>
+                    <div class="stat-label">Satisfação dos Clientes</div>
+                </div>
+                
+                <div class="stat-card">
+                    <span class="stat-number">24h</span>
+                    <div class="stat-label">Resposta Média</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contato">
+        <div class="container">
+            <h2 class="section-title">Entre em Contato</h2>
+            <p class="section-subtitle">
+                Tire suas dúvidas ou solicite uma demonstração personalizada
+            </p>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4>Email</h4>
+                            <p>contato@propostaswin.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h4>Telefone</h4>
+                            <p>(11) 9 9999-9999</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h4>Horário de Atendimento</h4>
+                            <p>Segunda a Sexta: 9h às 18h</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <form class="contact-form" id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Nome Completo *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Empresa</label>
+                            <input type="text" id="company" name="company">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Telefone</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Assunto *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Selecione um assunto</option>
+                            <option value="demonstracao">Solicitar Demonstração</option>
+                            <option value="duvidas">Tirar Dúvidas</option>
+                            <option value="preco">Informações sobre Preços</option>
+                            <option value="suporte">Suporte Técnico</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Mensagem *</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Conte-nos como podemos ajudar..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-button">
+                        <i class="fas fa-paper-plane"></i>
+                        Enviar Mensagem
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section class="contact-section" id="cadastro">
+        <div class="container">
+            <h2 class="section-title">Pré-Cadastro - PropostasWin</h2>
+            <p class="section-subtitle">
+                Complete seus dados para receber informações exclusivas e ser um dos primeiros a usar nossa plataforma
+            </p>
+            
+            <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <form class="contact-form" id="registrationForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-name">Nome Completo *</label>
+                            <input type="text" id="reg-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-email">Email *</label>
+                            <input type="email" id="reg-email" name="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-phone">Telefone</label>
+                            <input type="tel" id="reg-phone" name="phone" placeholder="(11) 99999-9999">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-whatsapp">WhatsApp</label>
+                            <input type="tel" id="reg-whatsapp" name="whatsapp" placeholder="(11) 99999-9999">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-company">Nome da Empresa</label>
+                            <input type="text" id="reg-company" name="company">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-cnpj">CNPJ</label>
+                            <input type="text" id="reg-cnpj" name="cnpj" placeholder="12.345.678/0001-90">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-cpf">CPF</label>
+                            <input type="text" id="reg-cpf" name="cpf" placeholder="123.456.789-01">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-plan">Plano de Interesse</label>
+                            <select id="reg-plan" name="plan_interest">
+                                <option value="">Selecione um plano</option>
+                                <option value="free">Free - Gratuito</option>
+                                <option value="premium">Premium - Recursos avançados</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reg-address">Endereço Completo</label>
+                        <input type="text" id="reg-address" name="address" placeholder="Rua das Flores, 123, Bairro">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-city">Cidade</label>
+                            <input type="text" id="reg-city" name="city">
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-state">Estado</label>
+                            <select id="reg-state" name="state">
+                                <option value="">Selecione</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reg-cep">CEP</label>
+                        <input type="text" id="reg-cep" name="cep" placeholder="12345-678" style="max-width: 200px;">
+                    </div>
+                    
+                    <button type="submit" class="submit-button">
+                        <i class="fas fa-user-plus"></i>
+                        Fazer Pré-Cadastro
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="demonstracao">
+        <div class="container">
+            <h2>Pronto para Revolucionar suas Propostas?</h2>
+            <p>Comece hoje mesmo e veja suas conversões dispararem</p>
+            <a href="/dashboard" class="cta-button">
+                <i class="fas fa-rocket"></i>
+                Começar Agora - É Grátis
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PropostasWin</h3>
+                    <p>Propostas que facilitam a decisão de compra.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Produto</h3>
+                    <a href="#recursos">Recursos</a>
+                    <a href="#como-funciona">Como Funciona</a>
+                    <a href="#resultados">Resultados</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Suporte</h3>
+                    <a href="mailto:contato@propostaswin.com">Contato</a>
+                    <a href="#ajuda">Central de Ajuda</a>
+                    <a href="#tutoriais">Tutoriais</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <a href="#privacidade">Privacidade</a>
+                    <a href="#termos">Termos de Uso</a>
+                    <a href="#seguranca">Segurança</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 PropostasWin. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Animate elements on scroll
+        document.querySelectorAll('.feature-card, .step, .problem-card, .stat-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Track CTA clicks
+        document.querySelectorAll('.hero-cta, .cta-button, .header-cta').forEach(button => {
+            button.addEventListener('click', function() {
+                // Analytics tracking would go here
+                console.log('CTA clicked:', this.textContent);
+            });
+        });
+
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitButton = this.querySelector('.submit-button');
+            const originalText = submitButton.innerHTML;
+            
+            // Disable button and show loading state
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                // Send to backend API
+                const response = await fetch('/api/leads/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const result = await response.json();
+                
+                // Show success message
+                submitButton.innerHTML = '<i class="fas fa-check"></i> Mensagem Enviada!';
+                submitButton.style.background = 'var(--success)';
+                
+                // Reset form after 3 seconds
+                setTimeout(() => {
+                    this.reset();
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalText;
+                    submitButton.style.background = 'var(--primary)';
+                }, 3000);
+                
+                // Log contact attempt (in production, send to analytics)
+                console.log('Contact form submitted:', result);
+                
+            } catch (error) {
+                // Show error message
+                submitButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erro ao enviar';
+                submitButton.style.background = 'var(--danger)';
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalText;
+                    submitButton.style.background = 'var(--primary)';
+                }, 3000);
+                
+                console.error('Error sending contact form:', error);
+            }
+        });
+
+        // Registration form submission
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitButton = this.querySelector('.submit-button');
+            const originalText = submitButton.innerHTML;
+            
+            // Disable button and show loading state
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando cadastro...';
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                // Send to backend API
+                const response = await fetch('/api/leads/registration', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    const errorResult = await response.json();
+                    if (errorResult.errors) {
+                        throw new Error(errorResult.errors.map(err => err.msg).join(', '));
+                    }
+                    throw new Error('Erro no servidor');
+                }
+                
+                const result = await response.json();
+                
+                // Show success message
+                submitButton.innerHTML = '<i class="fas fa-check"></i> Pré-Cadastro Realizado!';
+                submitButton.style.background = 'var(--success)';
+                
+                // Show success alert
+                alert('Pré-cadastro realizado com sucesso! Em breve nossa equipe entrará em contato.');
+                
+                // Reset form after 3 seconds
+                setTimeout(() => {
+                    this.reset();
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalText;
+                    submitButton.style.background = 'var(--primary)';
+                }, 3000);
+                
+                // Log registration attempt
+                console.log('Registration form submitted:', result);
+                
+            } catch (error) {
+                // Show error message
+                submitButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erro no cadastro';
+                submitButton.style.background = 'var(--danger)';
+                
+                // Show error alert
+                alert('Erro ao realizar pré-cadastro: ' + error.message);
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalText;
+                    submitButton.style.background = 'var(--primary)';
+                }, 3000);
+                
+                console.error('Error sending registration form:', error);
+            }
+        });
+
+        // Mask for phone numbers
+        function maskPhone(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                if (value.length < 14) {
+                    value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                }
+            }
+            input.value = value;
+        }
+
+        // Mask for CNPJ
+        function maskCNPJ(input) {
+            let value = input.value.replace(/\D/g, '');
+            value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+            input.value = value;
+        }
+
+        // Mask for CPF
+        function maskCPF(input) {
+            let value = input.value.replace(/\D/g, '');
+            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            input.value = value;
+        }
+
+        // Mask for CEP
+        function maskCEP(input) {
+            let value = input.value.replace(/\D/g, '');
+            value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+            input.value = value;
+        }
+
+        // Apply masks
+        document.getElementById('reg-phone').addEventListener('input', function() {
+            maskPhone(this);
+        });
+
+        document.getElementById('reg-whatsapp').addEventListener('input', function() {
+            maskPhone(this);
+        });
+
+        document.getElementById('reg-cnpj').addEventListener('input', function() {
+            maskCNPJ(this);
+        });
+
+        document.getElementById('reg-cpf').addEventListener('input', function() {
+            maskCPF(this);
+        });
+
+        document.getElementById('reg-cep').addEventListener('input', function() {
+            maskCEP(this);
+        });
+    </script>
+</body>
+</html>

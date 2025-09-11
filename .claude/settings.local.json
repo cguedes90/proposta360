@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm run migrate:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm install:*)",
+      "Bash(curl:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "WebFetch(domain:provelo.com.br)",
+      "Bash(PORT=3002 npm run dev)",
+      "Bash(psql:*)",
+      "Bash(node:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

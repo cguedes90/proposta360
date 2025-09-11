@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta - PropostasWin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background: #ffffff;
+            --surface: #f8fafc;
+            --surface-dark: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius: 0.5rem;
+            --radius-lg: 1rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Layout principal */
+        .proposal-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header da proposta */
+        .proposal-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .proposal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .proposal-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: none;
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .action-btn:hover {
+            background: var(--surface);
+            border-color: var(--primary);
+        }
+
+        .action-btn.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-btn.success {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .action-btn.success:hover {
+            background: #059669;
+        }
+
+        /* Progress indicator */
+        .progress-indicator {
+            background: var(--surface-dark);
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .progress-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* Main content */
+        .proposal-main {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        /* Sidebar com índice */
+        .proposal-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .proposal-sidebar {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-nav {
+            list-style: none;
+        }
+
+        .section-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .section-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .section-link:hover,
+        .section-link.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .section-number {
+            background: var(--border);
+            color: var(--text-secondary);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .section-link.active .section-number,
+        .section-link:hover .section-number {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .section-link.completed .section-number {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Content area */
+        .proposal-content {
+            background: var(--background);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section {
+            display: none;
+            padding: 3rem;
+            min-height: 600px;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Seções específicas */
+        .cover-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+        }
+
+        .cover-section .section-title {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .cover-section .section-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+        }
+
+        .company-logo {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            font-size: 3rem;
+        }
+
+        .proposal-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .meta-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: var(--radius);
+            text-align: left;
+        }
+
+        .meta-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 0.25rem;
+        }
+
+        .meta-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Content styles */
+        .content-block {
+            margin-bottom: 2rem;
+        }
+
+        .content-block h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .content-block h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .content-block p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .content-block ul {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .content-block li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .pricing-table {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .pricing-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .pricing-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .pricing-items {
+            padding: 0;
+        }
+
+        .pricing-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pricing-item:last-child {
+            border-bottom: none;
+            background: var(--surface-dark);
+            font-weight: 600;
+        }
+
+        /* Navigation buttons */
+        .section-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .nav-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .nav-btn.outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .nav-btn.outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Feedback section */
+        .feedback-section {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .feedback-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .feedback-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .feedback-btn.reject {
+            background: var(--danger);
+        }
+
+        .feedback-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .proposal-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .proposal-sidebar {
+                position: static;
+                order: 2;
+            }
+
+            .proposal-main {
+                padding: 1rem;
+            }
+
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .cover-section .section-title {
+                font-size: 2rem;
+            }
+
+            .header-content {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .proposal-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .proposal-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .feedback-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Loading state */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Alert styles */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert.success { background: var(--success); }
+        .alert.error { background: var(--danger); }
+        .alert.warning { background: var(--warning); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Files and media */
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .file-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .file-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .file-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .file-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .file-type {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        .image-container, .video-container {
+            margin: 1.5rem 0;
+        }
+
+        .image-container img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .video-container video {
+            width: 100%;
+            max-width: 100%;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+    </style>
+</head>
+<body>
+    <div class="proposal-container">
+        <!-- Header -->
+        <header class="proposal-header">
+            <div class="header-content">
+                <h1 class="proposal-title" id="proposalTitle">Carregando...</h1>
+                <div class="proposal-actions">
+                    <button class="action-btn" onclick="downloadProposal()">
+                        <i class="fas fa-download"></i>
+                        Baixar PDF
+                    </button>
+                    <button class="action-btn" onclick="shareProposal()">
+                        <i class="fas fa-share"></i>
+                        Compartilhar
+                    </button>
+                    <button class="action-btn primary" onclick="scrollToFeedback()">
+                        <i class="fas fa-comment"></i>
+                        Dar Feedback
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress indicator -->
+        <div class="progress-indicator">
+            <div class="progress-content">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">0% visualizado</span>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <main class="proposal-main">
+            <div class="proposal-layout">
+                <!-- Sidebar navigation -->
+                <aside class="proposal-sidebar">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-list"></i>
+                        Índice
+                    </h3>
+                    <ul class="section-nav" id="sectionNav">
+                        <!-- Navigation será gerada dinamicamente -->
+                    </ul>
+                </aside>
+
+                <!-- Content area -->
+                <div class="proposal-content">
+                    <div id="loadingState" class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>Carregando proposta...</p>
+                    </div>
+
+                    <!-- Sections serão geradas dinamicamente -->
+                    <div id="proposalSections">
+                        <!-- Conteúdo das seções -->
+                    </div>
+
+                    <!-- Feedback section -->
+                    <div class="feedback-section" id="feedbackSection" style="display: none;">
+                        <h3>O que você achou desta proposta?</h3>
+                        <p>Sua opinião é muito importante para nós. Clique em uma das opções abaixo:</p>
+                        <div class="feedback-buttons">
+                            <button class="feedback-btn" onclick="submitFeedback('approved')">
+                                <i class="fas fa-thumbs-up"></i>
+                                Aprovar Proposta
+                            </button>
+                            <button class="feedback-btn reject" onclick="submitFeedback('rejected')">
+                                <i class="fas fa-thumbs-down"></i>
+                                Rejeitar Proposta
+                            </button>
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <textarea id="feedbackComment" placeholder="Comentários adicionais (opcional)" style="width: 100%; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius); min-height: 100px; resize: vertical;"></textarea>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <button class="action-btn primary" onclick="submitDetailedFeedback()">
+                                <i class="fas fa-paper-plane"></i>
+                                Enviar Feedback
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Dados da proposta (normalmente viria da API)
+        const proposalData = {
+            id: "PROP-2024-001",
+            title: "Proposta de Marketing Digital para Empresa XYZ",
+            client: "Empresa XYZ Ltda",
+            author: "João Silva",
+            date: "2024-03-15",
+            value: "R$ 15.000,00",
+            deadline: "30 dias",
+            sections: [
+                {
+                    id: "cover",
+                    title: "Capa",
+                    type: "cover",
+                    content: {
+                        title: "Proposta de Marketing Digital",
+                        subtitle: "Estratégia completa para crescimento online",
+                        client: "Empresa XYZ Ltda",
+                        author: "João Silva - Especialista em Marketing",
+                        date: "Março 2024",
+                        value: "R$ 15.000,00"
+                    }
+                },
+                {
+                    id: "intro",
+                    title: "Apresentação",
+                    type: "content",
+                    content: `
+                        <div class="content-block">
+                            <h3>Sobre Nossa Empresa</h3>
+                            <p>Somos uma agência especializada em marketing digital com mais de 5 anos de experiência no mercado. Nossa missão é ajudar empresas a crescerem online através de estratégias eficazes e resultados mensuráveis.</p>
+                            
+                            <h4>Nossa Experiência</h4>
+                            <ul>
+                                <li>Mais de 100 projetos realizados</li>
+                                <li>ROI médio de 300% para nossos clientes</li>
+                                <li>Especialistas certificados em Google Ads e Facebook Ads</li>
+                                <li>Equipe multidisciplinar com designers, copywriters e analistas</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                {
+                    id: "analysis",
+                    title: "Análise da Situação",
+                    type: "content",
+                    content: `
+                        <div class="content-block">
+                            <h3>Diagnóstico Atual</h3>
+                            <p>Após análise detalhada da presença digital da Empresa XYZ, identificamos as seguintes oportunidades:</p>
+                            
+                            <h4>Pontos Fortes</h4>
+                            <ul>
+                                <li>Marca consolidada no mercado local</li>
+                                <li>Produtos de qualidade reconhecida</li>
+                                <li>Base de clientes fiéis</li>
+                            </ul>
+                            
+                            <h4>Oportunidades de Melhoria</h4>
+                            <ul>
+                                <li>Presença digital limitada</li>
+                                <li>Ausência em redes sociais relevantes</li>
+                                <li>Website não otimizado para conversões</li>
+                                <li>Falta de estratégia de conteúdo</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                {
+                    id: "strategy",
+                    title: "Estratégia Proposta",
+                    type: "content",
+                    content: `
+                        <div class="content-block">
+                            <h3>Nossa Abordagem</h3>
+                            <p>Desenvolvemos uma estratégia 360° focada em resultados mensuráveis e crescimento sustentável:</p>
+                            
+                            <h4>1. Otimização do Website</h4>
+                            <ul>
+                                <li>Melhoria da experiência do usuário (UX/UI)</li>
+                                <li>Otimização para motores de busca (SEO)</li>
+                                <li>Implementação de ferramentas de analytics</li>
+                                <li>Criação de landing pages de conversão</li>
+                            </ul>
+                            
+                            <h4>2. Marketing de Conteúdo</h4>
+                            <ul>
+                                <li>Criação de blog com conteúdo relevante</li>
+                                <li>Produção de materiais educativos</li>
+                                <li>Newsletter quinzenal</li>
+                                <li>E-books e whitepapers</li>
+                            </ul>
+                            
+                            <h4>3. Redes Sociais</h4>
+                            <ul>
+                                <li>Gestão de Instagram e LinkedIn</li>
+                                <li>Criação de conteúdo visual atrativo</li>
+                                <li>Engajamento com a audiência</li>
+                                <li>Campanhas de awareness</li>
+                            </ul>
+                            
+                            <h4>4. Publicidade Digital</h4>
+                            <ul>
+                                <li>Campanhas no Google Ads</li>
+                                <li>Anúncios no Facebook e Instagram</li>
+                                <li>Remarketing para visitantes do site</li>
+                                <li>Otimização contínua baseada em dados</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                {
+                    id: "investment",
+                    title: "Investimento",
+                    type: "pricing",
+                    content: {
+                        title: "Pacote Completo de Marketing Digital",
+                        items: [
+                            { service: "Otimização do Website", price: "R$ 3.500,00" },
+                            { service: "Gestão de Redes Sociais", price: "R$ 2.500,00" },
+                            { service: "Marketing de Conteúdo", price: "R$ 3.000,00" },
+                            { service: "Campanhas de Publicidade", price: "R$ 4.000,00" },
+                            { service: "Relatórios e Analytics", price: "R$ 1.000,00" },
+                            { service: "Suporte e Consultoria", price: "R$ 1.000,00" }
+                        ],
+                        total: "R$ 15.000,00",
+                        period: "Mensalidade"
+                    }
+                },
+                {
+                    id: "timeline",
+                    title: "Cronograma",
+                    type: "content",
+                    content: `
+                        <div class="content-block">
+                            <h3>Fases de Implementação</h3>
+                            
+                            <h4>Mês 1 - Setup e Fundações</h4>
+                            <ul>
+                                <li>Auditoria completa do website</li>
+                                <li>Configuração de ferramentas de analytics</li>
+                                <li>Criação de personas e estratégia de conteúdo</li>
+                                <li>Setup inicial das redes sociais</li>
+                            </ul>
+                            
+                            <h4>Mês 2 - Otimização e Conteúdo</h4>
+                            <ul>
+                                <li>Implementação de melhorias no website</li>
+                                <li>Início da produção de conteúdo</li>
+                                <li>Lançamento oficial das redes sociais</li>
+                                <li>Primeira campanha de publicidade</li>
+                            </ul>
+                            
+                            <h4>Mês 3+ - Otimização e Crescimento</h4>
+                            <ul>
+                                <li>Análise de resultados e otimizações</li>
+                                <li>Expansão das campanhas de sucesso</li>
+                                <li>Implementação de novos canais</li>
+                                <li>Relatórios mensais detalhados</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                {
+                    id: "results",
+                    title: "Resultados Esperados",
+                    type: "content",
+                    content: `
+                        <div class="content-block">
+                            <h3>Metas e KPIs</h3>
+                            <p>Estabelecemos metas claras e mensuráveis para acompanhar o sucesso da estratégia:</p>
+                            
+                            <h4>Primeiros 3 Meses</h4>
+                            <ul>
+                                <li>Aumento de 50% no tráfego do website</li>
+                                <li>1000+ seguidores nas redes sociais</li>
+                                <li>20% de melhoria na taxa de conversão</li>
+                                <li>ROI de 200% em campanhas pagas</li>
+                            </ul>
+                            
+                            <h4>6 Meses</h4>
+                            <ul>
+                                <li>100% de aumento no tráfego orgânico</li>
+                                <li>5000+ seguidores engajados</li>
+                                <li>40% de melhoria na taxa de conversão</li>
+                                <li>ROI de 300% em campanhas pagas</li>
+                            </ul>
+                            
+                            <h4>Relatórios</h4>
+                            <ul>
+                                <li>Dashboards em tempo real</li>
+                                <li>Relatórios mensais detalhados</li>
+                                <li>Reuniões quinzenais de alinhamento</li>
+                                <li>Recomendações de otimização contínua</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                {
+                    id: "contact",
+                    title: "Próximos Passos",
+                    type: "content",
+                    content: `
+                        <div class="content-block">
+                            <h3>Como Podemos Começar</h3>
+                            <p>Estamos ansiosos para trabalhar com a Empresa XYZ e ajudar no crescimento digital. Para dar início ao projeto:</p>
+                            
+                            <h4>1. Aprovação da Proposta</h4>
+                            <p>Clique no botão "Aprovar Proposta" ao final desta página para confirmar sua aceitação.</p>
+                            
+                            <h4>2. Reunião de Kickoff</h4>
+                            <p>Agendaremos uma reunião para alinhar expectativas e definir detalhes operacionais.</p>
+                            
+                            <h4>3. Início dos Trabalhos</h4>
+                            <p>Começaremos imediatamente com a auditoria e setup inicial.</p>
+                            
+                            <h4>Contato</h4>
+                            <p><strong>João Silva</strong><br>
+                            Email: joao.silva@agencia.com<br>
+                            Telefone: (11) 99999-9999<br>
+                            WhatsApp: (11) 99999-9999</p>
+                        </div>
+                    `
+                }
+            ]
+        };
+
+        let currentSection = 0;
+        let viewedSections = new Set();
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProposal();
+            trackProposalView();
+        });
+
+        // Carregar proposta
+        function loadProposal() {
+            document.getElementById('proposalTitle').textContent = proposalData.title;
+            generateNavigation();
+            generateSections();
+            
+            // Mostrar primeira seção após um delay
+            setTimeout(() => {
+                document.getElementById('loadingState').style.display = 'none';
+                showSection(0);
+            }, 1000);
+        }
+
+        // Gerar navegação lateral
+        function generateNavigation() {
+            const nav = document.getElementById('sectionNav');
+            nav.innerHTML = proposalData.sections.map((section, index) => `
+                <li>
+                    <a href="#section-${index}" class="section-link" onclick="showSection(${index})" data-section="${index}">
+                        <span class="section-number">${index + 1}</span>
+                        <span class="section-name">${section.title}</span>
+                    </a>
+                </li>
+            `).join('');
+        }
+
+        // Gerar seções
+        function generateSections() {
+            const container = document.getElementById('proposalSections');
+            container.innerHTML = proposalData.sections.map((section, index) => {
+                if (section.type === 'cover') {
+                    return generateCoverSection(section, index);
+                } else if (section.type === 'pricing') {
+                    return generatePricingSection(section, index);
+                } else {
+                    return generateContentSection(section, index);
+                }
+            }).join('');
+        }
+
+        // Gerar seção de capa
+        function generateCoverSection(section, index) {
+            return `
+                <div class="section cover-section" id="section-${index}">
+                    <div class="company-logo">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h1 class="section-title">${section.content.title}</h1>
+                    <p class="section-subtitle">${section.content.subtitle}</p>
+                    <div class="proposal-meta">
+                        <div class="meta-item">
+                            <div class="meta-label">Cliente</div>
+                            <div class="meta-value">${section.content.client}</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Consultor</div>
+                            <div class="meta-value">${section.content.author}</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Data</div>
+                            <div class="meta-value">${section.content.date}</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Valor</div>
+                            <div class="meta-value">${section.content.value}</div>
+                        </div>
+                    </div>
+                    <div class="section-navigation">
+                        <button class="nav-btn outline" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                            Anterior
+                        </button>
+                        <button class="nav-btn" onclick="nextSection()">
+                            Próximo
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Gerar seção de preços
+        function generatePricingSection(section, index) {
+            return `
+                <div class="section" id="section-${index}">
+                    <div class="section-header">
+                        <h2 class="section-title">${section.title}</h2>
+                    </div>
+                    <div class="pricing-table">
+                        <div class="pricing-header">
+                            <h3>${section.content.title}</h3>
+                            <p>Investimento ${section.content.period}</p>
+                        </div>
+                        <div class="pricing-items">
+                            ${section.content.items.map(item => `
+                                <div class="pricing-item">
+                                    <span>${item.service}</span>
+                                    <span>${item.price}</span>
+                                </div>
+                            `).join('')}
+                            <div class="pricing-item">
+                                <span><strong>Total ${section.content.period}</strong></span>
+                                <span><strong>${section.content.total}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-navigation">
+                        <button class="nav-btn outline" onclick="prevSection()">
+                            <i class="fas fa-chevron-left"></i>
+                            Anterior
+                        </button>
+                        <button class="nav-btn" onclick="nextSection()">
+                            Próximo
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Gerar seção de conteúdo
+        function generateContentSection(section, index) {
+            return `
+                <div class="section" id="section-${index}">
+                    <div class="section-header">
+                        <h2 class="section-title">${section.title}</h2>
+                    </div>
+                    ${section.content}
+                    <div class="section-navigation">
+                        <button class="nav-btn outline" onclick="prevSection()" ${index === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-chevron-left"></i>
+                            Anterior
+                        </button>
+                        ${index === proposalData.sections.length - 1 ? 
+                            '<button class="nav-btn" onclick="scrollToFeedback()">Dar Feedback <i class="fas fa-comment"></i></button>' :
+                            '<button class="nav-btn" onclick="nextSection()">Próximo <i class="fas fa-chevron-right"></i></button>'
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        // Mostrar seção
+        function showSection(index) {
+            // Ocultar seção atual
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Mostrar nova seção
+            document.getElementById(`section-${index}`).classList.add('active');
+
+            // Atualizar navegação
+            document.querySelectorAll('.section-link').forEach((link, i) => {
+                link.classList.toggle('active', i === index);
+                if (viewedSections.has(i)) {
+                    link.classList.add('completed');
+                }
+            });
+
+            // Marcar como visualizada
+            viewedSections.add(index);
+            currentSection = index;
+
+            // Atualizar progresso
+            updateProgress();
+
+            // Track view
+            trackSectionView(index);
+
+            // Mostrar feedback na última seção
+            if (index === proposalData.sections.length - 1) {
+                setTimeout(() => {
+                    document.getElementById('feedbackSection').style.display = 'block';
+                }, 500);
+            }
+        }
+
+        // Navegação
+        function nextSection() {
+            if (currentSection < proposalData.sections.length - 1) {
+                showSection(currentSection + 1);
+            }
+        }
+
+        function prevSection() {
+            if (currentSection > 0) {
+                showSection(currentSection - 1);
+            }
+        }
+
+        function scrollToFeedback() {
+            document.getElementById('feedbackSection').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('feedbackSection').style.display = 'block';
+        }
+
+        // Atualizar progresso
+        function updateProgress() {
+            const progress = (viewedSections.size / proposalData.sections.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${Math.round(progress)}% visualizado`;
+        }
+
+        // Feedback
+        function submitFeedback(type) {
+            const comment = document.getElementById('feedbackComment').value;
+            
+            // Simular envio
+            showAlert(`Feedback "${type}" enviado com sucesso!`, 'success');
+            
+            // Track feedback
+            trackFeedback(type, comment);
+            
+            // Enviar para API (simulado)
+            console.log('Feedback enviado:', { type, comment, proposalId: proposalData.id });
+        }
+
+        function submitDetailedFeedback() {
+            const comment = document.getElementById('feedbackComment').value;
+            if (!comment.trim()) {
+                showAlert('Por favor, adicione um comentário', 'warning');
+                return;
+            }
+            
+            submitFeedback('commented');
+        }
+
+        // Ações da proposta
+        function downloadProposal() {
+            showAlert('Download iniciado...', 'success');
+            // Implementar download real
+        }
+
+        function shareProposal() {
+            if (navigator.share) {
+                navigator.share({
+                    title: proposalData.title,
+                    text: 'Confira esta proposta',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showAlert('Link copiado para o clipboard!', 'success');
+            }
+        }
+
+        // Tracking (normalmente enviaria para API)
+        function trackProposalView() {
+            console.log('Proposta visualizada:', proposalData.id);
+            // Enviar para analytics
+        }
+
+        function trackSectionView(sectionIndex) {
+            console.log('Seção visualizada:', proposalData.sections[sectionIndex].title);
+            // Enviar para analytics
+        }
+
+        function trackFeedback(type, comment) {
+            console.log('Feedback enviado:', { type, comment });
+            // Enviar para analytics
+        }
+
+        // Utilitários
+        function showAlert(message, type = 'success') {
+            const alert = document.createElement('div');
+            alert.className = `alert ${type}`;
+            alert.textContent = message;
+            document.body.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

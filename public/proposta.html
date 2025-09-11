@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta - PropostasWin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background: #ffffff;
+            --surface: #f8fafc;
+            --surface-dark: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius: 0.5rem;
+            --radius-lg: 1rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid #2563eb;
+        }
+        
+        .section h2 {
+            color: #2563eb;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .section-content {
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        
+        .section-text {
+            margin-bottom: 20px;
+        }
+        
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .file-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            background: #f9fafb;
+            transition: transform 0.2s;
+        }
+        
+        .file-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .file-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .file-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+            word-break: break-word;
+        }
+        
+        .file-type {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+        
+        .btn {
+            background: #2563eb;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        
+        .btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .btn-success {
+            background: #16a34a;
+        }
+        
+        .btn-success:hover {
+            background: #15803d;
+        }
+        
+        .btn-danger {
+            background: #dc2626;
+        }
+        
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+        
+        .interaction-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .video-container video {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        
+        .image-container {
+            margin: 20px 0;
+        }
+        
+        .image-container img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #6b7280;
+        }
+        
+        .error {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #fecaca;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .section-number {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .meta-info {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #1e40af;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .section {
+                padding: 20px;
+                margin-bottom: 15px;
+            }
+            
+            .interaction-buttons {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loading" class="loading">
+            <div>🔄 Carregando proposta...</div>
+        </div>
+        
+        <div id="error" class="error" style="display: none;">
+            <h2>❌ Proposta não encontrada</h2>
+            <p>Esta proposta pode ter sido removida ou o link pode estar incorreto.</p>
+        </div>
+        
+        <div id="content" style="display: none;">
+            <div class="header">
+                <h1 id="proposalTitle">Título da Proposta</h1>
+                <div class="meta-info">
+                    <span id="proposalDate"></span>
+                </div>
+            </div>
+            
+            <div id="sectionsContainer">
+                <!-- Seções serão inseridas aqui -->
+            </div>
+            
+            <div class="section">
+                <h2>💬 Feedback</h2>
+                <p>O que achou desta proposta? Seu feedback é muito importante!</p>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-success" onclick="approve()">✅ Aprovar Proposta</button>
+                    <button class="btn btn-danger" onclick="reject()">❌ Rejeitar</button>
+                    <button class="btn" onclick="requestMeeting()">📅 Solicitar Reunião</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="interaction-buttons">
+        <button class="btn" onclick="scrollToTop()" title="Voltar ao topo">⬆️</button>
+        <button class="btn" onclick="shareProposal()" title="Compartilhar">📤</button>
+    </div>
+
+    <script>
+        // Detectar automaticamente a URL base
+        const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+        let proposalData = null;
+        let currentPublicLink = null;
+        let viewStartTime = Date.now();
+        let currentSection = null;
+
+        // Obter o link público da URL
+        function getPublicLinkFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const linkParam = urlParams.get('link');
+            if (linkParam) return linkParam;
+            
+            // Extrair da URL do tipo /proposta/uuid
+            const pathParts = window.location.pathname.split('/');
+            return pathParts[pathParts.length - 1];
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            currentPublicLink = getPublicLinkFromURL();
+            
+            if (!currentPublicLink || currentPublicLink === 'proposta.html') {
+                showError();
+                return;
+            }
+            
+            loadProposal();
+            
+            // Rastrear tempo na página
+            setInterval(trackTime, 30000); // A cada 30 segundos
+            
+            // Rastrear scroll
+            let lastScrollTime = 0;
+            window.addEventListener('scroll', () => {
+                if (Date.now() - lastScrollTime > 1000) { // Throttle scroll tracking
+                    trackScroll();
+                    lastScrollTime = Date.now();
+                }
+            });
+        });
+
+        // Carregar proposta
+        async function loadProposal() {
+            try {
+                const response = await fetch(`${API_BASE}/public/proposal/${currentPublicLink}`);
+                
+                if (!response.ok) {
+                    throw new Error('Proposta não encontrada');
+                }
+                
+                const data = await response.json();
+                proposalData = data.proposal;
+                
+                displayProposal();
+                
+            } catch (error) {
+                console.error('Erro ao carregar proposta:', error);
+                showError();
+            }
+        }
+
+        // Exibir proposta
+        function displayProposal() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            
+            // Título e meta informações
+            document.getElementById('proposalTitle').textContent = proposalData.title;
+            document.getElementById('proposalDate').textContent = 
+                `Criada em ${new Date(proposalData.created_at).toLocaleDateString('pt-BR')}`;
+            
+            // Seções
+            const sectionsContainer = document.getElementById('sectionsContainer');
+            
+            if (proposalData.sections.length === 0) {
+                sectionsContainer.innerHTML = `
+                    <div class="section">
+                        <h2>📝 Proposta em Construção</h2>
+                        <p>Esta proposta ainda está sendo preparada. Volte em breve para ver o conteúdo completo!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            sectionsContainer.innerHTML = proposalData.sections.map((section, index) => {
+                return createSectionHTML(section, index + 1);
+            }).join('');
+            
+            // Configurar observers para rastreamento
+            setupSectionObservers();
+        }
+
+        // Criar HTML da seção
+        function createSectionHTML(section, index) {
+            let contentHTML = '';
+            
+            // Conteúdo de texto
+            if (section.content.text) {
+                contentHTML += `<div class="section-text">${section.content.text}</div>`;
+            }
+            
+            // Arquivos/Imagens/Vídeos
+            if (section.files && section.files.length > 0) {
+                contentHTML += '<div class="files-grid">';
+                
+                section.files.forEach(file => {
+                    if (file.file_type === 'image') {
+                        contentHTML += `
+                            <div class="image-container">
+                                <img src="${file.url}" alt="${file.original_name}" 
+                                     onclick="trackInteraction('image_view', '${section.id}', {filename: '${file.original_name}'})">
+                            </div>
+                        `;
+                    } else if (file.file_type === 'video') {
+                        contentHTML += `
+                            <div class="video-container">
+                                <video controls 
+                                       onplay="trackInteraction('video_play', '${section.id}', {filename: '${file.original_name}'})"
+                                       onended="trackInteraction('video_complete', '${section.id}', {filename: '${file.original_name}'})">
+                                    <source src="${file.url}" type="video/mp4">
+                                    Seu navegador não suporta vídeo HTML5.
+                                </video>
+                            </div>
+                        `;
+                    } else {
+                        const icon = getFileIcon(file.file_type);
+                        contentHTML += `
+                            <div class="file-item" onclick="downloadFile('${file.url}', '${file.original_name}', '${section.id}')">
+                                <div class="file-icon">${icon}</div>
+                                <div class="file-name">${file.original_name}</div>
+                                <div class="file-type">${file.file_type}</div>
+                                <a href="${file.url}" class="btn" download="${file.original_name}">Baixar</a>
+                            </div>
+                        `;
+                    }
+                });
+                
+                contentHTML += '</div>';
+            }
+            
+            return `
+                <div class="section" data-section-id="${section.id}" id="section-${index}">
+                    <h2>
+                        <span class="section-number">${index}</span>
+                        ${section.title}
+                    </h2>
+                    <div class="section-content">
+                        ${contentHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Ícones para tipos de arquivo
+        function getFileIcon(fileType) {
+            const icons = {
+                'pdf': '📄',
+                'document': '📝',
+                'image': '🖼️',
+                'video': '🎥',
+                'file': '📎'
+            };
+            return icons[fileType] || '📎';
+        }
+
+        // Configurar observers para rastreamento de seções
+        function setupSectionObservers() {
+            const sections = document.querySelectorAll('.section[data-section-id]');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                        const sectionId = entry.target.dataset.sectionId;
+                        if (sectionId && sectionId !== currentSection) {
+                            trackSectionView(sectionId);
+                            currentSection = sectionId;
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.5,
+                rootMargin: '0px'
+            });
+            
+            sections.forEach(section => observer.observe(section));
+        }
+
+        // Rastreamento de visualização de seção
+        async function trackSectionView(sectionId) {
+            try {
+                await fetch(`${API_BASE}/public/proposal/${currentPublicLink}/track-section`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sectionId: sectionId,
+                        timeSpent: Math.floor((Date.now() - viewStartTime) / 1000)
+                    })
+                });
+            } catch (error) {
+                console.error('Erro ao rastrear seção:', error);
+            }
+        }
+
+        // Rastreamento de interações
+        async function trackInteraction(type, sectionId, data = {}) {
+            try {
+                await fetch(`${API_BASE}/public/proposal/${currentPublicLink}/track-interaction`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        interactionType: type,
+                        sectionId: sectionId,
+                        data: data
+                    })
+                });
+            } catch (error) {
+                console.error('Erro ao rastrear interação:', error);
+            }
+        }
+
+        // Rastreamento de tempo
+        function trackTime() {
+            if (currentSection) {
+                trackSectionView(currentSection);
+            }
+        }
+
+        // Rastreamento de scroll
+        function trackScroll() {
+            trackInteraction('scroll', currentSection, {
+                scrollY: window.scrollY,
+                timestamp: Date.now()
+            });
+        }
+
+        // Ações de feedback
+        async function approve() {
+            await trackInteraction('approval', null, { action: 'approve' });
+            alert('✅ Obrigado! Sua aprovação foi registrada. Entraremos em contato em breve!');
+        }
+
+        async function reject() {
+            const reason = prompt('Pode nos dizer o motivo da rejeição? (opcional)');
+            await trackInteraction('rejection', null, { 
+                action: 'reject',
+                reason: reason 
+            });
+            alert('❌ Obrigado pelo feedback. Entraremos em contato para entender melhor suas necessidades.');
+        }
+
+        async function requestMeeting() {
+            const contact = prompt('Como prefere ser contatado? (email, telefone, WhatsApp)');
+            await trackInteraction('meeting_request', null, { 
+                action: 'meeting_request',
+                contact: contact 
+            });
+            alert('📅 Solicitação de reunião registrada! Entraremos em contato para agendar.');
+        }
+
+        // Download de arquivo
+        function downloadFile(url, filename, sectionId) {
+            trackInteraction('download', sectionId, { filename: filename });
+        }
+
+        // Utilitários
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function shareProposal() {
+            if (navigator.share) {
+                navigator.share({
+                    title: proposalData.title,
+                    text: 'Confira esta proposta',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback para cópia do link
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('📋 Link copiado para a área de transferência!');
+                });
+            }
+        }
+
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+        }
+
+        // Detectar quando o usuário sai da página
+        window.addEventListener('beforeunload', () => {
+            if (currentSection) {
+                trackSectionView(currentSection);
+            }
+        });
+    </script>
+</body>
+</html>

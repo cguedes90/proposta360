@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin - PropostasWin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+        }
+
+        .admin-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0 2rem;
+            margin-bottom: 2rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .stat-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-trend {
+            font-size: 0.875rem;
+            color: var(--success);
+            margin-top: 0.5rem;
+        }
+
+        /* Content sections */
+        .content-section {
+            background: var(--surface);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table th {
+            background: var(--background);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--background);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-inactive {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-premium {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-free {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .pagination button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .pagination button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-shield-alt"></i>
+                Super Admin
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="#dashboard" class="nav-link active" data-section="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                    <li><a href="#users" class="nav-link" data-section="users"><i class="fas fa-users"></i> Usuários</a></li>
+                    <li><a href="#leads" class="nav-link" data-section="leads"><i class="fas fa-user-plus"></i> Leads</a></li>
+                    <li><a href="#settings" class="nav-link" data-section="settings"><i class="fas fa-cog"></i> Configurações</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="user-info">
+                    <span id="admin-name">Super Admin</span>
+                    <a href="/dashboard" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair
+                    </a>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="content-section">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Total de Usuários</div>
+                            <div class="stat-icon" style="background: var(--primary);">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-number" id="total-users">-</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span id="users-growth">-</span> esta semana
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Usuários Premium</div>
+                            <div class="stat-icon" style="background: var(--success);">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                        </div>
+                        <div class="stat-number" id="premium-users">-</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span id="premium-growth">-</span> conversões
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Total de Propostas</div>
+                            <div class="stat-icon" style="background: var(--warning);">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                        </div>
+                        <div class="stat-number" id="total-proposals">-</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span id="proposals-growth">-</span> este mês
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Leads Capturados</div>
+                            <div class="stat-icon" style="background: var(--danger);">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                        </div>
+                        <div class="stat-number" id="total-leads">-</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                            <span id="leads-growth">-</span> novos leads
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="users-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Gerenciamento de Usuários</h2>
+                    <div class="section-actions">
+                        <input type="text" id="users-search" placeholder="Buscar usuários..." style="padding: 0.5rem; margin-right: 1rem; border: 1px solid var(--border); border-radius: 6px;">
+                        <button class="btn btn-primary" onclick="loadUsers()">
+                            <i class="fas fa-refresh"></i>
+                            Atualizar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="loading" id="users-loading">
+                    <div class="spinner"></div>
+                    <p>Carregando usuários...</p>
+                </div>
+
+                <div id="users-content">
+                    <table class="data-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Plano</th>
+                                <th>Role</th>
+                                <th>Propostas</th>
+                                <th>Data de Cadastro</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody">
+                        </tbody>
+                    </table>
+
+                    <div class="pagination" id="users-pagination">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leads Section -->
+            <div id="leads-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Leads Capturados</h2>
+                    <div class="section-actions">
+                        <select id="leads-source-filter" style="padding: 0.5rem; margin-right: 1rem; border: 1px solid var(--border); border-radius: 6px;">
+                            <option value="">Todas as fontes</option>
+                            <option value="contact_form">Formulário de Contato</option>
+                            <option value="registration_form">Pré-Cadastro</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="loadLeads()">
+                            <i class="fas fa-refresh"></i>
+                            Atualizar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="loading" id="leads-loading">
+                    <div class="spinner"></div>
+                    <p>Carregando leads...</p>
+                </div>
+
+                <div id="leads-content">
+                    <table class="data-table" id="leads-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Empresa</th>
+                                <th>Fonte</th>
+                                <th>Status</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leads-tbody">
+                        </tbody>
+                    </table>
+
+                    <div class="pagination" id="leads-pagination">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Configurações do Sistema</h2>
+                </div>
+                <div style="padding: 2rem;">
+                    <p>Configurações avançadas do sistema em desenvolvimento...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="edit-user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Usuário</h3>
+                <button class="close-modal" onclick="closeModal('edit-user-modal')">&times;</button>
+            </div>
+            <form id="edit-user-form">
+                <input type="hidden" id="edit-user-id">
+                <div class="form-group">
+                    <label for="edit-user-name">Nome:</label>
+                    <input type="text" id="edit-user-name" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="edit-user-email">Email:</label>
+                    <input type="email" id="edit-user-email" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="edit-user-plan">Plano:</label>
+                    <select id="edit-user-plan" required>
+                        <option value="free">Free</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-user-role">Role:</label>
+                    <select id="edit-user-role" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                        <option value="super_admin">Super Admin</option>
+                    </select>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('edit-user-modal')">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveUser()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Lead Modal -->
+    <div id="edit-lead-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Lead</h3>
+                <button class="close-modal" onclick="closeModal('edit-lead-modal')">&times;</button>
+            </div>
+            <form id="edit-lead-form">
+                <input type="hidden" id="edit-lead-id">
+                <div class="form-group">
+                    <label for="edit-lead-name">Nome:</label>
+                    <input type="text" id="edit-lead-name" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="edit-lead-email">Email:</label>
+                    <input type="email" id="edit-lead-email" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="edit-lead-status">Status:</label>
+                    <select id="edit-lead-status" required>
+                        <option value="pending">Pendente</option>
+                        <option value="contacted">Contatado</option>
+                        <option value="converted">Convertido</option>
+                        <option value="lost">Perdido</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-lead-notes">Notas:</label>
+                    <textarea id="edit-lead-notes" rows="4" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px;"></textarea>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('edit-lead-modal')">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveLead()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        const token = localStorage.getItem('authToken');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        if (!token || user.role !== 'super_admin') {
+            alert('Acesso negado. Apenas super admins podem acessar esta área.');
+            window.location.href = '/dashboard';
+        }
+
+        // API functions
+        async function apiCall(endpoint, options = {}) {
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+
+            const response = await fetch(endpoint, { ...defaultOptions, ...options });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'API Error');
+            }
+
+            return response.json();
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = e.currentTarget.dataset.section;
+                showSection(section);
+                
+                // Update active nav
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Show selected section
+            document.getElementById(`${sectionName}-section`).classList.remove('hidden');
+
+            // Update page title
+            const titles = {
+                dashboard: 'Dashboard',
+                users: 'Gerenciamento de Usuários', 
+                leads: 'Leads Capturados',
+                settings: 'Configurações'
+            };
+            document.getElementById('page-title').textContent = titles[sectionName];
+
+            // Load section data
+            if (sectionName === 'dashboard') {
+                loadDashboard();
+            } else if (sectionName === 'users') {
+                loadUsers();
+            } else if (sectionName === 'leads') {
+                loadLeads();
+            }
+        }
+
+        // Dashboard
+        async function loadDashboard() {
+            try {
+                const stats = await apiCall('/api/admin/stats');
+                
+                document.getElementById('total-users').textContent = stats.users.total_users || 0;
+                document.getElementById('users-growth').textContent = stats.users.users_this_week || 0;
+                document.getElementById('premium-users').textContent = stats.users.premium_users || 0;
+                document.getElementById('premium-growth').textContent = stats.users.premium_users || 0;
+                document.getElementById('total-proposals').textContent = stats.proposals.total_proposals || 0;
+                document.getElementById('proposals-growth').textContent = stats.proposals.proposals_this_month || 0;
+                document.getElementById('total-leads').textContent = stats.leads.total || 0;
+                document.getElementById('leads-growth').textContent = stats.leads.this_week || 0;
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                alert('Erro ao carregar dashboard: ' + error.message);
+            }
+        }
+
+        // Users management
+        let currentUsersPage = 1;
+        async function loadUsers(page = 1) {
+            const loading = document.getElementById('users-loading');
+            const content = document.getElementById('users-content');
+            const search = document.getElementById('users-search').value;
+
+            loading.classList.add('active');
+            content.style.display = 'none';
+
+            try {
+                const params = new URLSearchParams({
+                    page: page,
+                    limit: 10
+                });
+
+                if (search) {
+                    params.append('search', search);
+                }
+
+                const data = await apiCall(`/api/admin/users?${params}`);
+                
+                const tbody = document.getElementById('users-tbody');
+                tbody.innerHTML = '';
+
+                data.users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td><span class="status-badge status-${user.plan}">${user.plan}</span></td>
+                        <td><span class="status-badge status-${user.role === 'super_admin' ? 'premium' : 'free'}">${user.role}</span></td>
+                        <td>${user.total_proposals || 0}</td>
+                        <td>${new Date(user.created_at).toLocaleDateString('pt-BR')}</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-sm btn-primary" onclick="editUser('${user.id}', '${user.name}', '${user.email}', '${user.plan}', '${user.role}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteUser('${user.id}', '${user.name}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // Update pagination
+                updatePagination('users', data.pagination);
+                currentUsersPage = page;
+
+            } catch (error) {
+                console.error('Error loading users:', error);
+                alert('Erro ao carregar usuários: ' + error.message);
+            } finally {
+                loading.classList.remove('active');
+                content.style.display = 'block';
+            }
+        }
+
+        function editUser(id, name, email, plan, role) {
+            document.getElementById('edit-user-id').value = id;
+            document.getElementById('edit-user-name').value = name;
+            document.getElementById('edit-user-email').value = email;
+            document.getElementById('edit-user-plan').value = plan;
+            document.getElementById('edit-user-role').value = role;
+            
+            document.getElementById('edit-user-modal').classList.add('active');
+        }
+
+        async function saveUser() {
+            const userId = document.getElementById('edit-user-id').value;
+            const plan = document.getElementById('edit-user-plan').value;
+            const role = document.getElementById('edit-user-role').value;
+
+            try {
+                // Update plan
+                await apiCall(`/api/admin/users/${userId}/plan`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ plan })
+                });
+
+                // Update role
+                await apiCall(`/api/admin/users/${userId}/role`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ role })
+                });
+
+                alert('Usuário atualizado com sucesso!');
+                closeModal('edit-user-modal');
+                loadUsers(currentUsersPage);
+
+            } catch (error) {
+                console.error('Error updating user:', error);
+                alert('Erro ao atualizar usuário: ' + error.message);
+            }
+        }
+
+        async function deleteUser(id, name) {
+            if (!confirm(`Tem certeza que deseja excluir o usuário "${name}"? Esta ação não pode ser desfeita.`)) {
+                return;
+            }
+
+            try {
+                await apiCall(`/api/admin/users/${id}`, {
+                    method: 'DELETE'
+                });
+
+                alert('Usuário excluído com sucesso!');
+                loadUsers(currentUsersPage);
+
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                alert('Erro ao excluir usuário: ' + error.message);
+            }
+        }
+
+        // Leads management
+        let currentLeadsPage = 1;
+        async function loadLeads(page = 1) {
+            const loading = document.getElementById('leads-loading');
+            const content = document.getElementById('leads-content');
+            const sourceFilter = document.getElementById('leads-source-filter').value;
+
+            loading.classList.add('active');
+            content.style.display = 'none';
+
+            try {
+                const params = new URLSearchParams({
+                    page: page,
+                    limit: 10
+                });
+
+                if (sourceFilter) {
+                    params.append('source', sourceFilter);
+                }
+
+                const data = await apiCall(`/api/admin/leads?${params}`);
+                
+                const tbody = document.getElementById('leads-tbody');
+                tbody.innerHTML = '';
+
+                data.leads.forEach(lead => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${lead.name}</td>
+                        <td>${lead.email}</td>
+                        <td>${lead.phone || '-'}</td>
+                        <td>${lead.company || '-'}</td>
+                        <td><span class="status-badge status-${lead.source === 'contact_form' ? 'free' : 'premium'}">${lead.source === 'contact_form' ? 'Contato' : 'Cadastro'}</span></td>
+                        <td><span class="status-badge status-${lead.status === 'converted' ? 'active' : 'inactive'}">${lead.status}</span></td>
+                        <td>${new Date(lead.created_at).toLocaleDateString('pt-BR')}</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-sm btn-primary" onclick="editLead('${lead.id}', '${lead.name}', '${lead.email}', '${lead.status}', '${lead.notes || ''}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteLead('${lead.id}', '${lead.name}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // Update pagination
+                updatePagination('leads', data.pagination);
+                currentLeadsPage = page;
+
+            } catch (error) {
+                console.error('Error loading leads:', error);
+                alert('Erro ao carregar leads: ' + error.message);
+            } finally {
+                loading.classList.remove('active');
+                content.style.display = 'block';
+            }
+        }
+
+        function editLead(id, name, email, status, notes) {
+            document.getElementById('edit-lead-id').value = id;
+            document.getElementById('edit-lead-name').value = name;
+            document.getElementById('edit-lead-email').value = email;
+            document.getElementById('edit-lead-status').value = status;
+            document.getElementById('edit-lead-notes').value = notes;
+            
+            document.getElementById('edit-lead-modal').classList.add('active');
+        }
+
+        async function saveLead() {
+            const leadId = document.getElementById('edit-lead-id').value;
+            const status = document.getElementById('edit-lead-status').value;
+            const notes = document.getElementById('edit-lead-notes').value;
+
+            try {
+                await apiCall(`/api/admin/leads/${leadId}/status`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status, notes })
+                });
+
+                alert('Lead atualizado com sucesso!');
+                closeModal('edit-lead-modal');
+                loadLeads(currentLeadsPage);
+
+            } catch (error) {
+                console.error('Error updating lead:', error);
+                alert('Erro ao atualizar lead: ' + error.message);
+            }
+        }
+
+        async function deleteLead(id, name) {
+            if (!confirm(`Tem certeza que deseja excluir o lead "${name}"? Esta ação não pode ser desfeita.`)) {
+                return;
+            }
+
+            try {
+                await apiCall(`/api/admin/leads/${id}`, {
+                    method: 'DELETE'
+                });
+
+                alert('Lead excluído com sucesso!');
+                loadLeads(currentLeadsPage);
+
+            } catch (error) {
+                console.error('Error deleting lead:', error);
+                alert('Erro ao excluir lead: ' + error.message);
+            }
+        }
+
+        // Pagination
+        function updatePagination(type, pagination) {
+            const container = document.getElementById(`${type}-pagination`);
+            container.innerHTML = '';
+
+            if (pagination.pages <= 1) return;
+
+            // Previous button
+            if (pagination.page > 1) {
+                const prevBtn = document.createElement('button');
+                prevBtn.textContent = 'Anterior';
+                prevBtn.onclick = () => {
+                    if (type === 'users') loadUsers(pagination.page - 1);
+                    else loadLeads(pagination.page - 1);
+                };
+                container.appendChild(prevBtn);
+            }
+
+            // Page numbers
+            for (let i = Math.max(1, pagination.page - 2); i <= Math.min(pagination.pages, pagination.page + 2); i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.textContent = i;
+                pageBtn.className = i === pagination.page ? 'active' : '';
+                pageBtn.onclick = () => {
+                    if (type === 'users') loadUsers(i);
+                    else loadLeads(i);
+                };
+                container.appendChild(pageBtn);
+            }
+
+            // Next button
+            if (pagination.page < pagination.pages) {
+                const nextBtn = document.createElement('button');
+                nextBtn.textContent = 'Próxima';
+                nextBtn.onclick = () => {
+                    if (type === 'users') loadUsers(pagination.page + 1);
+                    else loadLeads(pagination.page + 1);
+                };
+                container.appendChild(nextBtn);
+            }
+        }
+
+        // Modal functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Search functionality
+        document.getElementById('users-search').addEventListener('input', debounce(() => {
+            loadUsers(1);
+        }, 500));
+
+        document.getElementById('leads-source-filter').addEventListener('change', () => {
+            loadLeads(1);
+        });
+
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Initialize
+        loadDashboard();
+    </script>
+</body>
+</html>

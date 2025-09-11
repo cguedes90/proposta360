@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Cadastro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .debug {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste de Cadastro</h1>
+        
+        <div id="alert" class="alert"></div>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" required minlength="6">
+            </div>
+            
+            <button type="submit">Criar Conta</button>
+        </form>
+        
+        <div id="debug" class="debug">
+            <strong>Debug Info:</strong><br>
+            <span id="debugInfo">Aguardando ação...</span>
+        </div>
+        
+        <div id="success" style="display: none; margin-top: 20px; padding: 20px; background: #d4edda; border-radius: 4px;">
+            <h3>✅ Cadastro realizado com sucesso!</h3>
+            <p><strong>ID:</strong> <span id="userId"></span></p>
+            <p><strong>Nome:</strong> <span id="userName"></span></p>
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            <p><strong>Token:</strong> <span id="userToken" style="word-break: break-all; font-family: monospace; font-size: 12px;"></span></p>
+            <p><a href="/app">Ir para o App Principal</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Detectar automaticamente a URL base
+        const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+        
+        // Log da configuração
+        document.getElementById('debugInfo').innerHTML = `
+            API Base: ${API_BASE}<br>
+            Current URL: ${window.location.href}<br>
+            Protocol: ${window.location.protocol}<br>
+            Host: ${window.location.host}
+        `;
+        
+        document.getElementById('registerForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            console.log('🚀 Iniciando cadastro...');
+            console.log('Dados:', { name, email, password: '***' });
+            console.log('API_BASE:', API_BASE);
+            
+            // Atualizar debug
+            document.getElementById('debugInfo').innerHTML += `<br><br>📝 Enviando cadastro...<br>
+                Nome: ${name}<br>
+                Email: ${email}<br>
+                Senha: ${'*'.repeat(password.length)}<br>
+                URL: ${API_BASE}/auth/register
+            `;
+            
+            try {
+                console.log('📡 Fazendo requisição...');
+                
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, password })
+                });
+                
+                console.log('📥 Resposta recebida:', response);
+                console.log('Status:', response.status);
+                console.log('Status Text:', response.statusText);
+                
+                // Atualizar debug
+                document.getElementById('debugInfo').innerHTML += `<br><br>📥 Resposta do servidor:<br>
+                    Status: ${response.status} ${response.statusText}<br>
+                    Headers: ${JSON.stringify([...response.headers.entries()], null, 2)}
+                `;
+                
+                const data = await response.json();
+                console.log('📦 Dados da resposta:', data);
+                
+                // Atualizar debug
+                document.getElementById('debugInfo').innerHTML += `<br><br>📦 Dados recebidos:<br>
+                    ${JSON.stringify(data, null, 2)}
+                `;
+                
+                if (response.ok) {
+                    console.log('✅ Cadastro realizado com sucesso!');
+                    
+                    // Mostrar sucesso
+                    document.getElementById('success').style.display = 'block';
+                    document.getElementById('userId').textContent = data.user.id;
+                    document.getElementById('userName').textContent = data.user.name;
+                    document.getElementById('userEmail').textContent = data.user.email;
+                    document.getElementById('userToken').textContent = data.token;
+                    
+                    // Salvar no localStorage
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    
+                    showAlert('Conta criada com sucesso! 🎉', 'success');
+                    
+                    // Limpar formulário
+                    document.getElementById('registerForm').reset();
+                    
+                } else {
+                    console.error('❌ Erro no cadastro:', data);
+                    showAlert(`Erro: ${data.error || 'Erro desconhecido'}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('💥 Erro de conexão:', error);
+                showAlert(`Erro de conexão: ${error.message}`, 'error');
+                
+                // Atualizar debug
+                document.getElementById('debugInfo').innerHTML += `<br><br>💥 Erro de conexão:<br>
+                    ${error.message}<br>
+                    Stack: ${error.stack}
+                `;
+            }
+        });
+        
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert alert-${type}`;
+            alert.style.display = 'block';
+            
+            // Auto-hide depois de 5 segundos
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Verificar se já está logado
+        const existingToken = localStorage.getItem('authToken');
+        const existingUser = localStorage.getItem('currentUser');
+        
+        if (existingToken && existingUser) {
+            document.getElementById('debugInfo').innerHTML += `<br><br>🔑 Usuário já logado:<br>
+                Token: ${existingToken.substring(0, 20)}...<br>
+                User: ${existingUser}
+            `;
+        }
+    </script>
+</body>
+</html>

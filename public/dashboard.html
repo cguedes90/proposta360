@@ -1,0 +1,3120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PropostasWin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --surface-dark: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius: 0.5rem;
+            --radius-lg: 1rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Layout Principal */
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1.5rem 1rem;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            margin-bottom: 0.75rem;
+            padding: 0 0.75rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            margin-bottom: 0.25rem;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: var(--surface-dark);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Conteúdo Principal */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-left p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: var(--surface-dark);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .user-menu:hover {
+            background: var(--surface-dark);
+        }
+
+        .avatar {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        /* Conteúdo */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon.primary { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+        .stat-icon.success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .stat-icon.warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .stat-icon.danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive { color: var(--success); }
+        .stat-change.negative { color: var(--danger); }
+
+        /* Seções */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .section-content {
+            padding: 1.5rem;
+        }
+
+        /* Lista de Propostas */
+        .proposals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .proposal-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: all 0.2s ease;
+        }
+
+        .proposal-item:hover {
+            background: var(--surface-dark);
+            border-color: var(--primary);
+        }
+
+        .proposal-info {
+            flex: 1;
+        }
+
+        .proposal-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .proposal-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .proposal-stats {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .proposal-stat {
+            text-align: center;
+        }
+
+        .proposal-stat-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .proposal-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.draft {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        .status-badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.archived {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-action {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .quick-action:hover {
+            background: var(--surface-dark);
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .quick-action-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius);
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Auth Forms */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--background);
+        }
+
+        .auth-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-subtitle {
+            color: var(--text-secondary);
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: var(--surface-dark);
+            border-radius: var(--radius);
+            padding: 0.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .auth-tab.active {
+            background: var(--surface);
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .spinner {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Alertas */
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .alert.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .alert.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        
+        /* Builder Styles */
+        .builder-container {
+            height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+            background: var(--background);
+        }
+        
+        .builder-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            gap: 1rem;
+        }
+        
+        .toolbar-left, .toolbar-right {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .toolbar-center {
+            flex: 1;
+            max-width: 400px;
+        }
+        
+        .builder-title-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .builder-main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 250px 1fr 280px;
+            height: 100%;
+        }
+        
+        .builder-sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .element-categories {
+            padding: 0.5rem;
+        }
+        
+        .element-category {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .element-category:hover {
+            background: var(--surface-dark);
+        }
+        
+        .element-category.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .elements-list {
+            padding: 0.5rem;
+        }
+        
+        .element-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            transition: all 0.2s ease;
+            background: var(--background);
+        }
+        
+        .element-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+        
+        .element-item:active {
+            cursor: grabbing;
+        }
+        
+        .element-icon {
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+        
+        .builder-canvas {
+            background: #f8f9fa;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .canvas-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .canvas-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-icon {
+            width: 2rem;
+            height: 2rem;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-icon:hover {
+            background: var(--surface-dark);
+        }
+        
+        .canvas-content {
+            padding: 2rem;
+            min-height: calc(100% - 60px);
+            background: white;
+            margin: 1rem;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .canvas-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+        
+        .canvas-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .builder-properties {
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+        }
+        
+        .properties-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .properties-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .properties-content {
+            padding: 1rem;
+        }
+        
+        .no-selection {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem 1rem;
+        }
+        
+        .no-selection i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .proposal-element {
+            position: relative;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border: 2px dashed transparent;
+            border-radius: var(--radius);
+            transition: all 0.2s ease;
+        }
+        
+        .proposal-element.selected {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .proposal-element:hover {
+            border-color: var(--border);
+        }
+        
+        .element-toolbar {
+            position: absolute;
+            top: -2.5rem;
+            right: 0;
+            display: flex;
+            gap: 0.25rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .proposal-element:hover .element-toolbar,
+        .proposal-element.selected .element-toolbar {
+            opacity: 1;
+        }
+        
+        .drag-over {
+            border-color: var(--primary) !important;
+            background: rgba(59, 130, 246, 0.1) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Container (inicialmente visível) -->
+    <div id="authContainer" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-file-signature"></i>
+                    PropostasWin
+                </div>
+                <h1 class="auth-title">Bem-vindo de volta</h1>
+                <p class="auth-subtitle">Entre na sua conta ou crie uma nova</p>
+            </div>
+
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="showAuthTab('login')">Entrar</div>
+                <div class="auth-tab" onclick="showAuthTab('register')">Cadastrar</div>
+            </div>
+
+            <div id="alerts"></div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="loginEmail" required 
+                           placeholder="seu@email.com" value="teste@example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input type="password" class="form-input" id="loginPassword" required 
+                           placeholder="Sua senha" value="123456">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <span class="login-text">Entrar</span>
+                    <div class="loading" style="display: none;">
+                        <div class="spinner"></div>
+                        Entrando...
+                    </div>
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">Nome completo</label>
+                    <input type="text" class="form-input" id="registerName" required 
+                           placeholder="Seu nome completo">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="registerEmail" required 
+                           placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input type="password" class="form-input" id="registerPassword" required 
+                           placeholder="Mínimo 6 caracteres" minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <span class="register-text">Criar conta grátis</span>
+                    <div class="loading" style="display: none;">
+                        <div class="spinner"></div>
+                        Criando...
+                    </div>
+                </button>
+            </form>
+
+            <div class="form-footer">
+                <p style="font-size: 0.875rem; color: var(--text-secondary);">
+                    Ao continuar, você aceita nossos 
+                    <a href="#" style="color: var(--primary);">Termos de Uso</a> e 
+                    <a href="#" style="color: var(--primary);">Política de Privacidade</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard (inicialmente oculto) -->
+    <div id="dashboardContainer" class="app-layout" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="/" class="logo">
+                    <i class="fas fa-file-signature"></i>
+                    PropostasWin
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Menu Principal</div>
+                    <a href="#" class="nav-item active" onclick="showPage('dashboard')">
+                        <i class="fas fa-chart-line"></i>
+                        Dashboard
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('proposals')">
+                        <i class="fas fa-file-alt"></i>
+                        Propostas
+                        <span id="proposalsCount" style="margin-left: auto; background: var(--primary); color: white; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem;">0</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('builder')">
+                        <i class="fas fa-magic"></i>
+                        Construtor
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('templates')">
+                        <i class="fas fa-layer-group"></i>
+                        Templates
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('analytics')">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Ferramentas</div>
+                    <a href="#" class="nav-item" onclick="showPage('builder')">
+                        <i class="fas fa-magic"></i>
+                        Construtor
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('files')">
+                        <i class="fas fa-folder"></i>
+                        Arquivos
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('integrations')">
+                        <i class="fas fa-plug"></i>
+                        Integrações
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Conta</div>
+                    <a href="#" class="nav-item" onclick="showPage('settings')">
+                        <i class="fas fa-cog"></i>
+                        Configurações
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('billing')">
+                        <i class="fas fa-credit-card"></i>
+                        Faturamento
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-menu" onclick="showUserMenu()">
+                    <div class="avatar" id="userAvatar">U</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 500; font-size: 0.875rem;" id="userName">Usuário</div>
+                        <div style="font-size: 0.75rem; color: var(--text-light);" id="userEmail">email@exemplo.com</div>
+                    </div>
+                    <i class="fas fa-chevron-up"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <p id="pageSubtitle">Visão geral das suas propostas e performance</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-outline" onclick="showNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span id="notificationCount" style="display: none; background: var(--danger); color: white; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; margin-left: 0.5rem;">0</span>
+                    </button>
+                    <a href="#" class="btn btn-primary" onclick="createProposal()">
+                        <i class="fas fa-plus"></i>
+                        Nova Proposta
+                    </a>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content" id="pageContent">
+                <!-- Dashboard Content será inserido aqui -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Nova Proposta -->
+    <div id="newProposalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Nova Proposta</h2>
+                <button class="close-modal" onclick="closeModal('newProposalModal')">&times;</button>
+            </div>
+            <form onsubmit="handleCreateProposal(event)">
+                <div class="form-group">
+                    <label class="form-label">Título da Proposta</label>
+                    <input type="text" class="form-input" id="proposalTitle" required 
+                           placeholder="Ex: Desenvolvimento de Site Institucional">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Título Privado (opcional)</label>
+                    <input type="text" class="form-input" id="proposalPrivateTitle" 
+                           placeholder="Ex: Cliente ABC - Projeto Website">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Template</label>
+                    <select class="form-input" id="proposalTemplate">
+                        <option value="">Começar do zero</option>
+                        <option value="website">Website/E-commerce</option>
+                        <option value="consultoria">Consultoria</option>
+                        <option value="marketing">Marketing Digital</option>
+                        <option value="design">Design Gráfico</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeModal('newProposalModal')">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        Criar Proposta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Estado da aplicação
+        const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+        let currentUser = null;
+        let authToken = localStorage.getItem('authToken');
+        let currentPage = 'dashboard';
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Dashboard iniciado');
+            checkAuth();
+        });
+
+        // Verificar autenticação
+        function checkAuth() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('currentUser');
+            
+            if (token && user) {
+                currentUser = JSON.parse(user);
+                authToken = token;
+                showDashboard();
+            } else {
+                showAuth();
+            }
+        }
+
+        // Mostrar tela de autenticação
+        function showAuth() {
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').style.display = 'none';
+        }
+
+        // Mostrar dashboard
+        function showDashboard() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'flex';
+            
+            // Configurar dados do usuário
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userEmail').textContent = currentUser.email;
+                document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            }
+            
+            // Carregar página inicial
+            showPage('dashboard');
+        }
+
+        // Tabs de autenticação
+        function showAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Form').classList.add('active');
+        }
+
+        // Login
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            showLoading('login', true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    currentUser = data.user;
+                    authToken = data.token;
+                    
+                    showAlert('Login realizado com sucesso!', 'success');
+                    setTimeout(() => showDashboard(), 1000);
+                } else {
+                    showAlert(data.error || 'Erro no login', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro de conexão', 'error');
+            } finally {
+                showLoading('login', false);
+            }
+        }
+
+        // Registro
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            showLoading('register', true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    currentUser = data.user;
+                    authToken = data.token;
+                    
+                    showAlert('Conta criada com sucesso!', 'success');
+                    setTimeout(() => showDashboard(), 1000);
+                } else {
+                    showAlert(data.error || 'Erro no cadastro', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro de conexão', 'error');
+            } finally {
+                showLoading('register', false);
+            }
+        }
+
+        // Mostrar loading
+        function showLoading(type, show) {
+            const button = document.querySelector(`#${type}Form button[type="submit"]`);
+            const text = button.querySelector(`.${type}-text`);
+            const loading = button.querySelector('.loading');
+            
+            if (show) {
+                text.style.display = 'none';
+                loading.style.display = 'flex';
+                button.disabled = true;
+            } else {
+                text.style.display = 'block';
+                loading.style.display = 'none';
+                button.disabled = false;
+            }
+        }
+
+        // Mostrar alertas
+        function showAlert(message, type) {
+            const alertsContainer = document.getElementById('alerts');
+            const alert = document.createElement('div');
+            alert.className = `alert ${type}`;
+            alert.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            
+            alertsContainer.appendChild(alert);
+            
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        // Navegação entre páginas
+        function showPage(page) {
+            // Atualizar navegação
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelector(`[onclick="showPage('${page}')"]`).classList.add('active');
+            
+            currentPage = page;
+            
+            // Atualizar header
+            const pageConfig = {
+                dashboard: {
+                    title: 'Dashboard',
+                    subtitle: 'Visão geral das suas propostas e performance'
+                },
+                proposals: {
+                    title: 'Propostas',
+                    subtitle: 'Gerencie todas as suas propostas'
+                },
+                templates: {
+                    title: 'Templates',
+                    subtitle: 'Modelos prontos para acelerar sua criação'
+                },
+                analytics: {
+                    title: 'Analytics',
+                    subtitle: 'Métricas detalhadas das suas propostas'
+                },
+                builder: {
+                    title: 'Construtor',
+                    subtitle: 'Crie propostas incríveis visualmente'
+                }
+            };
+            
+            const config = pageConfig[page] || { title: 'Página', subtitle: '' };
+            document.getElementById('pageTitle').textContent = config.title;
+            document.getElementById('pageSubtitle').textContent = config.subtitle;
+            
+            // Carregar conteúdo da página
+            loadPageContent(page);
+        }
+
+        // Carregar conteúdo da página
+        async function loadPageContent(page) {
+            const content = document.getElementById('pageContent');
+            
+            switch (page) {
+                case 'dashboard':
+                    content.innerHTML = await getDashboardContent();
+                    loadDashboardData();
+                    break;
+                case 'proposals':
+                    content.innerHTML = await getProposalsContent();
+                    loadProposalsData();
+                    break;
+                case 'builder':
+                    content.innerHTML = await getBuilderContent();
+                    initializeProposalBuilder();
+                    break;
+                case 'templates':
+                    content.innerHTML = await getTemplatesContent();
+                    initializeTemplatesPage();
+                    break;
+                default:
+                    content.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-hammer"></i>
+                            <h3>Em construção</h3>
+                            <p>Esta página está sendo desenvolvida.</p>
+                        </div>
+                    `;
+            }
+        }
+
+        // Conteúdo do Construtor Visual
+        async function getBuilderContent() {
+            return `
+                <div class="builder-container">
+                    <!-- Toolbar superior -->
+                    <div class="builder-toolbar">
+                        <div class="toolbar-left">
+                            <button class="btn btn-outline" onclick="saveBuilderProposal()">
+                                <i class="fas fa-save"></i>
+                                Salvar
+                            </button>
+                            <button class="btn btn-outline" onclick="previewBuilderProposal()">
+                                <i class="fas fa-eye"></i>
+                                Visualizar
+                            </button>
+                        </div>
+                        <div class="toolbar-center">
+                            <input type="text" id="proposalBuilderTitle" placeholder="Título da Proposta" class="builder-title-input">
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn btn-outline" onclick="undoBuilderAction()">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                            <button class="btn btn-outline" onclick="redoBuilderAction()">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                            <button class="btn btn-primary" onclick="publishBuilderProposal()">
+                                <i class="fas fa-rocket"></i>
+                                Publicar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Área principal -->
+                    <div class="builder-main">
+                        <!-- Sidebar com elementos -->
+                        <div class="builder-sidebar">
+                            <div class="sidebar-header">
+                                <h3>Elementos</h3>
+                            </div>
+                            <div class="element-categories">
+                                <div class="element-category active" data-category="basic">
+                                    <i class="fas fa-font"></i>
+                                    Básicos
+                                </div>
+                                <div class="element-category" data-category="media">
+                                    <i class="fas fa-image"></i>
+                                    Mídia
+                                </div>
+                                <div class="element-category" data-category="forms">
+                                    <i class="fas fa-wpforms"></i>
+                                    Formulários
+                                </div>
+                                <div class="element-category" data-category="advanced">
+                                    <i class="fas fa-cogs"></i>
+                                    Avançado
+                                </div>
+                            </div>
+                            
+                            <div class="elements-list" id="elementsList">
+                                <!-- Elementos serão carregados aqui -->
+                            </div>
+                        </div>
+                        
+                        <!-- Canvas de edição -->
+                        <div class="builder-canvas">
+                            <div class="canvas-header">
+                                <span class="canvas-title">Canvas da Proposta</span>
+                                <div class="canvas-actions">
+                                    <button class="btn-icon" onclick="zoomOut()"><i class="fas fa-search-minus"></i></button>
+                                    <span id="zoomLevel">100%</span>
+                                    <button class="btn-icon" onclick="zoomIn()"><i class="fas fa-search-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="canvas-content" id="proposalCanvas">
+                                <div class="canvas-placeholder">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <p>Arraste elementos aqui para começar a construir sua proposta</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Properties panel -->
+                        <div class="builder-properties">
+                            <div class="properties-header">
+                                <h3>Propriedades</h3>
+                            </div>
+                            <div class="properties-content" id="propertiesPanel">
+                                <div class="no-selection">
+                                    <i class="fas fa-mouse-pointer"></i>
+                                    <p>Selecione um elemento para editar suas propriedades</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Conteúdo do Dashboard
+        async function getDashboardContent() {
+            return `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-value" id="totalProposals">0</div>
+                        <div class="stat-label">Total de Propostas</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+12% este mês</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="stat-value" id="totalViews">0</div>
+                        <div class="stat-label">Visualizações</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+24% esta semana</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="stat-value" id="totalApprovals">0</div>
+                        <div class="stat-label">Aprovações</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+8% este mês</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon danger">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value" id="avgTime">0min</div>
+                        <div class="stat-label">Tempo Médio</div>
+                        <div class="stat-change negative">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>-15% mais rápido</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Ações Rápidas</h2>
+                    </div>
+                    <div class="section-content">
+                        <div class="quick-actions">
+                            <a href="#" class="quick-action" onclick="createProposal()">
+                                <div class="quick-action-icon">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Nova Proposta</div>
+                                    <div style="font-size: 0.875rem; color: var(--text-secondary);">Criar do zero ou template</div>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="quick-action" onclick="openProposalBuilder()">
+                                <div class="quick-action-icon" style="background: var(--warning);">
+                                    <i class="fas fa-magic"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Construtor Visual</div>
+                                    <div style="font-size: 0.875rem; color: var(--text-secondary);">Editor drag-and-drop</div>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="quick-action" onclick="showPage('templates')">
+                                <div class="quick-action-icon" style="background: var(--success);">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Usar Template</div>
+                                    <div style="font-size: 0.875rem; color: var(--text-secondary);">Modelos prontos</div>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="quick-action" onclick="showPage('analytics')">
+                                <div class="quick-action-icon" style="background: var(--warning);">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Ver Analytics</div>
+                                    <div style="font-size: 0.875rem; color: var(--text-secondary);">Métricas detalhadas</div>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="quick-action" onclick="showPage('builder')">
+                                <div class="quick-action-icon" style="background: var(--danger);">
+                                    <i class="fas fa-magic"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Construtor Visual</div>
+                                    <div style="font-size: 0.875rem; color: var(--text-secondary);">Editor drag & drop</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Propostas Recentes</h2>
+                        <a href="#" class="btn btn-outline" onclick="showPage('proposals')">Ver todas</a>
+                    </div>
+                    <div class="section-content">
+                        <div id="recentProposals" class="proposals-list">
+                            <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                <div class="spinner" style="margin: 0 auto 1rem;"></div>
+                                Carregando propostas...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Conteúdo de Propostas
+        async function getProposalsContent() {
+            return `
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Suas Propostas</h2>
+                        <a href="#" class="btn btn-primary" onclick="createProposal()">
+                            <i class="fas fa-plus"></i>
+                            Nova Proposta
+                        </a>
+                    </div>
+                    <div class="section-content">
+                        <div id="proposalsList" class="proposals-list">
+                            <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                <div class="spinner" style="margin: 0 auto 1rem;"></div>
+                                Carregando propostas...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Carregar dados do dashboard
+        async function loadDashboardData() {
+            try {
+                // Carregar estatísticas
+                const [proposalsResponse, analyticsResponse] = await Promise.all([
+                    fetch(`${API_BASE}/proposals`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    }),
+                    fetch(`${API_BASE}/analytics/dashboard`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    })
+                ]);
+
+                if (proposalsResponse.ok) {
+                    const proposalsData = await proposalsResponse.json();
+                    document.getElementById('totalProposals').textContent = proposalsData.proposals.length;
+                    document.getElementById('proposalsCount').textContent = proposalsData.proposals.length;
+                    
+                    // Mostrar propostas recentes
+                    displayRecentProposals(proposalsData.proposals.slice(0, 5));
+                }
+
+                if (analyticsResponse.ok) {
+                    const analyticsData = await analyticsResponse.json();
+                    const overview = analyticsData.overview;
+                    
+                    document.getElementById('totalViews').textContent = overview.viewsStats?.total_views || 0;
+                    document.getElementById('totalApprovals').textContent = '0'; // Implementar contagem de aprovações
+                    document.getElementById('avgTime').textContent = Math.round(overview.viewsStats?.avg_time_spent || 0) + 'min';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados do dashboard:', error);
+            }
+        }
+
+        // Carregar dados de propostas
+        async function loadProposalsData() {
+            try {
+                const response = await fetch(`${API_BASE}/proposals`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayProposals(data.proposals);
+                } else {
+                    throw new Error('Erro ao carregar propostas');
+                }
+            } catch (error) {
+                document.getElementById('proposalsList').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Erro ao carregar propostas</h3>
+                        <p>Tente novamente em alguns instantes.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Exibir propostas recentes
+        function displayRecentProposals(proposals) {
+            const container = document.getElementById('recentProposals');
+            
+            if (proposals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>Nenhuma proposta ainda</h3>
+                        <p>Crie sua primeira proposta para começar!</p>
+                        <a href="#" class="btn btn-primary" onclick="createProposal()" style="margin-top: 1rem;">
+                            <i class="fas fa-plus"></i>
+                            Criar Primeira Proposta
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = proposals.map(proposal => `
+                <div class="proposal-item">
+                    <div class="proposal-info">
+                        <div class="proposal-title">${proposal.title}</div>
+                        <div class="proposal-meta">
+                            <span><i class="fas fa-calendar"></i> ${new Date(proposal.created_at).toLocaleDateString()}</span>
+                            <span class="status-badge ${proposal.status}">${proposal.status === 'draft' ? 'Rascunho' : 'Ativa'}</span>
+                        </div>
+                    </div>
+                    <div class="proposal-stats">
+                        <div class="proposal-stat">
+                            <div class="proposal-stat-value">${proposal.view_count || 0}</div>
+                            <div class="proposal-stat-label">Views</div>
+                        </div>
+                        <div class="proposal-stat">
+                            <div class="proposal-stat-value">${proposal.section_count || 0}</div>
+                            <div class="proposal-stat-label">Seções</div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline" onclick="shareProposal('${proposal.public_link}')">
+                            <i class="fas fa-share"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Exibir todas as propostas
+        function displayProposals(proposals) {
+            const container = document.getElementById('proposalsList');
+            
+            if (proposals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>Nenhuma proposta criada</h3>
+                        <p>Comece criando sua primeira proposta agora!</p>
+                        <a href="#" class="btn btn-primary" onclick="createProposal()" style="margin-top: 1rem;">
+                            <i class="fas fa-plus"></i>
+                            Criar Primeira Proposta
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = proposals.map(proposal => `
+                <div class="proposal-item">
+                    <div class="proposal-info">
+                        <div class="proposal-title">${proposal.title}</div>
+                        <div class="proposal-meta">
+                            <span><i class="fas fa-calendar"></i> ${new Date(proposal.created_at).toLocaleDateString()}</span>
+                            <span><i class="fas fa-clock"></i> ${new Date(proposal.updated_at).toLocaleDateString()}</span>
+                            <span class="status-badge ${proposal.status}">${proposal.status === 'draft' ? 'Rascunho' : 'Ativa'}</span>
+                        </div>
+                    </div>
+                    <div class="proposal-stats">
+                        <div class="proposal-stat">
+                            <div class="proposal-stat-value">${proposal.view_count || 0}</div>
+                            <div class="proposal-stat-label">Visualizações</div>
+                        </div>
+                        <div class="proposal-stat">
+                            <div class="proposal-stat-value">${proposal.section_count || 0}</div>
+                            <div class="proposal-stat-label">Seções</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-outline" onclick="editProposal('${proposal.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline" onclick="shareProposal('${proposal.public_link}')">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        <button class="btn btn-outline" onclick="viewAnalytics('${proposal.id}')">
+                            <i class="fas fa-chart-line"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Criar nova proposta
+        function createProposal() {
+            document.getElementById('newProposalModal').style.display = 'flex';
+        }
+        
+        // Abrir construtor visual de propostas
+        function openProposalBuilder() {
+            showPage('builder');
+        }
+
+        // Processar criação de proposta
+        async function handleCreateProposal(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('proposalTitle').value;
+            const privateTitle = document.getElementById('proposalPrivateTitle').value;
+            const template = document.getElementById('proposalTemplate').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/proposals`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        title,
+                        private_title: privateTitle
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert('Proposta criada com sucesso!', 'success');
+                    closeModal('newProposalModal');
+                    
+                    // Recarregar dados se estiver na página certa
+                    if (currentPage === 'dashboard') {
+                        loadDashboardData();
+                    } else if (currentPage === 'proposals') {
+                        loadProposalsData();
+                    }
+                    
+                    // Limpar formulário
+                    document.getElementById('proposalTitle').value = '';
+                    document.getElementById('proposalPrivateTitle').value = '';
+                    document.getElementById('proposalTemplate').value = '';
+                } else {
+                    showAlert(data.error || 'Erro ao criar proposta', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro de conexão', 'error');
+            }
+        }
+
+        // Compartilhar proposta
+        async function shareProposal(publicLink) {
+            const url = `${window.location.origin}/proposta/${publicLink}`;
+            
+            if (navigator.clipboard) {
+                try {
+                    await navigator.clipboard.writeText(url);
+                    showAlert('Link copiado para a área de transferência!', 'success');
+                } catch (error) {
+                    prompt('Link da proposta:', url);
+                }
+            } else {
+                prompt('Link da proposta:', url);
+            }
+        }
+
+        // Editar proposta
+        function editProposal(proposalId) {
+            showAlert('Editor em desenvolvimento', 'warning');
+        }
+
+        // Ver analytics
+        function viewAnalytics(proposalId) {
+            showPage('analytics');
+            showAlert('Analytics detalhado em desenvolvimento', 'warning');
+        }
+
+        // Fechar modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Mostrar notificações
+        function showNotifications() {
+            showAlert('Central de notificações em desenvolvimento', 'warning');
+        }
+
+        // Menu do usuário
+        function showUserMenu() {
+            if (confirm('Deseja fazer logout?')) {
+                logout();
+            }
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            authToken = null;
+            showAuth();
+        }
+
+        // Fechar modais clicando fora
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+        
+        // ===== PROPOSAL BUILDER FUNCTIONS =====
+        
+        // Inicializar construtor de propostas
+        function initializeProposalBuilder() {
+            loadElementCategories();
+            setupBuilderEventListeners();
+            initializeDragAndDrop();
+        }
+        
+        // Elementos disponíveis para arrastar
+        const builderElements = {
+            basic: [
+                { type: 'heading', name: 'Título', icon: 'fas fa-heading', description: 'Título principal' },
+                { type: 'text', name: 'Texto', icon: 'fas fa-paragraph', description: 'Parágrafo de texto' },
+                { type: 'list', name: 'Lista', icon: 'fas fa-list', description: 'Lista com marcadores' },
+                { type: 'quote', name: 'Citação', icon: 'fas fa-quote-left', description: 'Bloco de citação' },
+                { type: 'divider', name: 'Divisor', icon: 'fas fa-minus', description: 'Linha separadora' }
+            ],
+            media: [
+                { type: 'image', name: 'Imagem', icon: 'fas fa-image', description: 'Inserir imagem' },
+                { type: 'video', name: 'Vídeo', icon: 'fas fa-video', description: 'Incorporar vídeo' },
+                { type: 'file', name: 'Arquivo', icon: 'fas fa-file', description: 'Anexar arquivo' },
+                { type: 'gallery', name: 'Galeria', icon: 'fas fa-images', description: 'Galeria de imagens' }
+            ],
+            forms: [
+                { type: 'signature', name: 'Assinatura', icon: 'fas fa-signature', description: 'Campo de assinatura' },
+                { type: 'checkbox', name: 'Checkbox', icon: 'fas fa-check-square', description: 'Caixa de seleção' },
+                { type: 'input', name: 'Campo', icon: 'fas fa-edit', description: 'Campo de entrada' },
+                { type: 'contact', name: 'Contato', icon: 'fas fa-address-book', description: 'Informações de contato' }
+            ],
+            advanced: [
+                { type: 'pricing', name: 'Tabela Preços', icon: 'fas fa-dollar-sign', description: 'Tabela de preços' },
+                { type: 'timeline', name: 'Cronograma', icon: 'fas fa-calendar-alt', description: 'Linha do tempo' },
+                { type: 'comparison', name: 'Comparação', icon: 'fas fa-balance-scale', description: 'Tabela comparativa' },
+                { type: 'cta', name: 'Call to Action', icon: 'fas fa-bullhorn', description: 'Botão de ação' }
+            ]
+        };
+        
+        // Carregar categorias de elementos
+        function loadElementCategories() {
+            const activeCategory = document.querySelector('.element-category.active')?.dataset.category || 'basic';
+            loadElementsForCategory(activeCategory);
+            
+            // Event listeners para categorias
+            document.querySelectorAll('.element-category').forEach(category => {
+                category.addEventListener('click', () => {
+                    document.querySelectorAll('.element-category').forEach(c => c.classList.remove('active'));
+                    category.classList.add('active');
+                    loadElementsForCategory(category.dataset.category);
+                });
+            });
+        }
+        
+        // Carregar elementos para categoria
+        function loadElementsForCategory(category) {
+            const elementsList = document.getElementById('elementsList');
+            const elements = builderElements[category] || [];
+            
+            elementsList.innerHTML = elements.map(element => `
+                <div class="element-item" draggable="true" data-element-type="${element.type}">
+                    <div class="element-icon">
+                        <i class="${element.icon}"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 500; font-size: 0.875rem;">${element.name}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">${element.description}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Re-inicializar drag and drop para novos elementos
+            setTimeout(() => initializeDragAndDrop(), 100);
+        }
+        
+        // Configurar event listeners do builder
+        function setupBuilderEventListeners() {
+            // Zoom controls
+            window.zoomIn = () => adjustZoom(10);
+            window.zoomOut = () => adjustZoom(-10);
+            
+            // Toolbar actions
+            window.saveBuilderProposal = saveBuilderProposal;
+            window.previewBuilderProposal = previewBuilderProposal;
+            window.publishBuilderProposal = publishBuilderProposal;
+            window.undoBuilderAction = undoBuilderAction;
+            window.redoBuilderAction = redoBuilderAction;
+        }
+        
+        // Sistema de drag and drop
+        function initializeDragAndDrop() {
+            const canvas = document.getElementById('proposalCanvas');
+            if (!canvas) return;
+            
+            // Drag dos elementos da sidebar
+            document.querySelectorAll('.element-item').forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', item.dataset.elementType);
+                    item.style.opacity = '0.5';
+                });
+                
+                item.addEventListener('dragend', (e) => {
+                    item.style.opacity = '1';
+                });
+            });
+            
+            // Drop no canvas
+            canvas.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                canvas.classList.add('drag-over');
+            });
+            
+            canvas.addEventListener('dragleave', (e) => {
+                if (!canvas.contains(e.relatedTarget)) {
+                    canvas.classList.remove('drag-over');
+                }
+            });
+            
+            canvas.addEventListener('drop', (e) => {
+                e.preventDefault();
+                canvas.classList.remove('drag-over');
+                
+                const elementType = e.dataTransfer.getData('text/plain');
+                if (elementType) {
+                    addElementToCanvas(elementType);
+                }
+            });
+        }
+        
+        // Adicionar elemento ao canvas
+        function addElementToCanvas(elementType) {
+            const canvas = document.getElementById('proposalCanvas');
+            const placeholder = canvas.querySelector('.canvas-placeholder');
+            
+            if (placeholder) {
+                placeholder.remove();
+            }
+            
+            const elementId = 'element_' + Date.now();
+            const element = createProposalElement(elementType, elementId);
+            
+            canvas.appendChild(element);
+            selectElement(elementId);
+            showAlert(`Elemento ${elementType} adicionado!`, 'success');
+        }
+        
+        // Criar elemento da proposta
+        function createProposalElement(type, id) {
+            const div = document.createElement('div');
+            div.className = 'proposal-element';
+            div.dataset.elementType = type;
+            div.dataset.elementId = id;
+            div.onclick = () => selectElement(id);
+            
+            let content = '';
+            
+            switch (type) {
+                case 'heading':
+                    content = '<h2 contenteditable="true" style="margin: 0;">Título Principal</h2>';
+                    break;
+                case 'text':
+                    content = '<p contenteditable="true" style="margin: 0;">Digite seu texto aqui. Clique para editar.</p>';
+                    break;
+                case 'list':
+                    content = '<ul contenteditable="true" style="margin: 0;"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>';
+                    break;
+                case 'quote':
+                    content = '<blockquote contenteditable="true" style="margin: 0; padding: 1rem; border-left: 4px solid var(--primary); background: #f7fafc; font-style: italic;">"Digite sua citação aqui"</blockquote>';
+                    break;
+                case 'divider':
+                    content = '<hr style="margin: 2rem 0; border: 1px solid #e2e8f0;">';
+                    break;
+                case 'image':
+                    content = `
+                        <div class="image-placeholder" style="border: 2px dashed #cbd5e0; padding: 2rem; text-align: center; border-radius: 8px; cursor: pointer;" onclick="triggerImageUpload('${id}')">
+                            <i class="fas fa-image" style="font-size: 3rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                            <p style="margin: 0;">Clique para adicionar imagem</p>
+                            <input type="file" accept="image/*" style="display: none;">
+                        </div>
+                    `;
+                    break;
+                case 'pricing':
+                    content = `
+                        <div class="pricing-table">
+                            <h3 contenteditable="true" style="margin: 0 0 1rem 0;">Investimento</h3>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr style="background: #f7fafc;">
+                                    <th style="padding: 1rem; text-align: left; border: 1px solid #e2e8f0;" contenteditable="true">Item</th>
+                                    <th style="padding: 1rem; text-align: right; border: 1px solid #e2e8f0;" contenteditable="true">Valor</th>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 1rem; border: 1px solid #e2e8f0;" contenteditable="true">Serviço 1</td>
+                                    <td style="padding: 1rem; text-align: right; border: 1px solid #e2e8f0;" contenteditable="true">R$ 1.000,00</td>
+                                </tr>
+                                <tr style="background: #f7fafc; font-weight: bold;">
+                                    <td style="padding: 1rem; border: 1px solid #e2e8f0;" contenteditable="true">Total</td>
+                                    <td style="padding: 1rem; text-align: right; border: 1px solid #e2e8f0;" contenteditable="true">R$ 1.000,00</td>
+                                </tr>
+                            </table>
+                        </div>
+                    `;
+                    break;
+                case 'signature':
+                    content = `
+                        <div class="signature-field" style="border: 2px dashed #cbd5e0; padding: 3rem 2rem; text-align: center; border-radius: 8px;">
+                            <i class="fas fa-signature" style="font-size: 2rem; color: #a0aec0; margin-bottom: 1rem;"></i>
+                            <p style="margin: 0;">Campo de Assinatura Digital</p>
+                            <small style="color: #718096;">O cliente poderá assinar aqui</small>
+                        </div>
+                    `;
+                    break;
+                case 'cta':
+                    content = `
+                        <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+                            <h3 contenteditable="true" style="margin: 0 0 1rem 0;">Pronto para começar?</h3>
+                            <p contenteditable="true" style="margin: 0 0 2rem 0;">Entre em contato conosco hoje mesmo!</p>
+                            <button style="background: white; color: #667eea; padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                                <span contenteditable="true">Aceitar Proposta</span>
+                            </button>
+                        </div>
+                    `;
+                    break;
+                default:
+                    content = `<p contenteditable="true" style="margin: 0;">Elemento ${type}</p>`;
+            }
+            
+            div.innerHTML = `
+                <div class="element-toolbar">
+                    <button class="btn-icon" onclick="moveElementUp('${id}')" title="Mover para cima">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button class="btn-icon" onclick="moveElementDown('${id}')" title="Mover para baixo">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                    <button class="btn-icon" onclick="duplicateElement('${id}')" title="Duplicar">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="btn-icon" onclick="deleteElement('${id}')" title="Remover">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                ${content}
+            `;
+            
+            return div;
+        }
+        
+        // Selecionar elemento
+        function selectElement(elementId) {
+            document.querySelectorAll('.proposal-element').forEach(el => el.classList.remove('selected'));
+            const element = document.querySelector(`[data-element-id="${elementId}"]`);
+            if (element) {
+                element.classList.add('selected');
+                showElementProperties(elementId, element.dataset.elementType);
+            }
+        }
+        
+        // Mostrar propriedades do elemento
+        function showElementProperties(elementId, elementType) {
+            const propertiesPanel = document.getElementById('propertiesPanel');
+            
+            let propertiesContent = `
+                <div style="margin-bottom: 1rem;">
+                    <h4 style="margin: 0 0 1rem 0;">Propriedades - ${elementType}</h4>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">ID:</label>
+                        <input type="text" value="${elementId}" readonly style="width: 100%; padding: 0.5rem; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 4px;">
+                    </div>
+                </div>
+            `;
+            
+            // Propriedades específicas baseadas no tipo
+            switch (elementType) {
+                case 'heading':
+                case 'text':
+                    propertiesContent += `
+                        <div style="margin-bottom: 1rem;">
+                            <h4 style="margin: 0 0 1rem 0;">Formatação</h4>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Alinhamento:</label>
+                                <select onchange="updateElementStyle('${elementId}', 'textAlign', this.value)" style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 4px;">
+                                    <option value="left">Esquerda</option>
+                                    <option value="center">Centro</option>
+                                    <option value="right">Direita</option>
+                                    <option value="justify">Justificado</option>
+                                </select>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Cor do texto:</label>
+                                <input type="color" value="#000000" onchange="updateElementStyle('${elementId}', 'color', this.value)" style="width: 100%; height: 2.5rem; border: 1px solid #e2e8f0; border-radius: 4px;">
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            propertiesContent += `
+                <div style="margin-top: 2rem;">
+                    <h4 style="margin: 0 0 1rem 0;">Ações</h4>
+                    <button onclick="duplicateElement('${elementId}')" style="width: 100%; margin-bottom: 0.5rem; padding: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; cursor: pointer;">
+                        <i class="fas fa-copy"></i> Duplicar
+                    </button>
+                    <button onclick="deleteElement('${elementId}')" style="width: 100%; padding: 0.75rem; background: var(--surface); border: 1px solid var(--danger); color: var(--danger); border-radius: 4px; cursor: pointer;">
+                        <i class="fas fa-trash"></i> Remover
+                    </button>
+                </div>
+            `;
+            
+            propertiesPanel.innerHTML = propertiesContent;
+        }
+        
+        // Funções utilitárias do builder
+        function adjustZoom(delta) {
+            const zoomElement = document.getElementById('zoomLevel');
+            let currentZoom = parseInt(zoomElement.textContent) || 100;
+            currentZoom = Math.max(50, Math.min(200, currentZoom + delta));
+            zoomElement.textContent = currentZoom + '%';
+            
+            const canvas = document.getElementById('proposalCanvas');
+            canvas.style.transform = `scale(${currentZoom / 100})`;
+            canvas.style.transformOrigin = 'top left';
+        }
+        
+        function updateElementStyle(elementId, property, value) {
+            const element = document.querySelector(`[data-element-id="${elementId}"]`);
+            if (element) {
+                const content = element.querySelector('[contenteditable="true"]');
+                if (content) {
+                    content.style[property] = value;
+                }
+            }
+        }
+        
+        function triggerImageUpload(elementId) {
+            const element = document.querySelector(`[data-element-id="${elementId}"]`);
+            const fileInput = element.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.click();
+            }
+        }
+        
+        function deleteElement(elementId) {
+            if (confirm('Deseja remover este elemento?')) {
+                const element = document.querySelector(`[data-element-id="${elementId}"]`);
+                if (element) {
+                    element.remove();
+                    document.getElementById('propertiesPanel').innerHTML = `
+                        <div class="no-selection">
+                            <i class="fas fa-mouse-pointer"></i>
+                            <p>Selecione um elemento para editar suas propriedades</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        function duplicateElement(elementId) {
+            const element = document.querySelector(`[data-element-id="${elementId}"]`);
+            if (element) {
+                const newId = 'element_' + Date.now();
+                const clone = element.cloneNode(true);
+                clone.dataset.elementId = newId;
+                clone.onclick = () => selectElement(newId);
+                
+                // Atualizar IDs nos botões da toolbar
+                const toolbar = clone.querySelector('.element-toolbar');
+                toolbar.innerHTML = toolbar.innerHTML.replace(new RegExp(elementId, 'g'), newId);
+                
+                element.parentNode.insertBefore(clone, element.nextSibling);
+                selectElement(newId);
+            }
+        }
+        
+        function moveElementUp(elementId) {
+            const element = document.querySelector(`[data-element-id="${elementId}"]`);
+            const prev = element.previousElementSibling;
+            if (prev) {
+                element.parentNode.insertBefore(element, prev);
+            }
+        }
+        
+        function moveElementDown(elementId) {
+            const element = document.querySelector(`[data-element-id="${elementId}"]`);
+            const next = element.nextElementSibling;
+            if (next) {
+                element.parentNode.insertBefore(next, element);
+            }
+        }
+        
+        // Funções da toolbar
+        async function saveBuilderProposal() {
+            const title = document.getElementById('proposalBuilderTitle').value || 'Proposta sem título';
+            const canvas = document.getElementById('proposalCanvas');
+            const content = canvas.innerHTML;
+            
+            try {
+                showAlert('Proposta salva com sucesso!', 'success');
+            } catch (error) {
+                showAlert('Erro ao salvar proposta: ' + error.message, 'error');
+            }
+        }
+        
+        function previewBuilderProposal() {
+            const title = document.getElementById('proposalBuilderTitle').value || 'Proposta sem título';
+            const canvas = document.getElementById('proposalCanvas');
+            const content = canvas.innerHTML;
+            
+            // Abrir em nova janela para preview
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${title}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.6; }
+                        .proposal-element { margin-bottom: 2rem; }
+                        .element-toolbar { display: none !important; }
+                        h1, h2, h3 { color: #2d3748; }
+                        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+                        th, td { padding: 0.75rem; border: 1px solid #e2e8f0; }
+                        th { background: #f7fafc; font-weight: 600; }
+                        blockquote { border-left: 4px solid #3b82f6; padding: 1rem; background: #f7fafc; font-style: italic; margin: 1rem 0; }
+                    </style>
+                </head>
+                <body>
+                    <h1>${title}</h1>
+                    ${content}
+                </body>
+                </html>
+            `);
+        }
+        
+        function publishBuilderProposal() {
+            if (confirm('Deseja publicar esta proposta? Ela ficará disponível para visualização.')) {
+                saveBuilderProposal().then(() => {
+                    showAlert('Proposta publicada com sucesso!', 'success');
+                });
+            }
+        }
+        
+        function undoBuilderAction() {
+            showAlert('Função de desfazer em desenvolvimento', 'warning');
+        }
+        
+        function redoBuilderAction() {
+            showAlert('Função de refazer em desenvolvimento', 'warning');
+        }
+
+        // === SISTEMA DE TEMPLATES ===
+        
+        // Conteúdo da página de templates
+        async function getTemplatesContent() {
+            return `
+                <div class="templates-container">
+                    <!-- Header com filtros e busca -->
+                    <div class="templates-header">
+                        <div class="templates-search">
+                            <div class="search-wrapper">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="templateSearch" placeholder="Buscar templates..." onkeyup="filterTemplates()">
+                            </div>
+                        </div>
+                        <div class="templates-filters">
+                            <select id="templateCategory" onchange="filterTemplates()">
+                                <option value="">Todas as categorias</option>
+                                <option value="business">Negócios</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="tech">Tecnologia</option>
+                                <option value="consulting">Consultoria</option>
+                                <option value="design">Design</option>
+                                <option value="education">Educação</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="showCreateTemplateModal()">
+                                <i class="fas fa-plus"></i>
+                                Criar Template
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Templates Grid -->
+                    <div class="templates-grid" id="templatesGrid">
+                        <!-- Templates serão carregados aqui -->
+                    </div>
+
+                    <!-- Modal de criar/editar template -->
+                    <div id="templateModal" class="modal">
+                        <div class="modal-content template-modal">
+                            <div class="modal-header">
+                                <h3 id="templateModalTitle">Criar Novo Template</h3>
+                                <span class="close" onclick="closeTemplateModal()">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <form id="templateForm">
+                                    <div class="form-group">
+                                        <label for="templateName">Nome do Template</label>
+                                        <input type="text" id="templateName" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="templateDescription">Descrição</label>
+                                        <textarea id="templateDescription" rows="3" placeholder="Descreva quando usar este template..."></textarea>
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="templateCategorySelect">Categoria</label>
+                                            <select id="templateCategorySelect" required>
+                                                <option value="">Selecione uma categoria</option>
+                                                <option value="business">Negócios</option>
+                                                <option value="marketing">Marketing</option>
+                                                <option value="tech">Tecnologia</option>
+                                                <option value="consulting">Consultoria</option>
+                                                <option value="design">Design</option>
+                                                <option value="education">Educação</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="templateTags">Tags</label>
+                                            <input type="text" id="templateTags" placeholder="vendas, apresentação, proposta">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Preview do Template</label>
+                                        <div class="template-preview-upload">
+                                            <div class="preview-dropzone" onclick="document.getElementById('templatePreviewFile').click()">
+                                                <i class="fas fa-image"></i>
+                                                <p>Clique para adicionar uma imagem de preview</p>
+                                                <input type="file" id="templatePreviewFile" accept="image/*" style="display: none;" onchange="previewTemplateImage(this)">
+                                            </div>
+                                            <img id="templatePreviewImg" style="display: none; max-width: 100%; border-radius: 8px; margin-top: 10px;">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Estrutura do Template</label>
+                                        <div class="template-structure">
+                                            <div class="section-builder">
+                                                <button type="button" class="btn btn-outline" onclick="addTemplateSection()">
+                                                    <i class="fas fa-plus"></i>
+                                                    Adicionar Seção
+                                                </button>
+                                                <div id="templateSections">
+                                                    <!-- Seções serão adicionadas aqui -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline" onclick="closeTemplateModal()">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" onclick="saveTemplate()">Salvar Template</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal de preview do template -->
+                    <div id="templatePreviewModal" class="modal">
+                        <div class="modal-content template-preview-modal">
+                            <div class="modal-header">
+                                <h3 id="previewTemplateTitle"></h3>
+                                <span class="close" onclick="closeTemplatePreviewModal()">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <div id="templatePreviewContent">
+                                    <!-- Preview do template será mostrado aqui -->
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline" onclick="closeTemplatePreviewModal()">Fechar</button>
+                                <button type="button" class="btn btn-primary" onclick="useTemplate()">Usar Este Template</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    .templates-container {
+                        padding: 0;
+                    }
+
+                    .templates-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 2rem;
+                        gap: 1rem;
+                        flex-wrap: wrap;
+                    }
+
+                    .templates-search {
+                        flex: 1;
+                        max-width: 400px;
+                    }
+
+                    .search-wrapper {
+                        position: relative;
+                    }
+
+                    .search-wrapper i {
+                        position: absolute;
+                        left: 12px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: var(--text-light);
+                    }
+
+                    .search-wrapper input {
+                        width: 100%;
+                        padding: 12px 12px 12px 40px;
+                        border: 1px solid var(--border);
+                        border-radius: var(--radius);
+                        font-size: 0.9rem;
+                    }
+
+                    .templates-filters {
+                        display: flex;
+                        gap: 1rem;
+                        align-items: center;
+                    }
+
+                    .templates-filters select {
+                        padding: 12px;
+                        border: 1px solid var(--border);
+                        border-radius: var(--radius);
+                        font-size: 0.9rem;
+                        min-width: 160px;
+                    }
+
+                    .templates-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                        gap: 1.5rem;
+                    }
+
+                    .template-card {
+                        background: var(--surface);
+                        border-radius: var(--radius-lg);
+                        box-shadow: var(--shadow);
+                        overflow: hidden;
+                        transition: transform 0.2s, box-shadow 0.2s;
+                        cursor: pointer;
+                    }
+
+                    .template-card:hover {
+                        transform: translateY(-2px);
+                        box-shadow: var(--shadow-lg);
+                    }
+
+                    .template-preview {
+                        height: 200px;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .template-preview img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                    .template-info {
+                        padding: 1.5rem;
+                    }
+
+                    .template-title {
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                        margin-bottom: 0.5rem;
+                        color: var(--text-primary);
+                    }
+
+                    .template-description {
+                        font-size: 0.9rem;
+                        color: var(--text-secondary);
+                        margin-bottom: 1rem;
+                        line-height: 1.5;
+                    }
+
+                    .template-meta {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 1rem;
+                    }
+
+                    .template-category {
+                        background: var(--primary);
+                        color: white;
+                        padding: 0.25rem 0.75rem;
+                        border-radius: 1rem;
+                        font-size: 0.8rem;
+                        font-weight: 500;
+                    }
+
+                    .template-stats {
+                        display: flex;
+                        gap: 1rem;
+                        color: var(--text-light);
+                        font-size: 0.8rem;
+                    }
+
+                    .template-actions {
+                        display: flex;
+                        gap: 0.5rem;
+                    }
+
+                    .template-actions .btn {
+                        flex: 1;
+                        font-size: 0.9rem;
+                        padding: 0.5rem 1rem;
+                    }
+
+                    .template-tags {
+                        margin-top: 1rem;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 0.5rem;
+                    }
+
+                    .template-tag {
+                        background: var(--surface-dark);
+                        color: var(--text-secondary);
+                        padding: 0.25rem 0.5rem;
+                        border-radius: 0.25rem;
+                        font-size: 0.75rem;
+                    }
+
+                    .template-modal .modal-content {
+                        width: 90%;
+                        max-width: 800px;
+                        max-height: 90vh;
+                        overflow-y: auto;
+                    }
+
+                    .form-row {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 1rem;
+                    }
+
+                    .template-preview-upload {
+                        margin-top: 0.5rem;
+                    }
+
+                    .preview-dropzone {
+                        border: 2px dashed var(--border);
+                        border-radius: var(--radius);
+                        padding: 2rem;
+                        text-align: center;
+                        cursor: pointer;
+                        transition: border-color 0.2s;
+                    }
+
+                    .preview-dropzone:hover {
+                        border-color: var(--primary);
+                    }
+
+                    .preview-dropzone i {
+                        font-size: 2rem;
+                        color: var(--text-light);
+                        margin-bottom: 0.5rem;
+                    }
+
+                    .section-builder {
+                        margin-top: 1rem;
+                    }
+
+                    .template-section {
+                        background: var(--surface-dark);
+                        border-radius: var(--radius);
+                        padding: 1rem;
+                        margin-bottom: 1rem;
+                        border: 1px solid var(--border);
+                    }
+
+                    .section-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 1rem;
+                    }
+
+                    .section-title {
+                        font-weight: 600;
+                        color: var(--text-primary);
+                    }
+
+                    .template-preview-modal .modal-content {
+                        width: 95%;
+                        max-width: 1200px;
+                    }
+
+                    @media (max-width: 768px) {
+                        .templates-header {
+                            flex-direction: column;
+                            align-items: stretch;
+                        }
+
+                        .templates-filters {
+                            justify-content: space-between;
+                        }
+
+                        .form-row {
+                            grid-template-columns: 1fr;
+                        }
+
+                        .templates-grid {
+                            grid-template-columns: 1fr;
+                        }
+                    }
+                </style>
+            `;
+        }
+
+        // Dados de templates exemplo
+        const templatesData = [
+            {
+                id: 1,
+                name: "Proposta Comercial Completa",
+                description: "Template abrangente para propostas comerciais com seções de apresentação, serviços, investimento e termos.",
+                category: "business",
+                tags: ["vendas", "comercial", "completo"],
+                preview: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjMjU2M2ViIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4Ij5Qcm9wb3N0YSBDB21lcmNpYWw8L3RleHQ+Cjwvc3ZnPg==",
+                sections: ["Capa", "Apresentação da Empresa", "Serviços", "Investimento", "Termos", "Contatos"],
+                usageCount: 45,
+                createdAt: "2024-01-15"
+            },
+            {
+                id: 2,
+                name: "Proposta de Marketing Digital",
+                description: "Template especializado para agências de marketing digital com foco em resultados e ROI.",
+                category: "marketing",
+                tags: ["marketing", "digital", "roi", "resultados"],
+                preview: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjMTBiOTgxIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2Ij5NYXJrZXRpbmcgRGlnaXRhbDwvdGV4dD4KPC9zdmc+",
+                sections: ["Análise do Mercado", "Estratégia Digital", "Canais", "KPIs", "Investimento", "Cronograma"],
+                usageCount: 32,
+                createdAt: "2024-02-01"
+            },
+            {
+                id: 3,
+                name: "Proposta de Desenvolvimento",
+                description: "Template para propostas de desenvolvimento de software e aplicações web.",
+                category: "tech",
+                tags: ["desenvolvimento", "software", "web", "app"],
+                preview: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjNzc0YmEyIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2Ij5EZXNlbnZvbHZpbWVudG88L3RleHQ+Cjwvc3ZnPg==",
+                sections: ["Requisitos", "Arquitetura", "Funcionalidades", "Cronograma", "Orçamento", "Suporte"],
+                usageCount: 28,
+                createdAt: "2024-01-20"
+            },
+            {
+                id: 4,
+                name: "Consultoria Empresarial",
+                description: "Template para propostas de consultoria com análise diagnóstica e plano de ação.",
+                category: "consulting",
+                tags: ["consultoria", "diagnóstico", "estratégia"],
+                preview: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjU5ZTBiIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2Ij5Db25zdWx0b3JpYTwvdGV4dD4KPC9zdmc+",
+                sections: ["Diagnóstico", "Análise SWOT", "Plano de Ação", "Metodologia", "Resultados Esperados", "Investimento"],
+                usageCount: 19,
+                createdAt: "2024-02-10"
+            },
+            {
+                id: 5,
+                name: "Proposta de Design",
+                description: "Template criativo para propostas de design gráfico e branding.",
+                category: "design",
+                tags: ["design", "branding", "criativo", "visual"],
+                preview: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZWY0NDQ0Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4Ij5EZXNpZ24gJiBCcmFuZGluZzwvdGV4dD4KPC9zdmc+",
+                sections: ["Briefing", "Conceito Criativo", "Aplicações", "Manual da Marca", "Entregáveis", "Cronograma"],
+                usageCount: 23,
+                createdAt: "2024-01-30"
+            },
+            {
+                id: 6,
+                name: "Proposta Educacional",
+                description: "Template para cursos, treinamentos e propostas educacionais.",
+                category: "education",
+                tags: ["educação", "curso", "treinamento", "capacitação"],
+                preview: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjNjY3ZWVhIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2Ij5Fc2NvbGEgJiBUcmVpbmFtZW50bzwvdGV4dD4KPC9zdmc+",
+                sections: ["Objetivos", "Conteúdo Programático", "Metodologia", "Carga Horária", "Certificação", "Investimento"],
+                usageCount: 15,
+                createdAt: "2024-02-05"
+            }
+        ];
+
+        // Inicializar página de templates
+        function initializeTemplatesPage() {
+            loadTemplates();
+        }
+
+        // Carregar e renderizar templates
+        function loadTemplates() {
+            const grid = document.getElementById('templatesGrid');
+            grid.innerHTML = templatesData.map(template => createTemplateCard(template)).join('');
+        }
+
+        // Criar card de template
+        function createTemplateCard(template) {
+            return `
+                <div class="template-card" onclick="previewTemplate(${template.id})">
+                    <div class="template-preview">
+                        <img src="${template.preview}" alt="${template.name}">
+                    </div>
+                    <div class="template-info">
+                        <div class="template-title">${template.name}</div>
+                        <div class="template-description">${template.description}</div>
+                        <div class="template-meta">
+                            <span class="template-category">${getCategoryName(template.category)}</span>
+                            <div class="template-stats">
+                                <span><i class="fas fa-eye"></i> ${template.usageCount}</span>
+                                <span><i class="fas fa-calendar"></i> ${formatDate(template.createdAt)}</span>
+                            </div>
+                        </div>
+                        <div class="template-tags">
+                            ${template.tags.map(tag => `<span class="template-tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="template-actions">
+                            <button class="btn btn-outline" onclick="event.stopPropagation(); previewTemplate(${template.id})">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); useTemplate(${template.id})">
+                                <i class="fas fa-rocket"></i> Usar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Filtrar templates
+        function filterTemplates() {
+            const search = document.getElementById('templateSearch').value.toLowerCase();
+            const category = document.getElementById('templateCategory').value;
+            
+            const filtered = templatesData.filter(template => {
+                const matchesSearch = template.name.toLowerCase().includes(search) ||
+                                    template.description.toLowerCase().includes(search) ||
+                                    template.tags.some(tag => tag.toLowerCase().includes(search));
+                
+                const matchesCategory = !category || template.category === category;
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            const grid = document.getElementById('templatesGrid');
+            grid.innerHTML = filtered.map(template => createTemplateCard(template)).join('');
+        }
+
+        // Preview do template
+        function previewTemplate(templateId) {
+            const template = templatesData.find(t => t.id === templateId);
+            if (!template) return;
+            
+            document.getElementById('previewTemplateTitle').textContent = template.name;
+            document.getElementById('templatePreviewContent').innerHTML = `
+                <div class="template-preview-detail">
+                    <div class="preview-header">
+                        <img src="${template.preview}" alt="${template.name}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px;">
+                    </div>
+                    <div class="preview-info">
+                        <h4>Descrição</h4>
+                        <p>${template.description}</p>
+                        
+                        <h4>Estrutura do Template</h4>
+                        <div class="sections-list">
+                            ${template.sections.map((section, index) => `
+                                <div class="section-item">
+                                    <span class="section-number">${index + 1}</span>
+                                    <span class="section-name">${section}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="template-stats-detail">
+                            <div class="stat">
+                                <strong>Categoria:</strong> ${getCategoryName(template.category)}
+                            </div>
+                            <div class="stat">
+                                <strong>Usado:</strong> ${template.usageCount} vezes
+                            </div>
+                            <div class="stat">
+                                <strong>Tags:</strong> ${template.tags.join(', ')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <style>
+                    .template-preview-detail {
+                        text-align: left;
+                    }
+                    
+                    .preview-info {
+                        padding: 1.5rem 0;
+                    }
+                    
+                    .preview-info h4 {
+                        margin: 1.5rem 0 0.5rem 0;
+                        color: var(--text-primary);
+                    }
+                    
+                    .sections-list {
+                        background: var(--surface-dark);
+                        border-radius: var(--radius);
+                        padding: 1rem;
+                        margin: 1rem 0;
+                    }
+                    
+                    .section-item {
+                        display: flex;
+                        align-items: center;
+                        padding: 0.5rem 0;
+                        border-bottom: 1px solid var(--border);
+                    }
+                    
+                    .section-item:last-child {
+                        border-bottom: none;
+                    }
+                    
+                    .section-number {
+                        background: var(--primary);
+                        color: white;
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 0.8rem;
+                        margin-right: 1rem;
+                    }
+                    
+                    .template-stats-detail {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                        gap: 1rem;
+                        margin-top: 1.5rem;
+                        padding: 1rem;
+                        background: var(--surface-dark);
+                        border-radius: var(--radius);
+                    }
+                    
+                    .stat {
+                        font-size: 0.9rem;
+                    }
+                </style>
+            `;
+            
+            currentPreviewTemplate = templateId;
+            document.getElementById('templatePreviewModal').style.display = 'block';
+        }
+
+        // Usar template
+        function useTemplate(templateId) {
+            if (templateId) {
+                const template = templatesData.find(t => t.id === templateId);
+                if (template) {
+                    // Incrementar contador de uso
+                    template.usageCount++;
+                    
+                    // Redirecionar para o construtor com o template
+                    showAlert(`Template "${template.name}" carregado no construtor!`, 'success');
+                    closeTemplatePreviewModal();
+                    showPage('builder');
+                    
+                    // Simular carregamento do template no construtor
+                    setTimeout(() => {
+                        document.getElementById('proposalBuilderTitle').value = `Nova Proposta - ${template.name}`;
+                        // Aqui você pode adicionar lógica para pré-popular o construtor com as seções do template
+                    }, 500);
+                }
+            }
+        }
+
+        // Modal de criar template
+        function showCreateTemplateModal() {
+            document.getElementById('templateModalTitle').textContent = 'Criar Novo Template';
+            document.getElementById('templateForm').reset();
+            document.getElementById('templateSections').innerHTML = '';
+            document.getElementById('templateModal').style.display = 'block';
+            
+            // Adicionar seções padrão
+            addTemplateSection('Capa');
+            addTemplateSection('Apresentação');
+            addTemplateSection('Serviços');
+        }
+
+        function closeTemplateModal() {
+            document.getElementById('templateModal').style.display = 'none';
+        }
+
+        function closeTemplatePreviewModal() {
+            document.getElementById('templatePreviewModal').style.display = 'none';
+        }
+
+        // Adicionar seção ao template
+        function addTemplateSection(name = '') {
+            const sectionsContainer = document.getElementById('templateSections');
+            const sectionId = 'section_' + Date.now();
+            
+            const sectionHtml = `
+                <div class="template-section" id="${sectionId}">
+                    <div class="section-header">
+                        <input type="text" placeholder="Nome da seção" value="${name}" class="section-title-input">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="removeTemplateSection('${sectionId}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="section-content">
+                        <textarea placeholder="Conteúdo da seção (opcional)" rows="3" class="section-content-input"></textarea>
+                    </div>
+                </div>
+            `;
+            
+            sectionsContainer.insertAdjacentHTML('beforeend', sectionHtml);
+        }
+
+        function removeTemplateSection(sectionId) {
+            document.getElementById(sectionId).remove();
+        }
+
+        // Salvar template
+        function saveTemplate() {
+            const form = document.getElementById('templateForm');
+            const formData = new FormData(form);
+            
+            const templateData = {
+                name: document.getElementById('templateName').value,
+                description: document.getElementById('templateDescription').value,
+                category: document.getElementById('templateCategorySelect').value,
+                tags: document.getElementById('templateTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
+                sections: []
+            };
+            
+            // Coletar seções
+            const sectionElements = document.querySelectorAll('.template-section');
+            sectionElements.forEach(section => {
+                const title = section.querySelector('.section-title-input').value;
+                const content = section.querySelector('.section-content-input').value;
+                if (title) {
+                    templateData.sections.push({ title, content });
+                }
+            });
+            
+            if (!templateData.name || !templateData.category || templateData.sections.length === 0) {
+                showAlert('Preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+            
+            // Simular salvamento
+            const newTemplate = {
+                id: templatesData.length + 1,
+                ...templateData,
+                preview: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjMjU2M2ViIi8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5Ob3ZvIFRlbXBsYXRlPC90ZXh0Pgo8L3N2Zz4=",
+                sections: templateData.sections.map(s => s.title),
+                usageCount: 0,
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+            
+            templatesData.push(newTemplate);
+            loadTemplates();
+            closeTemplateModal();
+            showAlert('Template criado com sucesso!', 'success');
+        }
+
+        // Preview da imagem do template
+        function previewTemplateImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('templatePreviewImg');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Utilitários
+        function getCategoryName(category) {
+            const categories = {
+                business: 'Negócios',
+                marketing: 'Marketing',
+                tech: 'Tecnologia',
+                consulting: 'Consultoria',
+                design: 'Design',
+                education: 'Educação'
+            };
+            return categories[category] || category;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        let currentPreviewTemplate = null;
+    </script>
+</body>
+</html>

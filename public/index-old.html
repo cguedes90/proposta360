@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construtor de Propostas - API</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+            color: #334155;
+        }
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        .section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .endpoint {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+        .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .get { background: #10b981; color: white; }
+        .post { background: #3b82f6; color: white; }
+        .put { background: #f59e0b; color: white; }
+        .delete { background: #ef4444; color: white; }
+        .feature {
+            background: #ecfccb;
+            border-left: 4px solid #84cc16;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Construtor de Propostas</h1>
+        <p>Sistema completo para criação, gestão e análise de propostas comerciais</p>
+        <p><strong>Status:</strong> <span id="status">Verificando...</span></p>
+    </div>
+
+    <div class="grid">
+        <div class="section">
+            <h2>📊 Recursos Implementados</h2>
+            <div class="feature">
+                <strong>✅ Autenticação Completa</strong><br>
+                Cadastro, login e controle de acesso via JWT
+            </div>
+            <div class="feature">
+                <strong>✅ Construtor de Propostas</strong><br>
+                Sistema completo para criar e gerenciar propostas
+            </div>
+            <div class="feature">
+                <strong>✅ Upload de Arquivos</strong><br>
+                Suporte para PDF, DOC, imagens e vídeos
+            </div>
+            <div class="feature">
+                <strong>✅ Links Compartilháveis</strong><br>
+                Geração automática de links únicos para cada proposta
+            </div>
+            <div class="feature">
+                <strong>✅ Analytics Detalhado</strong><br>
+                Rastreamento de visualizações e interações
+            </div>
+            <div class="feature">
+                <strong>✅ Notificações</strong><br>
+                Sistema de notificações por email e WhatsApp
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔗 Principais Endpoints</h2>
+            
+            <h3>Autenticação</h3>
+            <div class="endpoint">
+                <span class="method post">POST</span> /api/auth/register
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span> /api/auth/login
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /api/auth/profile
+            </div>
+
+            <h3>Propostas</h3>
+            <div class="endpoint">
+                <span class="method post">POST</span> /api/proposals
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /api/proposals
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /api/proposals/:id
+            </div>
+
+            <h3>Seções</h3>
+            <div class="endpoint">
+                <span class="method post">POST</span> /api/sections
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span> /api/sections
+            </div>
+
+            <h3>Arquivos</h3>
+            <div class="endpoint">
+                <span class="method post">POST</span> /api/files/upload
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span> /api/files/upload-multiple
+            </div>
+
+            <h3>Público (sem auth)</h3>
+            <div class="endpoint">
+                <span class="method get">GET</span> /api/public/proposal/:publicLink
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ Configuração Necessária</h2>
+        <div class="warning">
+            <strong>Antes de usar em produção:</strong><br>
+            1. Configure as variáveis de ambiente no arquivo <code>.env</code><br>
+            2. Adicione suas credenciais de email (Gmail/SMTP)<br>
+            3. Configure a API do WhatsApp (opcional)<br>
+            4. Execute <code>npm run migrate</code> para criar as tabelas<br>
+            5. Configure o domínio do Vercel no <code>vercel.json</code>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🚀 Como usar</h2>
+        <ol>
+            <li><strong>Cadastro:</strong> Crie uma conta via <code>/api/auth/register</code></li>
+            <li><strong>Login:</strong> Faça login e obtenha o token JWT</li>
+            <li><strong>Criar Seções:</strong> Crie seções reutilizáveis com conteúdo</li>
+            <li><strong>Upload de Arquivos:</strong> Faça upload de imagens, vídeos, PDFs</li>
+            <li><strong>Construir Proposta:</strong> Monte sua proposta com as seções</li>
+            <li><strong>Compartilhar:</strong> Use o link público para compartilhar</li>
+            <li><strong>Acompanhar:</strong> Monitore as visualizações via analytics</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>📱 Links para Compartilhamento</h2>
+        <p>Cada proposta gera automaticamente:</p>
+        <ul>
+            <li><strong>Link Direto:</strong> Para copiar e colar</li>
+            <li><strong>Link WhatsApp:</strong> Compartilha direto no WhatsApp</li>
+            <li><strong>Link Email:</strong> Abre o cliente de email com a proposta</li>
+        </ul>
+    </div>
+
+    <script>
+        fetch('/api/health')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('status').textContent = `${data.status} - ${data.timestamp}`;
+                document.getElementById('status').style.color = '#10b981';
+            })
+            .catch(error => {
+                document.getElementById('status').textContent = 'Offline';
+                document.getElementById('status').style.color = '#ef4444';
+            });
+    </script>
+</body>
+</html>

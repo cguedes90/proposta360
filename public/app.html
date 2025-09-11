@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construtor de Propostas - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            background: #f8fafc;
+            color: #334155;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .auth-section, .main-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .btn {
+            background: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        
+        .btn-success {
+            background: #16a34a;
+        }
+        
+        .btn-success:hover {
+            background: #15803d;
+        }
+        
+        .btn-danger {
+            background: #dc2626;
+        }
+        
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .proposal-item {
+            border: 1px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .section-item {
+            border: 1px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            background: #f9fafb;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: #f0f9f0;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .alert-error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        
+        .close:hover {
+            color: #374151;
+        }
+        
+        .public-link {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 15px;
+            border-radius: 6px;
+            word-break: break-all;
+            font-family: monospace;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            border-bottom-color: #2563eb;
+            color: #2563eb;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Construtor de Propostas</h1>
+            <p>Sistema completo para criação e gestão de propostas comerciais</p>
+            <div id="userInfo" class="hidden" style="margin-top: 15px;">
+                <span>Logado como: <strong id="userName"></strong></span>
+                <button class="btn btn-secondary" onclick="logout()" style="margin-left: 15px;">Sair</button>
+            </div>
+        </div>
+
+        <!-- Auth Section -->
+        <div id="authSection" class="auth-section">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('login')">Login</div>
+                <div class="tab" onclick="showTab('register')">Cadastro</div>
+            </div>
+
+            <div id="loginTab" class="tab-content active">
+                <h2>Fazer Login</h2>
+                <form onsubmit="login(event)">
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha:</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn">Entrar</button>
+                </form>
+            </div>
+
+            <div id="registerTab" class="tab-content">
+                <h2>Criar Conta</h2>
+                <form onsubmit="register(event)">
+                    <div class="form-group">
+                        <label>Nome:</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha:</label>
+                        <input type="password" id="registerPassword" required minlength="6">
+                    </div>
+                    <button type="submit" class="btn">Criar Conta</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Application -->
+        <div id="mainSection" class="main-section hidden">
+            <div class="tabs">
+                <div class="tab active" onclick="showMainTab('propostas')">Propostas</div>
+                <div class="tab" onclick="showMainTab('secoes')">Seções</div>
+                <div class="tab" onclick="showMainTab('analytics')">Analytics</div>
+            </div>
+
+            <!-- Propostas Tab -->
+            <div id="propostasTab" class="tab-content active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Minhas Propostas</h2>
+                    <button class="btn" onclick="showCreateProposalModal()">Nova Proposta</button>
+                </div>
+                <div id="proposalsList"></div>
+            </div>
+
+            <!-- Seções Tab -->
+            <div id="secoesTab" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Minhas Seções</h2>
+                    <button class="btn" onclick="showCreateSectionModal()">Nova Seção</button>
+                </div>
+                <div id="sectionsList"></div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analyticsTab" class="tab-content">
+                <h2>Dashboard Analytics</h2>
+                <div id="analyticsContent"></div>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alerts"></div>
+    </div>
+
+    <!-- Modais -->
+    <!-- Modal Criar Proposta -->
+    <div id="createProposalModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('createProposalModal')">&times;</span>
+            <h2>Nova Proposta</h2>
+            <form onsubmit="createProposal(event)">
+                <div class="form-group">
+                    <label>Título Público:</label>
+                    <input type="text" id="proposalTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Título Privado (opcional):</label>
+                    <input type="text" id="proposalPrivateTitle">
+                </div>
+                <button type="submit" class="btn">Criar Proposta</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Criar Seção -->
+    <div id="createSectionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('createSectionModal')">&times;</span>
+            <h2>Nova Seção</h2>
+            <form onsubmit="createSection(event)">
+                <div class="form-group">
+                    <label>Título:</label>
+                    <input type="text" id="sectionTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo:</label>
+                    <select id="sectionType" required>
+                        <option value="text">Texto</option>
+                        <option value="image">Imagem</option>
+                        <option value="video">Vídeo</option>
+                        <option value="file">Arquivo</option>
+                        <option value="mixed">Misto</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Conteúdo:</label>
+                    <textarea id="sectionContent" rows="5" placeholder='{"text": "Seu conteúdo aqui..."}'></textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="sectionReusable"> Seção reutilizável
+                    </label>
+                </div>
+                <button type="submit" class="btn">Criar Seção</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Compartilhar -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('shareModal')">&times;</span>
+            <h2>Compartilhar Proposta</h2>
+            <div id="shareContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Detectar automaticamente a URL base
+        const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+        let authToken = localStorage.getItem('authToken');
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 App iniciado!');
+            console.log('API_BASE:', API_BASE);
+            console.log('Token existente:', authToken ? 'Sim' : 'Não');
+            console.log('Usuário existente:', currentUser ? currentUser.name : 'Não');
+            
+            if (authToken && currentUser) {
+                showMainApp();
+                loadProposals();
+                loadSections();
+            }
+            
+            // Adicionar event listeners para debug
+            const registerForm = document.querySelector('#registerTab form');
+            if (registerForm) {
+                console.log('✅ Formulário de registro encontrado');
+                registerForm.addEventListener('submit', function(e) {
+                    console.log('📝 Formulário de registro submetido!');
+                });
+            } else {
+                console.error('❌ Formulário de registro NÃO encontrado');
+            }
+        });
+
+        // Autenticação
+        async function login(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showMainApp();
+                    showAlert('Login realizado com sucesso!', 'success');
+                    loadProposals();
+                    loadSections();
+                } else {
+                    showAlert(data.error || 'Erro no login', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro de conexão', 'error');
+            }
+        }
+
+        async function register(event) {
+            console.log('🔥 Função register chamada!', event);
+            event.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            console.log('📋 Dados coletados do formulário:');
+            console.log('- Nome:', name);
+            console.log('- Email:', email);
+            console.log('- Senha:', password ? `${password.length} caracteres` : 'VAZIA');
+            console.log('- API_BASE:', API_BASE);
+            
+            if (!name || !email || !password) {
+                console.error('❌ Dados incompletos!');
+                showAlert('Por favor, preencha todos os campos', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (response.ok) {
+                    authToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showMainApp();
+                    showAlert('Conta criada com sucesso!', 'success');
+                    loadProposals();
+                    loadSections();
+                } else {
+                    console.error('Erro no cadastro:', data);
+                    showAlert(data.error || 'Erro no cadastro', 'error');
+                }
+            } catch (error) {
+                console.error('Erro de conexão:', error);
+                showAlert(`Erro de conexão: ${error.message}`, 'error');
+            }
+        }
+
+        function logout() {
+            authToken = null;
+            currentUser = null;
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            showAuthSection();
+        }
+
+        function showMainApp() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('mainSection').classList.remove('hidden');
+            document.getElementById('userInfo').classList.remove('hidden');
+            document.getElementById('userName').textContent = currentUser.name;
+        }
+
+        function showAuthSection() {
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('userInfo').classList.add('hidden');
+        }
+
+        // Propostas
+        async function loadProposals() {
+            try {
+                const response = await fetch(`${API_BASE}/proposals`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayProposals(data.proposals);
+                }
+            } catch (error) {
+                showAlert('Erro ao carregar propostas', 'error');
+            }
+        }
+
+        function displayProposals(proposals) {
+            const container = document.getElementById('proposalsList');
+            
+            if (proposals.length === 0) {
+                container.innerHTML = '<p>Nenhuma proposta criada ainda.</p>';
+                return;
+            }
+            
+            container.innerHTML = proposals.map(proposal => `
+                <div class="proposal-item">
+                    <h3>${proposal.title}</h3>
+                    <p><strong>Status:</strong> ${proposal.status}</p>
+                    <p><strong>Criada em:</strong> ${new Date(proposal.created_at).toLocaleDateString()}</p>
+                    <p><strong>Seções:</strong> ${proposal.section_count || 0}</p>
+                    <p><strong>Visualizações:</strong> ${proposal.view_count || 0}</p>
+                    <div style="margin-top: 10px;">
+                        <button class="btn btn-secondary" onclick="shareProposal('${proposal.id}', '${proposal.public_link}')">Compartilhar</button>
+                        <button class="btn btn-success" onclick="viewAnalytics('${proposal.id}')">Analytics</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function createProposal(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('proposalTitle').value;
+            const private_title = document.getElementById('proposalPrivateTitle').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/proposals`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ title, private_title })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    closeModal('createProposalModal');
+                    showAlert('Proposta criada com sucesso!', 'success');
+                    loadProposals();
+                    
+                    // Limpar formulário
+                    document.getElementById('proposalTitle').value = '';
+                    document.getElementById('proposalPrivateTitle').value = '';
+                } else {
+                    showAlert(data.error || 'Erro ao criar proposta', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro de conexão', 'error');
+            }
+        }
+
+        // Seções
+        async function loadSections() {
+            try {
+                const response = await fetch(`${API_BASE}/sections`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displaySections(data.sections);
+                }
+            } catch (error) {
+                showAlert('Erro ao carregar seções', 'error');
+            }
+        }
+
+        function displaySections(sections) {
+            const container = document.getElementById('sectionsList');
+            
+            if (sections.length === 0) {
+                container.innerHTML = '<p>Nenhuma seção criada ainda.</p>';
+                return;
+            }
+            
+            container.innerHTML = sections.map(section => `
+                <div class="section-item">
+                    <h3>${section.title}</h3>
+                    <p><strong>Tipo:</strong> ${section.type}</p>
+                    <p><strong>Reutilizável:</strong> ${section.is_reusable ? 'Sim' : 'Não'}</p>
+                    <p><strong>Criada em:</strong> ${new Date(section.created_at).toLocaleDateString()}</p>
+                    <details>
+                        <summary>Ver conteúdo</summary>
+                        <pre style="background: #f3f4f6; padding: 10px; border-radius: 4px; margin-top: 10px; white-space: pre-wrap;">${JSON.stringify(section.content, null, 2)}</pre>
+                    </details>
+                </div>
+            `).join('');
+        }
+
+        async function createSection(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('sectionTitle').value;
+            const type = document.getElementById('sectionType').value;
+            const contentText = document.getElementById('sectionContent').value;
+            const is_reusable = document.getElementById('sectionReusable').checked;
+            
+            let content;
+            try {
+                content = JSON.parse(contentText);
+            } catch (error) {
+                content = { text: contentText };
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/sections`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ title, type, content, is_reusable })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    closeModal('createSectionModal');
+                    showAlert('Seção criada com sucesso!', 'success');
+                    loadSections();
+                    
+                    // Limpar formulário
+                    document.getElementById('sectionTitle').value = '';
+                    document.getElementById('sectionContent').value = '';
+                    document.getElementById('sectionReusable').checked = false;
+                } else {
+                    showAlert(data.error || 'Erro ao criar seção', 'error');
+                }
+            } catch (error) {
+                showAlert('Erro de conexão', 'error');
+            }
+        }
+
+        // Compartilhamento
+        async function shareProposal(proposalId, publicLink) {
+            try {
+                const response = await fetch(`${API_BASE}/analytics/proposal/${proposalId}/share-links`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const shareContent = `
+                        <div class="form-group">
+                            <label>Link Direto:</label>
+                            <div class="public-link">${data.shareLinks.direct}</div>
+                        </div>
+                        <div class="share-buttons">
+                            <a href="${data.shareLinks.whatsapp}" target="_blank" class="btn btn-success">WhatsApp</a>
+                            <a href="${data.shareLinks.email}" class="btn btn-secondary">Email</a>
+                            <button class="btn" onclick="copyToClipboard('${data.shareLinks.direct}')">Copiar Link</button>
+                        </div>
+                    `;
+                    
+                    document.getElementById('shareContent').innerHTML = shareContent;
+                    document.getElementById('shareModal').style.display = 'block';
+                }
+            } catch (error) {
+                showAlert('Erro ao gerar links', 'error');
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showAlert('Link copiado!', 'success');
+            });
+        }
+
+        // Analytics
+        async function viewAnalytics(proposalId) {
+            showMainTab('analytics');
+            
+            try {
+                const response = await fetch(`${API_BASE}/analytics/proposal/${proposalId}`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayAnalytics(data.analytics);
+                }
+            } catch (error) {
+                showAlert('Erro ao carregar analytics', 'error');
+            }
+        }
+
+        function displayAnalytics(analytics) {
+            const container = document.getElementById('analyticsContent');
+            
+            container.innerHTML = `
+                <div class="grid">
+                    <div class="card">
+                        <h3>📊 Visão Geral</h3>
+                        <p><strong>Total de visualizações:</strong> ${analytics.overview.total_views || 0}</p>
+                        <p><strong>Visitantes únicos:</strong> ${analytics.overview.unique_views || 0}</p>
+                        <p><strong>Tempo médio:</strong> ${Math.round(analytics.overview.avg_time_spent || 0)}s</p>
+                        <p><strong>Última visualização:</strong> ${analytics.overview.last_view ? new Date(analytics.overview.last_view).toLocaleString() : 'Nunca'}</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>📄 Seções</h3>
+                        ${analytics.sections.map(section => `
+                            <div style="margin-bottom: 10px; padding: 10px; background: #f9fafb; border-radius: 4px;">
+                                <strong>${section.title}</strong><br>
+                                <small>Visualizações: ${section.unique_viewers || 0} | Interações: ${section.interactions || 0}</small>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🔥 Interações</h3>
+                        ${analytics.interactions.map(interaction => `
+                            <div style="margin-bottom: 10px;">
+                                <strong>${interaction.interaction_type}:</strong> ${interaction.count}
+                                <br><small>Última: ${new Date(interaction.last_interaction).toLocaleString()}</small>
+                            </div>
+                        `).join('') || '<p>Nenhuma interação ainda</p>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Utilitários
+        function showTab(tabName) {
+            document.querySelectorAll('#authSection .tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('#authSection .tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        function showMainTab(tabName) {
+            document.querySelectorAll('#mainSection .tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('#mainSection .tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            if (tabName === 'analytics') {
+                loadDashboardAnalytics();
+            }
+        }
+
+        async function loadDashboardAnalytics() {
+            try {
+                const response = await fetch(`${API_BASE}/analytics/dashboard`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayDashboardAnalytics(data.overview);
+                }
+            } catch (error) {
+                showAlert('Erro ao carregar dashboard', 'error');
+            }
+        }
+
+        function displayDashboardAnalytics(overview) {
+            const container = document.getElementById('analyticsContent');
+            
+            container.innerHTML = `
+                <div class="grid">
+                    <div class="card">
+                        <h3>📊 Propostas</h3>
+                        <p><strong>Total:</strong> ${overview.proposalsStats?.total_proposals || 0}</p>
+                        <p><strong>Rascunhos:</strong> ${overview.proposalsStats?.draft_proposals || 0}</p>
+                        <p><strong>Ativas:</strong> ${overview.proposalsStats?.active_proposals || 0}</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>👁️ Visualizações</h3>
+                        <p><strong>Total:</strong> ${overview.viewsStats?.total_views || 0}</p>
+                        <p><strong>Visitantes únicos:</strong> ${overview.viewsStats?.unique_visitors || 0}</p>
+                        <p><strong>Tempo médio:</strong> ${Math.round(overview.viewsStats?.avg_time_spent || 0)}s</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🏆 Top Propostas</h3>
+                        ${overview.topProposals?.map(proposal => `
+                            <div style="margin-bottom: 10px; padding: 10px; background: #f9fafb; border-radius: 4px;">
+                                <strong>${proposal.title}</strong><br>
+                                <small>Visualizações: ${proposal.view_count || 0} | Únicos: ${proposal.unique_views || 0}</small>
+                            </div>
+                        `).join('') || '<p>Nenhuma proposta ainda</p>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function showCreateProposalModal() {
+            document.getElementById('createProposalModal').style.display = 'block';
+        }
+
+        function showCreateSectionModal() {
+            document.getElementById('createSectionModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showAlert(message, type) {
+            const alertsContainer = document.getElementById('alerts');
+            const alertId = 'alert_' + Date.now();
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.id = alertId;
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            alertsContainer.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                const alert = document.getElementById(alertId);
+                if (alert) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+
+        // Fechar modais clicando fora
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

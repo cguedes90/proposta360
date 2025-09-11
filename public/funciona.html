@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema que FUNCIONA</title>
+</head>
+<body>
+    <h1>CADASTRO QUE FUNCIONA</h1>
+    
+    <div>
+        <label>Nome:</label>
+        <input type="text" id="nome" value="Usuario Teste">
+    </div>
+    <br>
+    
+    <div>
+        <label>Email:</label>
+        <input type="email" id="email" value="teste123@email.com">
+    </div>
+    <br>
+    
+    <div>
+        <label>Senha:</label>
+        <input type="password" id="senha" value="123456">
+    </div>
+    <br>
+    
+    <button onclick="cadastrar()">CADASTRAR AGORA</button>
+    <button onclick="alert('FUNCIONA!')">TESTE ALERT</button>
+    
+    <br><br>
+    <div id="resultado" style="border: 1px solid #ccc; padding: 10px; margin-top: 20px;">
+        Resultado aparecerá aqui...
+    </div>
+
+    <script>
+        function cadastrar() {
+            document.getElementById('resultado').innerHTML = 'Iniciando cadastro...';
+            
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            
+            document.getElementById('resultado').innerHTML += '<br>Dados coletados: ' + nome + ', ' + email;
+            
+            fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: nome,
+                    email: email,
+                    password: senha
+                })
+            })
+            .then(response => {
+                document.getElementById('resultado').innerHTML += '<br>Status: ' + response.status;
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('resultado').innerHTML += '<br>Resposta: ' + JSON.stringify(data);
+                if (data.user) {
+                    alert('SUCESSO! Usuario criado: ' + data.user.name);
+                } else {
+                    alert('ERRO: ' + (data.error || 'Erro desconhecido'));
+                }
+            })
+            .catch(error => {
+                document.getElementById('resultado').innerHTML += '<br>ERRO: ' + error.message;
+                alert('ERRO DE CONEXÃO: ' + error.message);
+            });
+        }
+    </script>
+</body>
+</html>

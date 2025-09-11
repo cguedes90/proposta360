@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Básico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            background: #f9f9f9;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste Básico de Cadastro</h1>
+    
+    <div class="container">
+        <h2>Teste 1: Função JavaScript</h2>
+        <button onclick="testeBasico()">Teste Básico</button>
+        <button onclick="alert('JavaScript funcionando!')">Teste Alert</button>
+    </div>
+    
+    <div class="container">
+        <h2>Teste 2: Cadastro Direto</h2>
+        <input type="text" id="nome" placeholder="Nome" value="Usuario Teste">
+        <input type="email" id="email" placeholder="Email" value="usuario@teste.com">
+        <input type="password" id="senha" placeholder="Senha" value="123456">
+        <button onclick="cadastrarUsuario()">CADASTRAR AGORA</button>
+    </div>
+    
+    <div class="container">
+        <h2>Teste 3: Fetch Simples</h2>
+        <button onclick="testarAPI()">Testar API Health</button>
+        <button onclick="testarCORS()">Testar CORS</button>
+    </div>
+    
+    <div class="log" id="log">
+        [LOG] Página carregada<br>
+    </div>
+    
+    <script>
+        function log(msg) {
+            const logEl = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logEl.innerHTML += `[${timestamp}] ${msg}<br>`;
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(msg);
+        }
+        
+        function testeBasico() {
+            log("✅ Função JavaScript está funcionando!");
+            const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+            log(`📡 API Base detectada: ${API_BASE}`);
+        }
+        
+        async function cadastrarUsuario() {
+            log("🚀 Iniciando cadastro...");
+            
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            
+            log(`📝 Dados: ${nome} | ${email} | ${senha.length} chars`);
+            
+            if (!nome || !email || !senha) {
+                log("❌ Campos vazios!");
+                alert("Preencha todos os campos!");
+                return;
+            }
+            
+            const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+            const url = `${API_BASE}/auth/register`;
+            
+            log(`📡 URL: ${url}`);
+            
+            try {
+                log("📡 Enviando requisição...");
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: nome,
+                        email: email,
+                        password: senha
+                    })
+                });
+                
+                log(`📥 Status: ${response.status}`);
+                log(`📥 Status Text: ${response.statusText}`);
+                
+                if (!response.ok) {
+                    log(`❌ Response não OK: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                log(`📦 Dados: ${JSON.stringify(data, null, 2)}`);
+                
+                if (response.ok && data.user) {
+                    log("🎉 SUCESSO! Usuário cadastrado!");
+                    alert(`Sucesso! Usuário ${data.user.name} cadastrado com ID: ${data.user.id}`);
+                } else {
+                    log(`❌ Erro: ${data.error || 'Erro desconhecido'}`);
+                    alert(`Erro: ${data.error || 'Erro desconhecido'}`);
+                }
+                
+            } catch (error) {
+                log(`💥 Erro catch: ${error.message}`);
+                log(`💥 Erro stack: ${error.stack}`);
+                alert(`Erro de conexão: ${error.message}`);
+            }
+        }
+        
+        async function testarAPI() {
+            log("🔍 Testando API Health...");
+            
+            try {
+                const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                log(`✅ API Health OK: ${JSON.stringify(data)}`);
+                
+            } catch (error) {
+                log(`❌ API Health Erro: ${error.message}`);
+            }
+        }
+        
+        async function testarCORS() {
+            log("🌍 Testando CORS...");
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/health', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                log(`✅ CORS OK: ${response.status}`);
+                
+            } catch (error) {
+                log(`❌ CORS Erro: ${error.message}`);
+            }
+        }
+        
+        // Auto-teste na inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            log("📋 DOM carregado");
+            log(`🌐 URL atual: ${window.location.href}`);
+            log(`🏠 Origin: ${window.location.origin}`);
+            log(`📡 API Base: ${window.location.protocol}//${window.location.host}/api`);
+            
+            // Teste automático
+            setTimeout(() => {
+                log("🔄 Executando teste automático...");
+                testarAPI();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
