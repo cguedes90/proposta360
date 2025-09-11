@@ -1917,19 +1917,164 @@
         }
 
         // Editar proposta
-        function editProposal(proposalId) {
-            showAlert('Editor em desenvolvimento', 'warning');
+        async function editProposal(proposalId) {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    showAlert('Você precisa estar logado', 'error');
+                    return;
+                }
+
+                // Buscar os dados da proposta
+                const response = await fetch(`/api/proposals/${proposalId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar proposta');
+                }
+
+                const result = await response.json();
+                const proposal = result.proposal;
+
+                // Configurar o construtor com os dados da proposta
+                window.currentProposalId = proposal.id;
+                
+                // Ir para a página do construtor
+                showPage('builder');
+                
+                // Aguardar um pouco para garantir que a página foi carregada
+                setTimeout(() => {
+                    // Preencher o título
+                    const titleInput = document.getElementById('proposalBuilderTitle');
+                    if (titleInput) {
+                        titleInput.value = proposal.title || '';
+                    }
+                    
+                    // Preencher o conteúdo se existir
+                    const canvas = document.getElementById('proposalCanvas');
+                    if (canvas && proposal.content) {
+                        canvas.innerHTML = proposal.content;
+                    }
+                    
+                    showAlert('Proposta carregada para edição', 'success');
+                }, 100);
+
+            } catch (error) {
+                console.error('Erro ao carregar proposta:', error);
+                showAlert('Erro ao carregar proposta: ' + error.message, 'error');
+            }
         }
 
         // Ver analytics
-        function viewAnalytics(proposalId) {
-            showPage('analytics');
-            showAlert('Analytics detalhado em desenvolvimento', 'warning');
+        async function viewAnalytics(proposalId) {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    showAlert('Você precisa estar logado', 'error');
+                    return;
+                }
+
+                // Buscar dados da proposta
+                const response = await fetch(`/api/proposals/${proposalId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar dados da proposta');
+                }
+
+                const result = await response.json();
+                const proposal = result.proposal;
+
+                // Mostrar modal com informações básicas
+                const modalHtml = `
+                    <div class="modal" id="analyticsModal" style="display: flex;">
+                        <div class="modal-content" style="max-width: 600px;">
+                            <div class="modal-header">
+                                <h3>Analytics - ${proposal.title}</h3>
+                                <button class="close-modal" onclick="closeModal('analyticsModal')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                                    <div class="stat-card">
+                                        <div class="stat-value">${proposal.view_count || 0}</div>
+                                        <div class="stat-label">Visualizações</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">${proposal.status === 'published' ? 'Publicada' : 'Rascunho'}</div>
+                                        <div class="stat-label">Status</div>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Link Público:</label>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <input type="text" value="${window.location.origin}/proposta/${proposal.public_link}" 
+                                               style="flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;" readonly>
+                                        <button class="btn btn-outline" onclick="copyToClipboard('${window.location.origin}/proposta/${proposal.public_link}')">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Informações:</label>
+                                    <p><strong>Criada em:</strong> ${new Date(proposal.created_at).toLocaleDateString('pt-BR')}</p>
+                                    <p><strong>Última atualização:</strong> ${new Date(proposal.updated_at).toLocaleDateString('pt-BR')}</p>
+                                    <p><strong>ID:</strong> ${proposal.id}</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" onclick="closeModal('analyticsModal')">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Adicionar modal ao body se não existir
+                let modal = document.getElementById('analyticsModal');
+                if (modal) {
+                    modal.remove();
+                }
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            } catch (error) {
+                console.error('Erro ao carregar analytics:', error);
+                showAlert('Erro ao carregar analytics: ' + error.message, 'error');
+            }
+        }
+
+        // Copiar para área de transferência
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showAlert('Link copiado para a área de transferência!', 'success');
+            } catch (error) {
+                // Fallback para navegadores mais antigos
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showAlert('Link copiado para a área de transferência!', 'success');
+                } catch (err) {
+                    showAlert('Erro ao copiar link', 'error');
+                }
+                document.body.removeChild(textArea);
+            }
         }
 
         // Fechar modal
         function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+            }
         }
 
         // Mostrar notificações
@@ -2355,9 +2500,67 @@
             const content = canvas.innerHTML;
             
             try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    showAlert('Você precisa estar logado para salvar uma proposta', 'error');
+                    return;
+                }
+
+                let proposalId = window.currentProposalId;
+                let response;
+
+                if (proposalId) {
+                    // Atualizar proposta existente
+                    response = await fetch(`/api/proposals/${proposalId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            title: title,
+                            content: content
+                        })
+                    });
+                } else {
+                    // Criar nova proposta
+                    response = await fetch('/api/proposals', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            title: title,
+                            content: content
+                        })
+                    });
+                }
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Erro ao salvar proposta');
+                }
+
+                const result = await response.json();
+                
+                // Salvar o ID da proposta para futuras atualizações
+                if (result.proposal && result.proposal.id) {
+                    window.currentProposalId = result.proposal.id;
+                }
+
                 showAlert('Proposta salva com sucesso!', 'success');
+                
+                // Recarregar a lista de propostas se estivermos na aba de propostas
+                if (window.currentPage === 'propostas') {
+                    loadPage('propostas');
+                }
+                
+                return result;
             } catch (error) {
+                console.error('Erro ao salvar proposta:', error);
                 showAlert('Erro ao salvar proposta: ' + error.message, 'error');
+                throw error;
             }
         }
         
@@ -2392,11 +2595,46 @@
             `);
         }
         
-        function publishBuilderProposal() {
+        async function publishBuilderProposal() {
             if (confirm('Deseja publicar esta proposta? Ela ficará disponível para visualização.')) {
-                saveBuilderProposal().then(() => {
+                try {
+                    // Primeiro salvar a proposta
+                    await saveBuilderProposal();
+                    
+                    // Depois atualizar o status para published
+                    const token = localStorage.getItem('authToken');
+                    const proposalId = window.currentProposalId;
+                    
+                    if (!proposalId) {
+                        throw new Error('Proposta precisa ser salva antes de ser publicada');
+                    }
+                    
+                    const response = await fetch(`/api/proposals/${proposalId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            status: 'published'
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error || 'Erro ao publicar proposta');
+                    }
+
                     showAlert('Proposta publicada com sucesso!', 'success');
-                });
+                    
+                    // Recarregar a lista de propostas se estivermos na aba de propostas
+                    if (window.currentPage === 'propostas') {
+                        loadPage('propostas');
+                    }
+                } catch (error) {
+                    console.error('Erro ao publicar proposta:', error);
+                    showAlert('Erro ao publicar proposta: ' + error.message, 'error');
+                }
             }
         }
         

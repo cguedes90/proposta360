@@ -3,14 +3,14 @@ const { v4: uuidv4 } = require('uuid');
 
 class Proposal {
   static async create(userId, proposalData) {
-    const { title, private_title } = proposalData;
+    const { title, private_title, content, status = 'draft' } = proposalData;
     const publicLink = uuidv4();
     
     const result = await db.query(
-      `INSERT INTO proposals (user_id, title, private_title, public_link) 
-       VALUES ($1, $2, $3, $4) 
+      `INSERT INTO proposals (user_id, title, private_title, public_link, content, status) 
+       VALUES ($1, $2, $3, $4, $5, $6) 
        RETURNING *`,
-      [userId, title, private_title, publicLink]
+      [userId, title, private_title, publicLink, content, status]
     );
     
     return result.rows[0];

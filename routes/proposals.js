@@ -23,7 +23,28 @@ const proposalValidation = [
     .optional()
     .trim()
     .isLength({ max: 255 })
-    .withMessage('Título privado deve ter até 255 caracteres')
+    .withMessage('Título privado deve ter até 255 caracteres'),
+  body('content')
+    .optional()
+];
+
+const proposalUpdateValidation = [
+  body('title')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 255 })
+    .withMessage('Título deve ter até 255 caracteres'),
+  body('private_title')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Título privado deve ter até 255 caracteres'),
+  body('content')
+    .optional(),
+  body('status')
+    .optional()
+    .isIn(['draft', 'published', 'archived'])
+    .withMessage('Status deve ser draft, published ou archived')
 ];
 
 const sectionOrderValidation = [
@@ -43,7 +64,7 @@ router.use(authenticateToken);
 router.post('/', proposalValidation, createProposal);
 router.get('/', getProposals);
 router.get('/:id', getProposal);
-router.put('/:id', proposalValidation, updateProposal);
+router.put('/:id', proposalUpdateValidation, updateProposal);
 router.delete('/:id', deleteProposal);
 
 router.post('/:proposalId/sections', addSectionToProposal);
