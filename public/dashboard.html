@@ -383,22 +383,27 @@
 
         .proposal-stats {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             align-items: center;
+            margin: 0 1rem;
         }
 
         .proposal-stat {
             text-align: center;
+            min-width: 60px;
         }
 
         .proposal-stat-value {
             font-weight: 600;
             color: var(--text-primary);
+            font-size: 1.1rem;
         }
 
         .proposal-stat-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
+            margin-top: 0.25rem;
+            line-height: 1.2;
         }
 
         .status-badge {
@@ -688,6 +693,37 @@
             background: rgba(245, 158, 11, 0.1);
             color: var(--warning);
             border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .alert.info {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        #alerts {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        #alerts .alert {
+            margin-bottom: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
         
         /* Builder Styles */
@@ -1902,17 +1938,41 @@
 
         // Compartilhar proposta
         async function shareProposal(publicLink) {
-            const url = `https://app.proposta360.com/welcome?id=${publicLink}&return=/proposta/${publicLink}`;
-            
-            if (navigator.clipboard) {
-                try {
+            try {
+                const url = `https://app.proposta360.com/welcome?id=${publicLink}&return=/proposta/${publicLink}`;
+                
+                // Tentar usar a API moderna de clipboard
+                if (navigator.clipboard && window.isSecureContext) {
                     await navigator.clipboard.writeText(url);
-                    showAlert('Link copiado para a área de transferência!', 'success');
-                } catch (error) {
-                    prompt('Link da proposta:', url);
+                    showAlert('✅ Link copiado para a área de transferência!', 'success');
+                    return;
                 }
-            } else {
-                prompt('Link da proposta:', url);
+                
+                // Fallback: usar método mais antigo
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    showAlert('✅ Link copiado para a área de transferência!', 'success');
+                } catch (fallbackError) {
+                    // Último recurso: mostrar o link em um prompt
+                    showAlert('📋 Copie o link abaixo:', 'info');
+                    setTimeout(() => {
+                        prompt('Link da proposta (Ctrl+C para copiar):', url);
+                    }, 100);
+                }
+                
+                document.body.removeChild(textArea);
+                
+            } catch (error) {
+                console.error('Erro ao compartilhar proposta:', error);
+                showAlert('❌ Erro ao copiar link. Tente novamente.', 'error');
             }
         }
 
