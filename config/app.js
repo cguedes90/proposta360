@@ -1,9 +1,9 @@
 const config = {
   // URL base da aplicação
-  APP_URL: process.env.APP_URL || 'https://proposta360.vercel.app',
+  APP_URL: process.env.APP_URL || 'https://app.proposta360.com',
   
   // URLs específicas
-  PROPOSAL_BASE_URL: process.env.PROPOSAL_BASE_URL || 'https://proposta360.vercel.app/proposta',
+  PROPOSAL_BASE_URL: process.env.PROPOSAL_BASE_URL || 'https://app.proposta360.com/proposta',
   
   // Configurações de notificação
   NOTIFICATION_SETTINGS: {

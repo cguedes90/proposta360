@@ -1902,7 +1902,7 @@
 
         // Compartilhar proposta
         async function shareProposal(publicLink) {
-            const url = `https://proposta360.vercel.app/welcome?id=${publicLink}&return=/proposta/${publicLink}`;
+            const url = `https://app.proposta360.com/welcome?id=${publicLink}&return=/proposta/${publicLink}`;
             
             if (navigator.clipboard) {
                 try {
@@ -2122,9 +2122,9 @@
                                 <i class="fas fa-link"></i> Link de Compartilhamento:
                             </label>
                             <div style="display: flex; gap: 0.5rem;">
-                                <input type="text" value="https://proposta360.vercel.app/welcome?id=${proposal.public_link}&return=/proposta/${proposal.public_link}" 
+                                <input type="text" value="https://app.proposta360.com/welcome?id=${proposal.public_link}&return=/proposta/${proposal.public_link}" 
                                        style="flex: 1; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem;" readonly>
-                                <button class="btn btn-outline" onclick="copyToClipboard('https://proposta360.vercel.app/welcome?id=${proposal.public_link}&return=/proposta/${proposal.public_link}')">
+                                <button class="btn btn-outline" onclick="copyToClipboard('https://app.proposta360.com/welcome?id=${proposal.public_link}&return=/proposta/${proposal.public_link}')">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </div>

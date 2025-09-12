@@ -182,7 +182,7 @@ class TrackingController {
           visitorCompany: visitor.company,
           visitorPosition: visitor.position,
           notificationType: type,
-          dashboardUrl: 'https://proposta360.vercel.app/dashboard'
+          dashboardUrl: 'https://app.proposta360.com/dashboard'
         });
       }
 
