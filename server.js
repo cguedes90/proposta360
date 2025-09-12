@@ -15,6 +15,7 @@ const analyticsRoutes = require('./routes/analytics');
 const leadRoutes = require('./routes/leads');
 const adminRoutes = require('./routes/admin');
 const trackingRoutes = require('./routes/tracking');
+const shortLinkRoutes = require('./routes/shortlinks');
 
 // Serviços
 const followUpService = require('./services/followUpService');
@@ -63,6 +64,10 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/leads', leadRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/tracking', trackingRoutes);
+
+// Rotas de links curtos (antes das rotas HTML para interceptar /p/*)
+app.use('/p', shortLinkRoutes);
+app.use('/api/shortlinks', shortLinkRoutes);
 
 // Rotas para páginas HTML
 app.get('/', (req, res) => {

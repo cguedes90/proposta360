@@ -725,6 +725,52 @@
                 opacity: 1;
             }
         }
+
+        /* Notification Styles */
+        .notification-item {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .notification-item.unread {
+            background: rgba(37, 99, 235, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .notification-item.read {
+            background: var(--background);
+            opacity: 0.8;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.8rem;
+        }
         
         /* Builder Styles */
         .builder-container {
@@ -1250,6 +1296,7 @@
                 }
                 
                 showDashboard();
+                updateNotificationCount();
             } else {
                 showAuth();
             }
@@ -1818,7 +1865,7 @@
                         </div>
                     </div>
                     <div>
-                        <button class="btn btn-outline" onclick="shareProposal('${proposal.public_link}')">
+                        <button class="btn btn-outline" onclick="shareProposal('${proposal.id}')">
                             <i class="fas fa-share"></i>
                         </button>
                     </div>
@@ -1869,7 +1916,7 @@
                         <button class="btn btn-outline" onclick="editProposal('${proposal.id}')">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-outline" onclick="shareProposal('${proposal.public_link}')">
+                        <button class="btn btn-outline" onclick="shareProposal('${proposal.id}')">
                             <i class="fas fa-share"></i>
                         </button>
                         <button class="btn btn-outline" onclick="viewAnalytics('${proposal.id}')">
@@ -1937,20 +1984,40 @@
         }
 
         // Compartilhar proposta
-        async function shareProposal(publicLink) {
+        async function shareProposal(proposalId) {
             try {
-                const url = `https://app.proposta360.com/welcome?id=${publicLink}&return=/proposta/${publicLink}`;
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    showAlert('Você precisa estar logado', 'error');
+                    return;
+                }
+
+                showAlert('🔗 Gerando link curto...', 'info');
+
+                // Buscar ou criar link curto
+                const response = await fetch(`/api/shortlinks/proposal/${proposalId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao obter link curto');
+                }
+
+                const linkData = await response.json();
+                const shortUrl = linkData.shortUrl;
                 
                 // Tentar usar a API moderna de clipboard
                 if (navigator.clipboard && window.isSecureContext) {
-                    await navigator.clipboard.writeText(url);
-                    showAlert('✅ Link copiado para a área de transferência!', 'success');
+                    await navigator.clipboard.writeText(shortUrl);
+                    showAlert(`✅ Link copiado! 📊 ${linkData.clicks} cliques`, 'success');
                     return;
                 }
                 
                 // Fallback: usar método mais antigo
                 const textArea = document.createElement('textarea');
-                textArea.value = url;
+                textArea.value = shortUrl;
                 textArea.style.position = 'fixed';
                 textArea.style.opacity = '0';
                 document.body.appendChild(textArea);
@@ -1959,12 +2026,12 @@
                 
                 try {
                     document.execCommand('copy');
-                    showAlert('✅ Link copiado para a área de transferência!', 'success');
+                    showAlert(`✅ Link copiado! 📊 ${linkData.clicks} cliques`, 'success');
                 } catch (fallbackError) {
                     // Último recurso: mostrar o link em um prompt
                     showAlert('📋 Copie o link abaixo:', 'info');
                     setTimeout(() => {
-                        prompt('Link da proposta (Ctrl+C para copiar):', url);
+                        prompt('Link da proposta (Ctrl+C para copiar):', shortUrl);
                     }, 100);
                 }
                 
@@ -2182,9 +2249,9 @@
                                 <i class="fas fa-link"></i> Link de Compartilhamento:
                             </label>
                             <div style="display: flex; gap: 0.5rem;">
-                                <input type="text" value="https://app.proposta360.com/welcome?id=${proposal.public_link}&return=/proposta/${proposal.public_link}" 
+                                <input type="text" value="https://proposta360.com.br/welcome?id=${proposal.public_link}&return=/proposta/${proposal.public_link}" 
                                        style="flex: 1; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem;" readonly>
-                                <button class="btn btn-outline" onclick="copyToClipboard('https://app.proposta360.com/welcome?id=${proposal.public_link}&return=/proposta/${proposal.public_link}')">
+                                <button class="btn btn-outline" onclick="copyToClipboard('https://proposta360.com.br/welcome?id=${proposal.public_link}&return=/proposta/${proposal.public_link}')">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </div>
@@ -2264,8 +2331,187 @@
         }
 
         // Mostrar notificações
-        function showNotifications() {
-            showAlert('Central de notificações em desenvolvimento', 'warning');
+        async function showNotifications() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    showAlert('Você precisa estar logado', 'error');
+                    return;
+                }
+
+                // Buscar notificações
+                const response = await fetch('/api/notifications', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar notificações');
+                }
+
+                const notifications = await response.json();
+
+                // Criar modal de notificações
+                const modal = `
+                    <div class="modal" id="notificationsModal" style="display: flex;">
+                        <div class="modal-content" style="max-width: 600px; width: 90vw;">
+                            <div class="modal-header">
+                                <h3><i class="fas fa-bell"></i> Central de Notificações</h3>
+                                <button class="close-modal" onclick="closeModal('notificationsModal')">&times;</button>
+                            </div>
+                            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                                ${notifications.length > 0 ? `
+                                    <div style="margin-bottom: 1rem;">
+                                        <button class="btn btn-outline btn-sm" onclick="markAllAsRead()">
+                                            <i class="fas fa-check-double"></i> Marcar todas como lidas
+                                        </button>
+                                    </div>
+                                    ${notifications.map(notification => `
+                                        <div class="notification-item ${notification.read ? 'read' : 'unread'}" data-id="${notification.id}">
+                                            <div class="notification-header">
+                                                <div class="notification-title">
+                                                    ${getNotificationIcon(notification.type)} ${notification.title}
+                                                </div>
+                                                <div class="notification-time">
+                                                    ${formatNotificationTime(notification.created_at)}
+                                                </div>
+                                            </div>
+                                            <div class="notification-message">${notification.message}</div>
+                                            ${!notification.read ? `
+                                                <button class="btn btn-sm btn-outline" onclick="markAsRead('${notification.id}')" style="margin-top: 0.5rem;">
+                                                    <i class="fas fa-check"></i> Marcar como lida
+                                                </button>
+                                            ` : ''}
+                                        </div>
+                                    `).join('')}
+                                ` : `
+                                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                        <i class="fas fa-bell-slash" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                        <h4>Nenhuma notificação</h4>
+                                        <p>Você está em dia! Não há notificações pendentes.</p>
+                                    </div>
+                                `}
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" onclick="closeModal('notificationsModal')">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.insertAdjacentHTML('beforeend', modal);
+
+            } catch (error) {
+                console.error('Erro ao carregar notificações:', error);
+                showAlert('❌ Erro ao carregar notificações', 'error');
+            }
+        }
+
+        // Marcar notificação como lida
+        async function markAsRead(notificationId) {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch(`/api/notifications/${notificationId}/read`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    // Remover da interface
+                    const notificationElement = document.querySelector(`[data-id="${notificationId}"]`);
+                    if (notificationElement) {
+                        notificationElement.classList.remove('unread');
+                        notificationElement.classList.add('read');
+                        const button = notificationElement.querySelector('.btn');
+                        if (button) button.remove();
+                    }
+                    updateNotificationCount();
+                }
+            } catch (error) {
+                console.error('Erro ao marcar como lida:', error);
+            }
+        }
+
+        // Marcar todas como lidas
+        async function markAllAsRead() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('/api/notifications/mark-all-read', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    // Atualizar interface
+                    document.querySelectorAll('.notification-item.unread').forEach(item => {
+                        item.classList.remove('unread');
+                        item.classList.add('read');
+                        const button = item.querySelector('.btn');
+                        if (button) button.remove();
+                    });
+                    updateNotificationCount();
+                    showAlert('✅ Todas as notificações foram marcadas como lidas', 'success');
+                }
+            } catch (error) {
+                console.error('Erro ao marcar todas como lidas:', error);
+            }
+        }
+
+        // Helpers para notificações
+        function getNotificationIcon(type) {
+            const icons = {
+                'proposal_visitor': '👤',
+                'proposal_view': '👁️',
+                'system': '⚙️',
+                'success': '✅',
+                'warning': '⚠️',
+                'error': '❌'
+            };
+            return icons[type] || '📢';
+        }
+
+        function formatNotificationTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffInMinutes = Math.floor((now - date) / (1000 * 60));
+            
+            if (diffInMinutes < 1) return 'Agora';
+            if (diffInMinutes < 60) return `${diffInMinutes}min`;
+            if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h`;
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        // Atualizar contador de notificações
+        async function updateNotificationCount() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+
+                const response = await fetch('/api/notifications/unread-count', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const countElement = document.getElementById('notificationCount');
+                    
+                    if (data.count > 0) {
+                        countElement.textContent = data.count;
+                        countElement.style.display = 'inline-block';
+                    } else {
+                        countElement.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar contador:', error);
+            }
         }
 
         // Menu do usuário
