@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta Demo - Revolução Digital 2024</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --surface-dark: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: var(--gradient);
+            color: white;
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #f1f5f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Proposal Section */
+        .proposal-section {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .proposal-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Proposal Content */
+        .proposal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        .proposal-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .company-info h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .company-info p {
+            color: var(--text-secondary);
+        }
+
+        .proposal-id {
+            background: var(--gradient);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        /* Services Grid */
+        .services-section {
+            margin: 3rem 0;
+        }
+
+        .services-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+        }
+
+        .service-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .service-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            color: white;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .service-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .price-value {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        /* Investment Summary */
+        .investment-section {
+            background: var(--surface-dark);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border-left: 5px solid var(--primary);
+        }
+
+        .investment-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .investment-breakdown {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .investment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+        }
+
+        .investment-item:not(:last-child) {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .investment-total {
+            background: var(--gradient);
+            color: white;
+            margin: 1rem -2rem -2rem;
+            padding: 1.5rem 2rem;
+            border-radius: 0 0 15px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient);
+            color: white;
+            text-align: center;
+            padding: 4rem 0;
+            margin: 3rem 0;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(0) translateY(0) rotate(0deg); }
+            100% { transform: translateX(-30px) translateY(-30px) rotate(360deg); }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--surface-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Features Highlight */
+        .features-highlight {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .feature-highlight {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-highlight:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-highlight-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .proposal-meta {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .proposal-content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-delay-1 { animation-delay: 0.2s; }
+        .animate-delay-2 { animation-delay: 0.4s; }
+        .animate-delay-3 { animation-delay: 0.6s; }
+
+        /* Back to Site */
+        .back-to-site {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            color: var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Back to Site -->
+    <div class="back-to-site">
+        <a href="/" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Voltar ao Site
+        </a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge fade-in">
+                <i class="fas fa-rocket"></i> Demonstração Interativa
+            </div>
+            <h1 class="hero-title fade-in animate-delay-1">Transformação Digital Completa</h1>
+            <p class="hero-subtitle fade-in animate-delay-2">
+                Veja como uma proposta profissional pode impressionar e converter seus clientes
+            </p>
+            
+            <div class="stats-grid fade-in animate-delay-3">
+                <div class="stat-card">
+                    <span class="stat-number">250%</span>
+                    <span class="stat-label">Aumento na Conversão</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">72h</span>
+                    <span class="stat-label">Tempo de Resposta Médio</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Satisfação do Cliente</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proposal Section -->
+    <section class="proposal-section">
+        <div class="container">
+            <div class="proposal-header">
+                <div class="section-badge">Proposta Profissional</div>
+                <h2 class="section-title">Solução Completa para Sua Empresa</h2>
+                <p class="section-subtitle">
+                    Uma proposta detalhada, interativa e profissional que demonstra o valor real dos seus serviços
+                </p>
+            </div>
+
+            <div class="proposal-content fade-in">
+                <div class="proposal-meta">
+                    <div class="company-info">
+                        <h2>TechSolutions Inovação</h2>
+                        <p>Especialistas em Transformação Digital</p>
+                    </div>
+                    <div class="proposal-id">
+                        <i class="fas fa-file-contract"></i>
+                        Proposta #2024-001
+                    </div>
+                </div>
+
+                <!-- Services Section -->
+                <div class="services-section">
+                    <h3 class="services-title">
+                        <i class="fas fa-cogs"></i>
+                        Serviços Inclusos
+                    </h3>
+                    
+                    <div class="services-grid">
+                        <div class="service-card fade-in animate-delay-1">
+                            <div class="service-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <h4 class="service-title">Website Responsivo</h4>
+                            <p class="service-description">
+                                Desenvolvimento de site moderno e responsivo, otimizado para conversões e experiência do usuário.
+                            </p>
+                            <div class="service-price">
+                                <span>Incluso no pacote</span>
+                                <span class="price-value">R$ 8.500</span>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card fade-in animate-delay-2">
+                            <div class="service-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h4 class="service-title">Dashboard Analytics</h4>
+                            <p class="service-description">
+                                Painel completo com métricas, relatórios em tempo real e insights para tomada de decisão.
+                            </p>
+                            <div class="service-price">
+                                <span>Incluso no pacote</span>
+                                <span class="price-value">R$ 5.200</span>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card fade-in animate-delay-3">
+                            <div class="service-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h4 class="service-title">App Mobile</h4>
+                            <p class="service-description">
+                                Aplicativo nativo para iOS e Android com sincronização em tempo real e push notifications.
+                            </p>
+                            <div class="service-price">
+                                <span>Incluso no pacote</span>
+                                <span class="price-value">R$ 12.800</span>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card fade-in animate-delay-1">
+                            <div class="service-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h4 class="service-title">Segurança Avançada</h4>
+                            <p class="service-description">
+                                Implementação de protocolos de segurança, SSL, backup automático e monitoramento 24/7.
+                            </p>
+                            <div class="service-price">
+                                <span>Incluso no pacote</span>
+                                <span class="price-value">R$ 3.100</span>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card fade-in animate-delay-2">
+                            <div class="service-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h4 class="service-title">Treinamento Completo</h4>
+                            <p class="service-description">
+                                Capacitação da equipe, documentação técnica e suporte especializado por 6 meses.
+                            </p>
+                            <div class="service-price">
+                                <span>Incluso no pacote</span>
+                                <span class="price-value">R$ 4.200</span>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card fade-in animate-delay-3">
+                            <div class="service-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <h4 class="service-title">Suporte Premium</h4>
+                            <p class="service-description">
+                                Suporte técnico especializado, atualizações gratuitas e manutenção preventiva.
+                            </p>
+                            <div class="service-price">
+                                <span>12 meses</span>
+                                <span class="price-value">R$ 2.400</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Investment Summary -->
+                <div class="investment-section">
+                    <h3 class="investment-title">
+                        <i class="fas fa-calculator"></i>
+                        Resumo do Investimento
+                    </h3>
+                    <div class="investment-breakdown">
+                        <div class="investment-item">
+                            <span>Desenvolvimento do Sistema</span>
+                            <span><strong>R$ 26.500,00</strong></span>
+                        </div>
+                        <div class="investment-item">
+                            <span>Treinamento e Implementação</span>
+                            <span><strong>R$ 4.200,00</strong></span>
+                        </div>
+                        <div class="investment-item">
+                            <span>Suporte Premium (12 meses)</span>
+                            <span><strong>R$ 2.400,00</strong></span>
+                        </div>
+                        <div class="investment-item">
+                            <span style="color: var(--danger);">Desconto para Fechamento Rápido</span>
+                            <span style="color: var(--danger);"><strong>- R$ 3.100,00</strong></span>
+                        </div>
+                    </div>
+                    <div class="investment-total">
+                        <span>Investimento Total</span>
+                        <span>R$ 30.000,00</span>
+                    </div>
+                </div>
+
+                <!-- Features Highlight -->
+                <div class="features-highlight">
+                    <div class="feature-highlight">
+                        <div class="feature-highlight-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h4>Entrega em 45 dias</h4>
+                        <p>Cronograma definido com marcos semanais</p>
+                    </div>
+                    <div class="feature-highlight">
+                        <div class="feature-highlight-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <h4>Garantia de 2 anos</h4>
+                        <p>Cobertura completa contra defeitos</p>
+                    </div>
+                    <div class="feature-highlight">
+                        <div class="feature-highlight-icon">
+                            <i class="fas fa-sync"></i>
+                        </div>
+                        <h4>Atualizações Gratuitas</h4>
+                        <p>Melhorias contínuas sem custo extra</p>
+                    </div>
+                    <div class="feature-highlight">
+                        <div class="feature-highlight-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>Equipe Especializada</h4>
+                        <p>Desenvolvedores com 8+ anos de experiência</p>
+                    </div>
+                </div>
+
+                <!-- CTA Section -->
+                <div class="cta-section">
+                    <div class="cta-content">
+                        <h3 class="cta-title">Pronto para Revolucionar Seu Negócio?</h3>
+                        <p class="cta-subtitle">
+                            Aceite nossa proposta e comece sua transformação digital hoje mesmo!
+                        </p>
+                        <div class="cta-buttons">
+                            <button class="btn btn-primary" onclick="acceptProposal()">
+                                <i class="fas fa-check"></i>
+                                Aceitar Proposta
+                            </button>
+                            <button class="btn btn-outline" onclick="requestCall()">
+                                <i class="fas fa-phone"></i>
+                                Agendar Conversa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with fade-in class
+        document.addEventListener('DOMContentLoaded', () => {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            fadeElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                observer.observe(el);
+            });
+        });
+
+        // CTA Actions
+        function acceptProposal() {
+            // Show success animation
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            
+            btn.style.background = 'var(--success)';
+            btn.innerHTML = '<i class="fas fa-check"></i> Proposta Aceita!';
+            
+            // Show success message
+            setTimeout(() => {
+                alert(`🎉 Parabéns! 
+
+Esta é uma demonstração do PropostasWin!
+
+Você acabou de ver como uma proposta interativa pode impressionar seus clientes e aumentar suas conversões.
+
+✨ Imagine o impacto que propostas como esta terão no seu negócio!
+
+👥 Seus clientes ficam mais engajados
+📈 Suas conversões aumentam drasticamente  
+⚡ Você se destaca da concorrência
+
+Pronto para criar suas próprias propostas profissionais?`);
+                
+                // Reset button
+                btn.style.background = '';
+                btn.innerHTML = originalText;
+            }, 2000);
+        }
+
+        function requestCall() {
+            alert(`📞 Que ótimo!
+
+Esta é uma demonstração do PropostasWin - a plataforma que cria propostas interativas como esta!
+
+🚀 Quer ver como você pode criar propostas impressionantes para seus clientes?
+
+Volte ao site e experimente nossa plataforma gratuitamente!
+
+💡 Com o PropostasWin você pode:
+• Criar propostas interativas em minutos
+• Acompanhar quando seus clientes visualizam
+• Receber notificações de interesse
+• Aumentar suas conversões em até 300%`);
+        }
+
+        // Track demo interactions
+        let startTime = Date.now();
+        let interactions = 0;
+
+        function trackInteraction(action) {
+            interactions++;
+            console.log(`Demo interaction: ${action} - Total interactions: ${interactions}`);
+        }
+
+        // Add event listeners for tracking
+        document.addEventListener('scroll', () => trackInteraction('scroll'));
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                trackInteraction('button_click');
+            }
+        });
+
+        // Track time spent
+        window.addEventListener('beforeunload', () => {
+            const timeSpent = Math.round((Date.now() - startTime) / 1000);
+            console.log(`Demo session: ${timeSpent}s, ${interactions} interactions`);
+        });
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
