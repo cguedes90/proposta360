@@ -17,6 +17,7 @@ const adminRoutes = require('./routes/admin');
 const trackingRoutes = require('./routes/tracking');
 const shortLinkRoutes = require('./routes/shortlinks');
 const templateRoutes = require('./routes/templates');
+const premiumRoutes = require('./routes/premium');
 
 // Serviços
 const followUpService = require('./services/followUpService');
@@ -73,6 +74,9 @@ app.use('/api/shortlinks', shortLinkRoutes);
 // Rotas de templates
 app.use('/api/templates', templateRoutes);
 
+// Rotas de templates premium
+app.use('/api/premium', premiumRoutes);
+
 // Rotas para páginas HTML
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'landing.html'));
@@ -108,6 +112,10 @@ app.get('/tutorial', (req, res) => {
 
 app.get('/templates', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'templates.html'));
+});
+
+app.get('/marketplace', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'marketplace.html'));
 });
 
 app.get('/api/health', (req, res) => {

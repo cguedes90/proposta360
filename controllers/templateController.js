@@ -9,6 +9,7 @@ class TemplateController {
         category, 
         industry, 
         isPremium, 
+        premium,
         tags, 
         limit = 50,
         popular = false 
@@ -24,6 +25,7 @@ class TemplateController {
         if (category) filters.category = category;
         if (industry) filters.industry = industry;
         if (isPremium !== undefined) filters.isPremium = isPremium === 'true';
+        if (premium !== undefined) filters.isPremium = premium === 'true';
         if (tags) filters.tags = Array.isArray(tags) ? tags : [tags];
         if (limit) filters.limit = parseInt(limit);
 
