@@ -16,6 +16,7 @@ const leadRoutes = require('./routes/leads');
 const adminRoutes = require('./routes/admin');
 const trackingRoutes = require('./routes/tracking');
 const shortLinkRoutes = require('./routes/shortlinks');
+const templateRoutes = require('./routes/templates');
 
 // Serviços
 const followUpService = require('./services/followUpService');
@@ -69,6 +70,9 @@ app.use('/api/tracking', trackingRoutes);
 app.use('/p', shortLinkRoutes);
 app.use('/api/shortlinks', shortLinkRoutes);
 
+// Rotas de templates
+app.use('/api/templates', templateRoutes);
+
 // Rotas para páginas HTML
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'landing.html'));
@@ -100,6 +104,10 @@ app.get('/welcome', (req, res) => {
 
 app.get('/tutorial', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'tutorial.html'));
+});
+
+app.get('/templates', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'templates.html'));
 });
 
 app.get('/api/health', (req, res) => {

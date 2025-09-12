@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Templates - PropostasWin</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --surface-dark: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+        }
+
+        /* Header */
+        .header {
+            background: var(--gradient);
+            color: white;
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M 8 0 L 0 0 0 8" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            margin-right: 0.5rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Filters */
+        .filters {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .filters-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: var(--surface-dark);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .tag:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .tag.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        /* Templates Grid */
+        .templates-section {
+            margin: 3rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .category-section {
+            margin-bottom: 4rem;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-left: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .template-card {
+            background: white;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .template-thumbnail {
+            height: 200px;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+        }
+
+        .template-thumbnail i {
+            position: relative;
+            z-index: 2;
+        }
+
+        .template-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .template-content {
+            padding: 1.5rem;
+        }
+
+        .template-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .template-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .template-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .template-category {
+            background: var(--surface-dark);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .template-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--warning);
+            font-size: 0.9rem;
+        }
+
+        .template-stats {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-subtitle {
+            color: var(--text-secondary);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--surface-dark);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* No results */
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .no-results i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .header-title {
+                font-size: 1.5rem;
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .modal {
+                padding: 1rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="header-title">
+                <i class="fas fa-th-large"></i>
+                Galeria de Templates
+            </h1>
+            <a href="/dashboard" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Voltar ao Dashboard
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Filters -->
+        <div class="filters">
+            <h3 class="filters-title">
+                <i class="fas fa-filter"></i>
+                Filtros
+            </h3>
+            <div class="filter-group">
+                <div class="filter-item">
+                    <label class="filter-label">Categoria</label>
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">Todas as categorias</option>
+                        <option value="technology">Tecnologia</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="legal">Jurídico</option>
+                        <option value="design">Design</option>
+                        <option value="business">Consultoria</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label class="filter-label">Setor</label>
+                    <select id="industryFilter" class="filter-select">
+                        <option value="">Todos os setores</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label class="filter-label">Tipo</label>
+                    <select id="premiumFilter" class="filter-select">
+                        <option value="">Todos os tipos</option>
+                        <option value="false">Gratuitos</option>
+                        <option value="true">Premium</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-tags" id="tagFilters">
+                <!-- Tags populares serão inseridas aqui -->
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner"></i>
+            Carregando templates...
+        </div>
+
+        <!-- Templates -->
+        <div class="templates-section" id="templatesSection" style="display: none;">
+            <h2 class="section-title">Templates Disponíveis</h2>
+            <p class="section-subtitle">Escolha um template profissional e comece sua proposta em segundos</p>
+            
+            <div id="templatesContainer">
+                <!-- Templates serão inseridos aqui -->
+            </div>
+        </div>
+
+        <!-- No Results -->
+        <div class="no-results" id="noResults" style="display: none;">
+            <i class="fas fa-search"></i>
+            <h3>Nenhum template encontrado</h3>
+            <p>Tente ajustar os filtros para ver mais opções</p>
+        </div>
+    </div>
+
+    <!-- Modal Template Preview -->
+    <div class="modal" id="templateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Template Preview</h3>
+                <p class="modal-subtitle" id="modalSubtitle">Visualização do template</p>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="templatePreview" style="width: 100%; height: 500px; border: none; border-radius: 10px;"></iframe>
+                <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" id="useTemplateBtn">
+                        <i class="fas fa-magic"></i>
+                        Usar Este Template
+                    </button>
+                    <button class="btn btn-outline" onclick="closeModal()">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let templates = [];
+        let filteredTemplates = [];
+        let selectedTemplate = null;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadTemplates();
+            setupFilters();
+            setupEventListeners();
+        });
+
+        // Carregar templates
+        async function loadTemplates() {
+            try {
+                const response = await fetch('/api/templates?popular=true');
+                const data = await response.json();
+
+                if (data.success) {
+                    templates = data.data.templates;
+                    filteredTemplates = [...templates];
+                    
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('templatesSection').style.display = 'block';
+                    
+                    renderTemplates();
+                    setupIndustryFilter();
+                    setupTagFilters();
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar templates:', error);
+                document.getElementById('loading').innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Erro ao carregar templates: ${error.message}
+                `;
+            }
+        }
+
+        // Renderizar templates
+        function renderTemplates() {
+            const container = document.getElementById('templatesContainer');
+            
+            if (filteredTemplates.length === 0) {
+                document.getElementById('noResults').style.display = 'block';
+                container.innerHTML = '';
+                return;
+            }
+
+            document.getElementById('noResults').style.display = 'none';
+
+            // Agrupar por categoria
+            const categorized = filteredTemplates.reduce((acc, template) => {
+                if (!acc[template.category]) {
+                    acc[template.category] = [];
+                }
+                acc[template.category].push(template);
+                return acc;
+            }, {});
+
+            container.innerHTML = '';
+
+            Object.keys(categorized).forEach(category => {
+                const categorySection = document.createElement('div');
+                categorySection.className = 'category-section fade-in';
+                
+                const categoryName = getCategoryDisplayName(category);
+                const categoryIcon = getCategoryIcon(category);
+                
+                categorySection.innerHTML = `
+                    <h3 class="category-title">
+                        <i class="${categoryIcon}"></i>
+                        ${categoryName}
+                        <span style="color: var(--text-secondary); font-weight: normal; font-size: 0.9rem;">
+                            (${categorized[category].length} template${categorized[category].length > 1 ? 's' : ''})
+                        </span>
+                    </h3>
+                    <div class="templates-grid">
+                        ${categorized[category].map(template => createTemplateCard(template)).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(categorySection);
+            });
+        }
+
+        // Criar card do template
+        function createTemplateCard(template) {
+            const rating = parseFloat(template.avg_rating) || 0;
+            const stars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+            const usageCount = parseInt(template.usage_count) || 0;
+            
+            return `
+                <div class="template-card" onclick="showTemplatePreview('${template.id}')">
+                    <div class="template-thumbnail">
+                        <i class="${getCategoryIcon(template.category)}"></i>
+                        ${template.is_premium ? '<div class="template-badge">Premium</div>' : ''}
+                    </div>
+                    <div class="template-content">
+                        <h4 class="template-title">${template.name}</h4>
+                        <p class="template-description">${template.description}</p>
+                        
+                        <div class="template-meta">
+                            <span class="template-category">${getCategoryDisplayName(template.category)}</span>
+                            ${rating > 0 ? `
+                                <div class="template-rating">
+                                    <span>${stars}</span>
+                                    <span>${rating.toFixed(1)}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="template-stats">
+                            <span><i class="fas fa-download"></i> ${usageCount} usos</span>
+                            <span><i class="fas fa-tag"></i> ${template.industry}</span>
+                        </div>
+                        
+                        <div class="template-actions">
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); useTemplate('${template.id}')">
+                                <i class="fas fa-magic"></i>
+                                Usar Template
+                            </button>
+                            <button class="btn btn-outline" onclick="event.stopPropagation(); showTemplatePreview('${template.id}')">
+                                <i class="fas fa-eye"></i>
+                                Preview
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Preview do template
+        async function showTemplatePreview(templateId) {
+            selectedTemplate = templates.find(t => t.id === templateId);
+            
+            if (!selectedTemplate) return;
+
+            document.getElementById('modalTitle').textContent = selectedTemplate.name;
+            document.getElementById('modalSubtitle').textContent = selectedTemplate.description;
+            
+            const previewFrame = document.getElementById('templatePreview');
+            previewFrame.src = `/api/templates/${templateId}/preview`;
+            
+            document.getElementById('useTemplateBtn').onclick = () => useTemplate(templateId);
+            document.getElementById('templateModal').classList.add('active');
+        }
+
+        // Usar template
+        function useTemplate(templateId) {
+            // Redirecionar para criação de proposta com template
+            const template = templates.find(t => t.id === templateId);
+            
+            if (template) {
+                localStorage.setItem('selectedTemplate', JSON.stringify({
+                    id: templateId,
+                    name: template.name,
+                    category: template.category
+                }));
+                
+                window.location.href = '/app?template=' + templateId;
+            }
+        }
+
+        // Fechar modal
+        function closeModal() {
+            document.getElementById('templateModal').classList.remove('active');
+        }
+
+        // Setup filtros
+        function setupFilters() {
+            const categoryFilter = document.getElementById('categoryFilter');
+            const industryFilter = document.getElementById('industryFilter');
+            const premiumFilter = document.getElementById('premiumFilter');
+
+            [categoryFilter, industryFilter, premiumFilter].forEach(filter => {
+                filter.addEventListener('change', applyFilters);
+            });
+        }
+
+        // Setup filtro de indústria
+        function setupIndustryFilter() {
+            const industries = [...new Set(templates.map(t => t.industry))].sort();
+            const industryFilter = document.getElementById('industryFilter');
+            
+            industries.forEach(industry => {
+                const option = document.createElement('option');
+                option.value = industry;
+                option.textContent = industry;
+                industryFilter.appendChild(option);
+            });
+        }
+
+        // Setup filtros de tags
+        function setupTagFilters() {
+            const allTags = templates.flatMap(t => t.tags || []);
+            const uniqueTags = [...new Set(allTags)].sort();
+            const tagContainer = document.getElementById('tagFilters');
+            
+            uniqueTags.slice(0, 10).forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.textContent = tag;
+                tagElement.onclick = () => toggleTag(tagElement, tag);
+                tagContainer.appendChild(tagElement);
+            });
+        }
+
+        // Toggle tag
+        function toggleTag(element, tag) {
+            element.classList.toggle('active');
+            applyFilters();
+        }
+
+        // Aplicar filtros
+        function applyFilters() {
+            const category = document.getElementById('categoryFilter').value;
+            const industry = document.getElementById('industryFilter').value;
+            const premium = document.getElementById('premiumFilter').value;
+            const activeTags = Array.from(document.querySelectorAll('.tag.active')).map(t => t.textContent);
+
+            filteredTemplates = templates.filter(template => {
+                if (category && template.category !== category) return false;
+                if (industry && template.industry !== industry) return false;
+                if (premium && template.is_premium.toString() !== premium) return false;
+                if (activeTags.length > 0 && !activeTags.some(tag => (template.tags || []).includes(tag))) return false;
+                return true;
+            });
+
+            renderTemplates();
+        }
+
+        // Event listeners
+        function setupEventListeners() {
+            // Fechar modal com ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+
+            // Fechar modal clicando fora
+            document.getElementById('templateModal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Helpers
+        function getCategoryDisplayName(category) {
+            const names = {
+                technology: 'Tecnologia',
+                marketing: 'Marketing', 
+                legal: 'Jurídico',
+                design: 'Design',
+                business: 'Consultoria',
+                finance: 'Financeiro',
+                health: 'Saúde',
+                education: 'Educação'
+            };
+            
+            return names[category] || category.charAt(0).toUpperCase() + category.slice(1);
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                technology: 'fas fa-laptop-code',
+                marketing: 'fas fa-bullhorn',
+                legal: 'fas fa-gavel',
+                design: 'fas fa-palette',
+                business: 'fas fa-briefcase',
+                finance: 'fas fa-chart-line',
+                health: 'fas fa-heartbeat',
+                education: 'fas fa-graduation-cap'
+            };
+            
+            return icons[category] || 'fas fa-file';
+        }
+    </script>
+</body>
+</html>
