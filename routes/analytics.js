@@ -16,14 +16,14 @@ router.get('/performance', getProposalPerformance);
 router.get('/proposal/:id', getProposalAnalytics);
 router.get('/proposal/:id/share-links', getShareableLink);
 
-// Rotas avançadas temporariamente comentadas para estabilizar servidor
-// router.get('/proposal/:id/engagement', getEngagementAnalytics);
-// router.get('/proposal/:id/conversion-funnel', getConversionFunnel);
-// router.get('/proposal/:id/heatmap', getHeatmapData);
-// router.get('/proposal/:id/real-time', getRealTimeAnalytics);
-// router.get('/follow-up/:id/schedule', getFollowUpSchedule);
-// router.post('/follow-up/:id/schedule', scheduleFollowUp);
-// router.get('/geographic-analysis', getGeographicAnalysis);
-// router.get('/behavioral-insights', getBehavioralInsights);
+// Rotas avançadas REATIVADAS - Analytics Premium
+router.get('/proposal/:id/engagement', getEngagementAnalytics);
+router.get('/proposal/:id/conversion-funnel', getConversionFunnel);
+router.get('/proposal/:id/heatmap', getHeatmapData);
+router.get('/proposal/:id/real-time', getRealTimeAnalytics);
+router.get('/follow-up/:id/schedule', getFollowUpSchedule);
+router.post('/follow-up/:id/schedule', scheduleFollowUp);
+router.get('/geographic-analysis', getGeographicAnalysis);
+router.get('/behavioral-insights', getBehavioralInsights);
 
 module.exports = router;

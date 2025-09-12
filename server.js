@@ -144,10 +144,10 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
     console.log(`📁 Documentação da API disponível em: http://localhost:${PORT}/api/`);
     
-    // Inicializar serviços em background (temporariamente desabilitado)
+    // Inicializar serviços em background REATIVADOS
     try {
-      // followUpService.start();
-      console.log(`🔄 Serviços de background temporariamente desabilitados`);
+      followUpService.start();
+      console.log(`🚀 Serviços de background REATIVADOS - Analytics Premium Ativo`);
     } catch (error) {
       console.error('❌ Erro ao inicializar serviços:', error);
     }
