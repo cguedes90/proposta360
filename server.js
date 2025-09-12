@@ -98,6 +98,10 @@ app.get('/welcome', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'welcome.html'));
 });
 
+app.get('/tutorial', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'tutorial.html'));
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 

@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial - Como Criar Propostas Profissionais</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --surface-dark: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+        }
+
+        /* Header */
+        .header {
+            background: var(--gradient);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M 8 0 L 0 0 0 8" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Tutorial Navigation */
+        .tutorial-nav {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .tutorial-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .step-nav-item {
+            background: var(--surface-dark);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .step-nav-item:hover {
+            border-color: var(--primary);
+            background: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .step-nav-item.active {
+            background: var(--gradient);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .step-nav-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .step-nav-item.active .step-nav-number {
+            background: white;
+            color: var(--primary);
+        }
+
+        .step-nav-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Tutorial Content */
+        .tutorial-content {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .step-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .step-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Demo Preview */
+        .demo-preview {
+            background: var(--surface-dark);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px dashed var(--border);
+            text-align: center;
+        }
+
+        .demo-preview img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Instructions Grid */
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .instruction-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .instruction-panel h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .instruction-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .instruction-list li:last-child {
+            border-bottom: none;
+        }
+
+        .instruction-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: var(--gradient);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* Visual Example */
+        .visual-example {
+            background: var(--gradient);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .example-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .example-mockup {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 1rem 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Navigation Buttons */
+        .tutorial-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .nav-btn.secondary {
+            background: var(--secondary);
+        }
+
+        /* Tips and Tricks */
+        .tips-section {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .tips-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .tip-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tip-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .instructions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tutorial-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .tutorial-navigation {
+                flex-direction: column;
+            }
+            
+            .header-title {
+                font-size: 2rem;
+            }
+            
+            .tutorial-content {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background: var(--surface-dark);
+            height: 8px;
+            border-radius: 50px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--gradient);
+            height: 100%;
+            border-radius: 50px;
+            transition: width 0.6s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Call to Action */
+        .cta-section {
+            background: var(--gradient);
+            color: white;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .cta-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-description {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="/dashboard" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Voltar ao Dashboard
+        </a>
+        <div class="header-content">
+            <h1 class="header-title">Tutorial Interativo</h1>
+            <p class="header-subtitle">Aprenda a criar propostas profissionais que impressionam e convertem</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 14%"></div>
+        </div>
+        <div class="progress-text" id="progressText">Passo 1 de 7 - Começando sua jornada</div>
+
+        <!-- Tutorial Navigation -->
+        <div class="tutorial-nav">
+            <h3 class="nav-title">Navegue pelos Passos do Tutorial</h3>
+            <div class="tutorial-steps">
+                <a href="#" class="step-nav-item active" data-step="1">
+                    <div class="step-nav-number">1</div>
+                    <div class="step-nav-title">Introdução</div>
+                </a>
+                <a href="#" class="step-nav-item" data-step="2">
+                    <div class="step-nav-number">2</div>
+                    <div class="step-nav-title">Criar Nova Proposta</div>
+                </a>
+                <a href="#" class="step-nav-item" data-step="3">
+                    <div class="step-nav-number">3</div>
+                    <div class="step-nav-title">Definir Cores e Estilo</div>
+                </a>
+                <a href="#" class="step-nav-item" data-step="4">
+                    <div class="step-nav-number">4</div>
+                    <div class="step-nav-title">Adicionar Textos</div>
+                </a>
+                <a href="#" class="step-nav-item" data-step="5">
+                    <div class="step-nav-number">5</div>
+                    <div class="step-nav-title">Dominar Editor</div>
+                </a>
+                <a href="#" class="step-nav-item" data-step="6">
+                    <div class="step-nav-number">6</div>
+                    <div class="step-nav-title">Publicar e Compartilhar</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Tutorial Content -->
+        <div class="tutorial-content">
+            <!-- Step 1: Introduction -->
+            <div class="step active" id="step1">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h2 class="step-title">Bem-vindo ao PropostasWin!</h2>
+                    <p class="step-description">
+                        Você está prestes a aprender como criar propostas profissionais que impressionam e convertem 3x mais que propostas tradicionais
+                    </p>
+                </div>
+
+                <div class="demo-preview">
+                    <h3 style="margin-bottom: 1rem; color: var(--primary);">
+                        <i class="fas fa-star"></i> Veja o que você vai conseguir criar
+                    </h3>
+                    <div style="background: white; border-radius: 10px; padding: 2rem; margin: 1rem 0; text-align: left;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border);">
+                            <div>
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">TechSolutions Inovação</h4>
+                                <p style="color: var(--text-secondary); margin: 0;">Proposta #2024-001</p>
+                            </div>
+                            <div style="background: var(--gradient); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">
+                                R$ 30.000,00
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div style="border: 1px solid var(--border); padding: 1rem; border-radius: 8px; text-align: center;">
+                                <i class="fas fa-globe" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <h5>Website Responsivo</h5>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">R$ 8.500</p>
+                            </div>
+                            <div style="border: 1px solid var(--border); padding: 1rem; border-radius: 8px; text-align: center;">
+                                <i class="fas fa-mobile-alt" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <h5>App Mobile</h5>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">R$ 12.800</p>
+                            </div>
+                            <div style="border: 1px solid var(--border); padding: 1rem; border-radius: 8px; text-align: center;">
+                                <i class="fas fa-chart-line" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                <h5>Dashboard Analytics</h5>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">R$ 5.200</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-secondary); font-style: italic;">Esta é uma prévia do que você vai aprender a criar!</p>
+                </div>
+
+                <div class="tips-section">
+                    <h3 class="tips-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Por que Propostas Interativas Funcionam Melhor?
+                    </h3>
+                    <div class="tips-grid">
+                        <div class="tip-item">
+                            <div class="tip-icon">👀</div>
+                            <h4>Engajamento Visual</h4>
+                            <p>Clientes passam 3x mais tempo visualizando propostas interativas</p>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-icon">📈</div>
+                            <h4>Maior Conversão</h4>
+                            <p>Taxa de fechamento 250% maior que propostas tradicionais</p>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-icon">⚡</div>
+                            <h4>Resposta Rápida</h4>
+                            <p>Clientes respondem em média 72h mais rápido</p>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-icon">🎯</div>
+                            <h4>Profissionalismo</h4>
+                            <p>Demonstra seriedade e diferencial competitivo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Create New Proposal -->
+            <div class="step" id="step2">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h2 class="step-title">Criando sua Primeira Proposta</h2>
+                    <p class="step-description">
+                        Vamos começar do básico - criando uma nova proposta no dashboard
+                    </p>
+                </div>
+
+                <div class="instructions-grid">
+                    <div class="instruction-panel">
+                        <h3><i class="fas fa-plus-circle"></i> Como Começar</h3>
+                        <ul class="instruction-list">
+                            <li>
+                                <div class="instruction-icon">1</div>
+                                <span>No dashboard, clique em <strong>"Nova Proposta"</strong></span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">2</div>
+                                <span>Insira o título da proposta (ex: "Transformação Digital 2024")</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">3</div>
+                                <span>Escolha se deseja começar do zero ou usar um template</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">4</div>
+                                <span>Clique em <strong>"Criar Proposta"</strong> para abrir o editor</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="instruction-panel">
+                        <h3><i class="fas fa-lightbulb"></i> Dicas Importantes</h3>
+                        <ul class="instruction-list">
+                            <li>
+                                <div class="instruction-icon">💡</div>
+                                <span>Use títulos que despertem interesse e urgência</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">🎯</div>
+                                <span>Pense no seu cliente ao escolher o nome</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">📊</div>
+                                <span>Templates aceleram o processo em 70%</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">✨</div>
+                                <span>Você pode editar tudo depois de criada</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="visual-example">
+                    <h3 class="example-title">Exemplo Visual: Tela de Criação</h3>
+                    <div class="example-mockup">
+                        <div style="text-align: left; background: white; color: var(--text-primary); padding: 2rem; border-radius: 8px;">
+                            <h4 style="margin-bottom: 1rem;">📝 Nova Proposta</h4>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Título da Proposta:</label>
+                                <input type="text" placeholder="Ex: Solução Completa de Marketing Digital 2024" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px;">
+                            </div>
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Template:</label>
+                                <select style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px;">
+                                    <option>🎨 Começar do Zero</option>
+                                    <option>💻 Template Tecnologia</option>
+                                    <option>📈 Template Marketing</option>
+                                    <option>🏢 Template Consultoria</option>
+                                </select>
+                            </div>
+                            <button style="background: var(--gradient); color: white; border: none; padding: 0.75rem 2rem; border-radius: 6px; font-weight: 600;">
+                                ✨ Criar Proposta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Colors and Style -->
+            <div class="step" id="step3">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <h2 class="step-title">Definindo Cores e Identidade Visual</h2>
+                    <p class="step-description">
+                        A identidade visual é crucial - ela comunica profissionalismo e confiança
+                    </p>
+                </div>
+
+                <div class="instructions-grid">
+                    <div class="instruction-panel">
+                        <h3><i class="fas fa-palette"></i> Configurando as Cores no Editor</h3>
+                        <ul class="instruction-list">
+                            <li>
+                                <div class="instruction-icon">🎨</div>
+                                <span>No topo do editor, clique no botão <strong>"⚙️ Configurações"</strong></span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">🎯</div>
+                                <span>Na aba "Estilo", encontre <strong>"Paleta de Cores"</strong></span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">✨</div>
+                                <span>Clique na cor primária para abrir o seletor</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">🔄</div>
+                                <span>As cores secundárias se ajustam automaticamente</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="instruction-panel">
+                        <h3><i class="fas fa-eye"></i> Psicologia das Cores</h3>
+                        <ul class="instruction-list">
+                            <li>
+                                <div class="instruction-icon" style="background: #2563eb;">💙</div>
+                                <span><strong>Azul:</strong> Confiança, tecnologia, estabilidade</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon" style="background: #16a34a;">💚</div>
+                                <span><strong>Verde:</strong> Crescimento, sucesso, prosperidade</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon" style="background: #dc2626;">❤️</div>
+                                <span><strong>Vermelho:</strong> Urgência, paixão, energia</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon" style="background: #7c3aed;">💜</div>
+                                <span><strong>Roxo:</strong> Luxo, criatividade, inovação</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="visual-example">
+                    <h3 class="example-title">Exemplo: Paleta de Cores Profissional</h3>
+                    <div class="example-mockup">
+                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; text-align: center;">
+                            <div>
+                                <div style="width: 60px; height: 60px; background: #2563eb; border-radius: 50%; margin: 0 auto 0.5rem;"></div>
+                                <span style="font-size: 0.9rem;">Primária<br>#2563eb</span>
+                            </div>
+                            <div>
+                                <div style="width: 60px; height: 60px; background: #1d4ed8; border-radius: 50%; margin: 0 auto 0.5rem;"></div>
+                                <span style="font-size: 0.9rem;">Escura<br>#1d4ed8</span>
+                            </div>
+                            <div>
+                                <div style="width: 60px; height: 60px; background: #3b82f6; border-radius: 50%; margin: 0 auto 0.5rem;"></div>
+                                <span style="font-size: 0.9rem;">Clara<br>#3b82f6</span>
+                            </div>
+                            <div>
+                                <div style="width: 60px; height: 60px; background: #16a34a; border-radius: 50%; margin: 0 auto 0.5rem;"></div>
+                                <span style="font-size: 0.9rem;">Sucesso<br>#16a34a</span>
+                            </div>
+                            <div>
+                                <div style="width: 60px; height: 60px; background: #64748b; border-radius: 50%; margin: 0 auto 0.5rem;"></div>
+                                <span style="font-size: 0.9rem;">Neutro<br>#64748b</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Adding Text -->
+            <div class="step" id="step4">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <h2 class="step-title">Adicionando Textos Impactantes</h2>
+                    <p class="step-description">
+                        Aprenda a usar textos que vendem - títulos, descrições e calls-to-action eficazes
+                    </p>
+                </div>
+
+                <div class="instructions-grid">
+                    <div class="instruction-panel">
+                        <h3><i class="fas fa-text-height"></i> Adicionando Textos no Editor</h3>
+                        <ul class="instruction-list">
+                            <li>
+                                <div class="instruction-icon">📝</div>
+                                <span>No painel esquerdo, clique em <strong>"📝 Texto"</strong></span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">🖱️</div>
+                                <span>Arraste para o canvas central (área pontilhada)</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">✏️</div>
+                                <span>Duplo-clique no texto para começar a digitar</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">🎨</div>
+                                <span>No painel direito, ajuste cor, tamanho e fonte</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="instruction-panel">
+                        <h3><i class="fas fa-magic"></i> Textos que Convertem</h3>
+                        <ul class="instruction-list">
+                            <li>
+                                <div class="instruction-icon">🎯</div>
+                                <span><strong>Títulos:</strong> Foque no benefício, não no recurso</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">📈</div>
+                                <span><strong>Descrições:</strong> Use números e dados específicos</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">⚡</div>
+                                <span><strong>CTAs:</strong> Crie senso de urgência</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">❤️</div>
+                                <span><strong>Benefícios:</strong> Fale das emoções do cliente</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="visual-example">
+                    <h3 class="example-title">Exemplo: Títulos Que Vendem vs Títulos Comuns</h3>
+                    <div class="example-mockup">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; text-align: left;">
+                            <div>
+                                <h4 style="color: #dc2626; margin-bottom: 1rem;">❌ Títulos Comuns</h4>
+                                <div style="background: rgba(220, 38, 38, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                                    "Desenvolvimento de Website"
+                                </div>
+                                <div style="background: rgba(220, 38, 38, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                                    "Consultoria em Marketing"
+                                </div>
+                                <div style="background: rgba(220, 38, 38, 0.1); padding: 1rem; border-radius: 8px;">
+                                    "Serviços de TI"
+                                </div>
+                            </div>
+                            <div>
+                                <h4 style="color: #16a34a; margin-bottom: 1rem;">✅ Títulos Que Vendem</h4>
+                                <div style="background: rgba(22, 163, 74, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                                    "Website que Converte 3x Mais Clientes"
+                                </div>
+                                <div style="background: rgba(22, 163, 74, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                                    "Estratégia que Triplicou Vendas em 90 Dias"
+                                </div>
+                                <div style="background: rgba(22, 163, 74, 0.1); padding: 1rem; border-radius: 8px;">
+                                    "Sistema que Automatiza 80% do Trabalho"
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Services -->
+            <div class="step" id="step5">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <h2 class="step-title">Dominando o Editor Visual</h2>
+                    <p class="step-description">
+                        Aprenda a usar nosso editor drag-and-drop para criar propostas profissionais rapidamente
+                    </p>
+                </div>
+
+                <div class="instructions-grid">
+                    <div class="instruction-panel">
+                        <h3><i class="fas fa-th-large"></i> Usando o Editor do PropostasWin</h3>
+                        <ul class="instruction-list">
+                            <li>
+                                <div class="instruction-icon">📦</div>
+                                <span>No painel esquerdo, vá na aba <strong>"Elementos"</strong></span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">🖱️</div>
+                                <span>Arraste elementos como "Texto", "Imagem", "Botão" para o canvas central</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">✏️</div>
+                                <span>Clique duplo em qualquer elemento para editá-lo</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">🎨</div>
+                                <span>Use o painel direito para ajustar cores, fontes e espaçamento</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="instruction-panel">
+                        <h3><i class="fas fa-star"></i> Dicas do Editor</h3>
+                        <ul class="instruction-list">
+                            <li>
+                                <div class="instruction-icon">🔄</div>
+                                <span><strong>Ctrl+Z:</strong> Desfazer a última ação</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">👁️</div>
+                                <span><strong>Preview:</strong> Clique no olho para ver como ficará</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">📱</div>
+                                <span><strong>Responsivo:</strong> Teste em diferentes tamanhos de tela</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">💾</div>
+                                <span><strong>Auto-save:</strong> Suas alterações são salvas automaticamente</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="visual-example">
+                    <h3 class="example-title">Exemplo: Interface do Editor PropostasWin</h3>
+                    <div class="example-mockup">
+                        <div style="background: white; color: var(--text-primary); padding: 1.5rem; border-radius: 12px; text-align: left;">
+                            <div style="display: grid; grid-template-columns: 200px 1fr 200px; gap: 1rem; height: 300px;">
+                                <!-- Painel Esquerdo -->
+                                <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <h5 style="margin-bottom: 1rem; font-size: 0.9rem;">📦 Elementos</h5>
+                                    <div style="font-size: 0.8rem; margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 4px; cursor: pointer;">📝 Texto</div>
+                                    <div style="font-size: 0.8rem; margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 4px; cursor: pointer;">🖼️ Imagem</div>
+                                    <div style="font-size: 0.8rem; margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 4px; cursor: pointer;">🔘 Botão</div>
+                                    <div style="font-size: 0.8rem; margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 4px; cursor: pointer;">📋 Card</div>
+                                </div>
+                                
+                                <!-- Canvas Central -->
+                                <div style="background: white; border: 2px dashed #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative;">
+                                    <div style="text-align: center;">
+                                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Canvas da Proposta</h4>
+                                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Arraste elementos aqui</p>
+                                        <div style="position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">👁️ Preview</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Painel Direito -->
+                                <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <h5 style="margin-bottom: 1rem; font-size: 0.9rem;">🎨 Propriedades</h5>
+                                    <div style="font-size: 0.8rem; margin-bottom: 0.5rem;">Cor: <span style="background: var(--primary); width: 20px; height: 15px; display: inline-block; border-radius: 3px; margin-left: 5px;"></span></div>
+                                    <div style="font-size: 0.8rem; margin-bottom: 0.5rem;">Fonte: Roboto</div>
+                                    <div style="font-size: 0.8rem; margin-bottom: 0.5rem;">Tamanho: 16px</div>
+                                    <div style="font-size: 0.8rem; margin-bottom: 0.5rem;">Alinhamento: Centro</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Publish and Share -->
+            <div class="step" id="step6">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <h2 class="step-title">Publicar e Compartilhar sua Proposta</h2>
+                    <p class="step-description">
+                        Agora que sua proposta está pronta, vamos publicá-la e acompanhar os resultados
+                    </p>
+                </div>
+
+                <div class="instructions-grid">
+                    <div class="instruction-panel">
+                        <h3><i class="fas fa-rocket"></i> Publicando</h3>
+                        <ul class="instruction-list">
+                            <li>
+                                <div class="instruction-icon">✅</div>
+                                <span>Revise toda a proposta no preview</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">🚀</div>
+                                <span>Clique em <strong>"Publicar Proposta"</strong></span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">🔗</div>
+                                <span>Copie o link curto gerado automaticamente</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">📊</div>
+                                <span>Ative notificações para acompanhar visualizações</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="instruction-panel">
+                        <h3><i class="fas fa-chart-line"></i> Acompanhando Resultados</h3>
+                        <ul class="instruction-list">
+                            <li>
+                                <div class="instruction-icon">👀</div>
+                                <span>Veja quando o cliente abriu a proposta</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">⏱️</div>
+                                <span>Tempo gasto visualizando cada seção</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">🔔</div>
+                                <span>Receba notificações de interesse</span>
+                            </li>
+                            <li>
+                                <div class="instruction-icon">📧</div>
+                                <span>Follow-up automático por email</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <h3 class="cta-title">🎉 Parabéns! Você Está Pronto!</h3>
+                    <p class="cta-description">
+                        Agora você sabe criar propostas profissionais que impressionam e convertem. 
+                        Está na hora de colocar em prática!
+                    </p>
+                    <a href="/dashboard" class="cta-button">
+                        <i class="fas fa-rocket"></i>
+                        Criar Minha Primeira Proposta
+                    </a>
+                </div>
+
+                <div class="tips-section">
+                    <h3 class="tips-title">
+                        <i class="fas fa-trophy"></i>
+                        Dicas para Máximo Sucesso
+                    </h3>
+                    <div class="tips-grid">
+                        <div class="tip-item">
+                            <div class="tip-icon">⚡</div>
+                            <h4>Teste A/B</h4>
+                            <p>Crie versões diferentes e veja qual converte mais</p>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-icon">📱</div>
+                            <h4>Mobile First</h4>
+                            <p>60% dos clientes abrem propostas no celular</p>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-icon">🎯</div>
+                            <h4>Personalização</h4>
+                            <p>Adapte cores e textos para cada cliente</p>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-icon">📈</div>
+                            <h4>Acompanhe Métricas</h4>
+                            <p>Use os dados para melhorar continuamente</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="tutorial-navigation">
+                <button class="nav-btn secondary" id="prevBtn" onclick="changeStep(-1)" disabled>
+                    <i class="fas fa-arrow-left"></i>
+                    Anterior
+                </button>
+                <div style="text-align: center;">
+                    <button class="nav-btn" onclick="window.location.href='/proposta/demo'">
+                        <i class="fas fa-eye"></i>
+                        Ver Demo Final
+                    </button>
+                </div>
+                <button class="nav-btn" id="nextBtn" onclick="changeStep(1)">
+                    Próximo
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 6;
+
+        function changeStep(direction) {
+            const newStep = currentStep + direction;
+            if (newStep >= 1 && newStep <= totalSteps) {
+                showStep(newStep);
+            }
+        }
+
+        function showStep(stepNumber) {
+            // Hide current step
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
+
+            // Show new step
+            currentStep = stepNumber;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            document.querySelector(`[data-step="${currentStep}"]`).classList.add('active');
+
+            // Update progress
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            const stepNames = [
+                'Começando sua jornada',
+                'Criando nova proposta',
+                'Definindo identidade visual',
+                'Adicionando textos impactantes',
+                'Dominando o editor visual',
+                'Publicando e compartilhando'
+            ];
+            
+            document.getElementById('progressText').textContent = 
+                `Passo ${currentStep} de ${totalSteps} - ${stepNames[currentStep - 1]}`;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentStep === 1;
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentStep === totalSteps) {
+                nextBtn.innerHTML = '<i class="fas fa-rocket"></i> Começar Agora!';
+                nextBtn.onclick = () => window.location.href = '/dashboard';
+            } else {
+                nextBtn.innerHTML = 'Próximo <i class="fas fa-arrow-right"></i>';
+                nextBtn.onclick = () => changeStep(1);
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Navigation from step nav items
+        document.querySelectorAll('.step-nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const stepNumber = parseInt(item.getAttribute('data-step'));
+                showStep(stepNumber);
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentStep > 1) {
+                changeStep(-1);
+            } else if (e.key === 'ArrowRight' && currentStep < totalSteps) {
+                changeStep(1);
+            }
+        });
+
+        // Track tutorial completion
+        let startTime = Date.now();
+        let stepsCompleted = new Set([1]);
+
+        function trackStepCompletion(step) {
+            stepsCompleted.add(step);
+            console.log(`Tutorial step ${step} completed. Total completed: ${stepsCompleted.size}/${totalSteps}`);
+            
+            if (stepsCompleted.size === totalSteps) {
+                const timeSpent = Math.round((Date.now() - startTime) / 1000);
+                console.log(`Tutorial completed in ${timeSpent} seconds!`);
+            }
+        }
+
+        // Track when user changes steps
+        const originalChangeStep = changeStep;
+        changeStep = function(direction) {
+            trackStepCompletion(currentStep);
+            originalChangeStep(direction);
+        };
+
+        // Auto-save tutorial progress
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('tutorialProgress', JSON.stringify({
+                currentStep,
+                stepsCompleted: Array.from(stepsCompleted),
+                lastVisit: Date.now()
+            }));
+        });
+
+        // Load saved progress
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('tutorialProgress');
+            if (saved) {
+                try {
+                    const progress = JSON.parse(saved);
+                    // Only restore if visited within last 24 hours
+                    if (Date.now() - progress.lastVisit < 24 * 60 * 60 * 1000) {
+                        if (progress.currentStep > 1) {
+                            showStep(progress.currentStep);
+                        }
+                        stepsCompleted = new Set(progress.stepsCompleted);
+                    }
+                } catch (e) {
+                    console.log('Could not restore tutorial progress');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
