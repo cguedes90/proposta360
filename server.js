@@ -18,6 +18,7 @@ const trackingRoutes = require('./routes/tracking');
 const shortLinkRoutes = require('./routes/shortlinks');
 const templateRoutes = require('./routes/templates');
 const premiumRoutes = require('./routes/premium');
+const paymentRoutes = require('./routes/payments');
 
 // Serviços
 const followUpService = require('./services/followUpService');
@@ -76,6 +77,9 @@ app.use('/api/templates', templateRoutes);
 
 // Rotas de templates premium
 app.use('/api/premium', premiumRoutes);
+
+// Rotas de pagamento
+app.use('/api/payments', paymentRoutes);
 
 // Rotas para páginas HTML
 app.get('/', (req, res) => {

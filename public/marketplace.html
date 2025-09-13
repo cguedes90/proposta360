@@ -833,33 +833,247 @@
             checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
 
             try {
-                // Simular pagamento PIX
-                const response = await fetch('/api/premium/pix/confirm', {
+                // Mostrar modal de pagamento
+                showPaymentModal();
+            } catch (error) {
+                console.error('Erro no checkout:', error);
+                alert('Erro no checkout');
+            } finally {
+                checkoutBtn.disabled = false;
+                checkoutBtn.innerHTML = '<i class="fas fa-credit-card"></i> Finalizar Compra';
+            }
+        }
+
+        // Mostrar modal de pagamento
+        function showPaymentModal() {
+            const modal = document.createElement('div');
+            modal.className = 'cart-modal';
+            modal.style.display = 'flex';
+            
+            const total = cart.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
+            
+            modal.innerHTML = `
+                <div class="cart-content" style="max-width: 600px;">
+                    <div class="cart-header">
+                        <h2 class="cart-title">Finalizar Compra</h2>
+                        <button class="close-cart" onclick="this.closest('.cart-modal').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Resumo do Pedido</h3>
+                        <div style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            ${cart.map(item => `
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span>${item.name}</span>
+                                    <span style="font-weight: 600;">R$ ${parseFloat(item.price).toFixed(2).replace('.', ',')}</span>
+                                </div>
+                            `).join('')}
+                            <hr style="margin: 1rem 0;">
+                            <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 700;">
+                                <span>Total:</span>
+                                <span style="color: var(--primary-color);">R$ ${total.toFixed(2).replace('.', ',')}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Dados do Comprador</h3>
+                        <div style="display: grid; gap: 1rem;">
+                            <input type="text" id="payerName" placeholder="Nome completo" required 
+                                   style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;">
+                            <input type="email" id="payerEmail" placeholder="Email" required 
+                                   style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;">
+                            <input type="tel" id="payerPhone" placeholder="Telefone (opcional)" 
+                                   style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; gap: 1rem;">
+                        <button onclick="createPixPayment()" style="width: 100%; padding: 1rem; background: var(--primary-color); color: white; border: none; border-radius: 0.75rem; font-size: 1.1rem; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-qrcode"></i> Pagar com PIX
+                        </button>
+                        
+                        <button onclick="createPreference()" style="width: 100%; padding: 1rem; background: var(--success-color); color: white; border: none; border-radius: 0.75rem; font-size: 1.1rem; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-credit-card"></i> Cartão, Boleto ou PIX
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Fechar modal ao clicar fora
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Criar pagamento PIX direto
+        async function createPixPayment() {
+            const name = document.getElementById('payerName').value;
+            const email = document.getElementById('payerEmail').value;
+            
+            if (!name || !email) {
+                alert('Nome e email são obrigatórios');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/payments/create-pix', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${userToken}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        paymentId: `pix_${Date.now()}`
+                        payer_info: {
+                            name: name,
+                            email: email,
+                            phone: document.getElementById('payerPhone').value
+                        }
                     })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
-                    showSuccessMessage('Pagamento confirmado! Templates adicionados à sua conta.');
-                    await loadCart();
-                    toggleCart();
+                    showPixModal(data);
                 } else {
-                    alert(data.message || 'Erro no pagamento');
+                    alert(data.message || 'Erro ao criar PIX');
                 }
             } catch (error) {
-                console.error('Erro no checkout:', error);
-                alert('Erro no pagamento');
-            } finally {
-                checkoutBtn.disabled = false;
-                checkoutBtn.innerHTML = '<i class="fas fa-credit-card"></i> Finalizar Compra';
+                console.error('Erro ao criar PIX:', error);
+                alert('Erro ao criar PIX');
+            }
+        }
+
+        // Mostrar modal PIX
+        function showPixModal(pixData) {
+            // Fechar modal anterior
+            document.querySelectorAll('.cart-modal').forEach(modal => modal.remove());
+            
+            const modal = document.createElement('div');
+            modal.className = 'cart-modal';
+            modal.style.display = 'flex';
+            
+            modal.innerHTML = `
+                <div class="cart-content" style="text-align: center;">
+                    <div class="cart-header">
+                        <h2 class="cart-title">PIX Gerado</h2>
+                        <button class="close-cart" onclick="this.closest('.cart-modal').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div style="margin: 2rem 0;">
+                        <p style="margin-bottom: 1rem; font-size: 1.1rem;">Escaneie o QR Code ou copie o código PIX:</p>
+                        
+                        ${pixData.qr_code_base64 ? `
+                            <img src="data:image/png;base64,${pixData.qr_code_base64}" 
+                                 alt="QR Code PIX" style="max-width: 300px; margin: 1rem 0; border: 1px solid var(--border-color); border-radius: 0.5rem;">
+                        ` : ''}
+                        
+                        <div style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; word-break: break-all; font-family: monospace; font-size: 0.9rem;">
+                            ${pixData.qr_code || 'Código PIX não disponível'}
+                        </div>
+                        
+                        <button onclick="copyPixCode('${pixData.qr_code}')" style="background: var(--primary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer;">
+                            <i class="fas fa-copy"></i> Copiar Código PIX
+                        </button>
+                        
+                        <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                            Após o pagamento, seus templates serão liberados automaticamente.
+                        </p>
+                        
+                        <div id="paymentStatus" style="margin-top: 1rem;">
+                            <button onclick="checkPaymentStatus('${pixData.payment_id}')" style="background: var(--success-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer;">
+                                <i class="fas fa-sync"></i> Verificar Pagamento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // Copiar código PIX
+        function copyPixCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                showSuccessMessage('Código PIX copiado!');
+            });
+        }
+
+        // Verificar status do pagamento
+        async function checkPaymentStatus(paymentId) {
+            try {
+                const response = await fetch(`/api/payments/status/${paymentId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.payment.status === 'approved') {
+                    showSuccessMessage('Pagamento confirmado! Templates liberados na sua conta.');
+                    await loadCart();
+                    document.querySelectorAll('.cart-modal').forEach(modal => modal.remove());
+                } else {
+                    alert('Pagamento ainda não foi processado. Aguarde alguns instantes.');
+                }
+            } catch (error) {
+                console.error('Erro ao verificar pagamento:', error);
+                alert('Erro ao verificar pagamento');
+            }
+        }
+
+        // Criar preferência (checkout completo)
+        async function createPreference() {
+            const name = document.getElementById('payerName').value;
+            const email = document.getElementById('payerEmail').value;
+            
+            if (!name || !email) {
+                alert('Nome e email são obrigatórios');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/payments/create-preference', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        payer_info: {
+                            name: name,
+                            email: email,
+                            phone: document.getElementById('payerPhone').value
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Redirecionar para checkout do Mercado Pago
+                    window.open(data.init_point, '_blank');
+                    
+                    // Fechar modais
+                    document.querySelectorAll('.cart-modal').forEach(modal => modal.remove());
+                    
+                    showSuccessMessage('Você foi redirecionado para o checkout do Mercado Pago!');
+                } else {
+                    alert(data.message || 'Erro ao criar checkout');
+                }
+            } catch (error) {
+                console.error('Erro ao criar preferência:', error);
+                alert('Erro ao criar checkout');
             }
         }
 
