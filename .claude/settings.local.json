@@ -23,7 +23,8 @@
       "Read(//c/**)",
       "Bash(PORT=3003 npm run dev)",
       "Bash(npm start)",
-      "Bash(xargs sed:*)"
+      "Bash(xargs sed:*)",
+      "Bash(PORT=3003 npm start)"
     ],
     "deny": [],
     "ask": []

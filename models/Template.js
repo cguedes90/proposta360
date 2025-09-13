@@ -45,7 +45,7 @@ class Template {
 
     query += `
       GROUP BY t.id
-      ORDER BY usage_count DESC, t.created_at DESC
+      ORDER BY COUNT(tu.id) DESC, t.created_at DESC
     `;
 
     if (filters.limit) {
@@ -212,7 +212,7 @@ class Template {
       WHERE t.is_active = true
       GROUP BY t.id
       HAVING COUNT(tu.id) > 0
-      ORDER BY usage_count DESC, avg_rating DESC NULLS LAST
+      ORDER BY COUNT(tu.id) DESC, AVG(tr.rating) DESC NULLS LAST
       LIMIT $1
     `, [limit]);
 
