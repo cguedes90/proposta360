@@ -585,23 +585,41 @@
         // Verificar se usuário está logado
         function checkAuthStatus() {
             if (!userToken) {
-                window.location.href = '/';
+                // Mostrar botão de login em vez de redirecionar
+                showLoginPrompt();
                 return;
+            }
+        }
+
+        // Mostrar prompt de login
+        function showLoginPrompt() {
+            const cartBtn = document.querySelector('.cart-btn');
+            if (cartBtn) {
+                cartBtn.innerHTML = `
+                    <i class="fas fa-sign-in-alt"></i>
+                    Fazer Login
+                `;
+                cartBtn.onclick = () => {
+                    window.location.href = '/dashboard';
+                };
             }
         }
 
         // Carregar templates premium
         async function loadTemplates() {
             try {
+                const headers = {};
+                if (userToken) {
+                    headers['Authorization'] = `Bearer ${userToken}`;
+                }
+
                 const response = await fetch('/api/templates?premium=true', {
-                    headers: {
-                        'Authorization': `Bearer ${userToken}`
-                    }
+                    headers: headers
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    templates = data.templates || [];
+                    templates = data.data?.templates || data.templates || [];
                     displayTemplates(templates);
                 }
             } catch (error) {
@@ -715,6 +733,14 @@
 
         // Adicionar ao carrinho
         async function addToCart(templateId) {
+            // Verificar se usuário está logado antes de adicionar
+            if (!userToken) {
+                if (confirm('Você precisa fazer login para adicionar templates ao carrinho. Deseja fazer login agora?')) {
+                    window.location.href = '/dashboard';
+                }
+                return;
+            }
+
             try {
                 const response = await fetch(`/api/premium/cart/${templateId}`, {
                     method: 'POST',
@@ -740,6 +766,12 @@
 
         // Carregar carrinho
         async function loadCart() {
+            if (!userToken) {
+                cart = [];
+                updateCartUI();
+                return;
+            }
+
             try {
                 const response = await fetch('/api/premium/cart', {
                     headers: {
@@ -812,6 +844,13 @@
 
         // Toggle carrinho modal
         function toggleCart() {
+            if (!userToken) {
+                if (confirm('Você precisa fazer login para acessar o carrinho. Deseja fazer login agora?')) {
+                    window.location.href = '/dashboard';
+                }
+                return;
+            }
+            
             const modal = document.getElementById('cartModal');
             modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
         }
