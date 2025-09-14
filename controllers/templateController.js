@@ -1,5 +1,6 @@
 const Template = require('../models/Template');
 const db = require('../config/database');
+const PremiumPreviewGenerator = require('./premiumPreviewGenerator');
 
 class TemplateController {
   // Listar todos os templates
@@ -288,8 +289,8 @@ class TemplateController {
         });
       }
 
-      // Renderizar preview HTML
-      const previewHtml = await this.generatePreviewHtml(template);
+      // Renderizar preview HTML personalizado
+      const previewHtml = PremiumPreviewGenerator.generatePreviewHtml(template);
 
       res.setHeader('Content-Type', 'text/html');
       res.send(previewHtml);
@@ -301,6 +302,75 @@ class TemplateController {
         error: 'Erro interno do servidor'
       });
     }
+  }
+
+  // Gerar preview HTML simples
+  static generateSimplePreviewHtml(template) {
+    return `
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Preview - ${template.name}</title>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; background: #f8fafc; }
+          .preview-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+          .preview-header { background: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+          .template-title { font-size: 2.5rem; color: #2563eb; margin-bottom: 0.5rem; }
+          .template-description { font-size: 1.2rem; color: #64748b; margin-bottom: 1rem; }
+          .template-info { display: flex; gap: 1rem; margin-bottom: 2rem; }
+          .info-badge { background: #2563eb; color: white; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; }
+          .preview-content { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+          .section { margin-bottom: 3rem; padding: 2rem; border-left: 4px solid #2563eb; background: #f8fafc; }
+          .section-title { font-size: 1.5rem; color: #1e293b; margin-bottom: 1rem; }
+          .placeholder-text { color: #64748b; line-height: 1.6; }
+          .cta-button { background: #2563eb; color: white; padding: 1rem 2rem; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; margin-top: 1rem; }
+        </style>
+      </head>
+      <body>
+        <div class="preview-container">
+          <div class="preview-header">
+            <h1 class="template-title">${template.name}</h1>
+            <p class="template-description">${template.description}</p>
+            <div class="template-info">
+              <span class="info-badge">Categoria: ${template.category}</span>
+              <span class="info-badge">Indústria: ${template.industry}</span>
+              ${template.is_premium ? '<span class="info-badge" style="background: #f59e0b;">Premium</span>' : '<span class="info-badge" style="background: #10b981;">Gratuito</span>'}
+            </div>
+          </div>
+          
+          <div class="preview-content">
+            <div class="section">
+              <h2 class="section-title">🎯 Seção Hero</h2>
+              <p class="placeholder-text">Título impactante que chama atenção do cliente e destaca o valor da sua proposta.</p>
+              <button class="cta-button">Aceitar Proposta</button>
+            </div>
+            
+            <div class="section">
+              <h2 class="section-title">🏢 Sobre a Empresa</h2>
+              <p class="placeholder-text">Apresentação da sua empresa, credibilidade e diferenciação no mercado.</p>
+            </div>
+            
+            <div class="section">
+              <h2 class="section-title">📋 Serviços Inclusos</h2>
+              <p class="placeholder-text">Lista detalhada dos serviços que serão entregues com descrições claras.</p>
+            </div>
+            
+            <div class="section">
+              <h2 class="section-title">💰 Investimento</h2>
+              <p class="placeholder-text">Valor do projeto com opções de pagamento e condições comerciais.</p>
+            </div>
+            
+            <div class="section">
+              <h2 class="section-title">🚀 Próximos Passos</h2>
+              <p class="placeholder-text">Call-to-action final para fechar a proposta e iniciar o projeto.</p>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
   }
 
   // Gerar HTML do preview

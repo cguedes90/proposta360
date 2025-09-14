@@ -38,13 +38,16 @@ app.use(cors({
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'production' ? 100 : 1000,
+  max: process.env.NODE_ENV === 'production' ? 100 : 50000, // Muito alto para desenvolvimento
   message: {
     error: 'Muitas requisições. Tente novamente em 15 minutos.'
-  }
+  },
+  standardHeaders: true, // Retornar rate limit info nos headers
+  legacyHeaders: false, // Desabilitar headers legados
 });
 
-app.use(limiter);
+// Rate limiting temporariamente desabilitado para desenvolvimento
+// app.use(limiter);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));

@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marketplace de Templates - Proposta360</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    
+    <!-- Meta Tags for SEO and Social -->
+    <meta name="description" content="Marketplace de templates premium para propostas profissionais - Proposta360">
+    <meta name="keywords" content="templates, premium, propostas, marketplace, Proposta360">
+    <meta name="author" content="Proposta360">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Marketplace de Templates - Proposta360">
+    <meta property="og:description" content="Descubra nossa coleção exclusiva de templates profissionais criados por especialistas">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Proposta360">
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -292,6 +309,46 @@
             background: var(--primary-dark);
         }
 
+        .btn-loading {
+            opacity: 0.8;
+            cursor: not-allowed !important;
+            transform: scale(0.98);
+            transition: all 0.2s ease;
+        }
+
+        .btn-loading:hover {
+            background: var(--primary-color) !important;
+        }
+
+        .btn-success {
+            background: var(--success-color) !important;
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background: var(--success-color) !important;
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn i {
+            margin-right: 0.5rem;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-success {
+            animation: pulse 0.6s ease-in-out;
+        }
+
         .btn-outline {
             background: transparent;
             color: var(--primary-color);
@@ -572,7 +629,7 @@
     <script>
         let cart = [];
         let templates = [];
-        let userToken = localStorage.getItem('token');
+        let userToken = localStorage.getItem('authToken');
 
         // Inicializar página
         document.addEventListener('DOMContentLoaded', async () => {
@@ -582,12 +639,35 @@
             checkAuthStatus();
         });
 
+        // Verificar status de login quando a página ganha foco (útil quando voltando do dashboard)
+        window.addEventListener('focus', function() {
+            userToken = localStorage.getItem('authToken');
+            checkAuthStatus();
+            if (userToken) {
+                loadCart();
+            }
+        });
+
         // Verificar se usuário está logado
         function checkAuthStatus() {
-            if (!userToken) {
-                // Mostrar botão de login em vez de redirecionar
+            console.log('checkAuthStatus - userToken:', userToken);
+            console.log('checkAuthStatus - localStorage authToken:', localStorage.getItem('authToken'));
+            
+            const cartBtn = document.querySelector('.cart-btn');
+            if (userToken) {
+                // Usuário logado - mostrar carrinho normal
+                console.log('Usuário logado - atualizando botão do carrinho');
+                if (cartBtn) {
+                    cartBtn.innerHTML = `
+                        <i class="fas fa-shopping-cart"></i>
+                        Carrinho (<span id="cartCount">0</span>)
+                    `;
+                    cartBtn.onclick = toggleCart;
+                }
+            } else {
+                // Usuário não logado - mostrar botão de login
+                console.log('Usuário não logado - mostrando botão de login');
                 showLoginPrompt();
-                return;
             }
         }
 
@@ -735,11 +815,18 @@
         async function addToCart(templateId) {
             // Verificar se usuário está logado antes de adicionar
             if (!userToken) {
-                if (confirm('Você precisa fazer login para adicionar templates ao carrinho. Deseja fazer login agora?')) {
-                    window.location.href = '/dashboard';
-                }
+                showLoginModal();
                 return;
             }
+
+            // Encontrar o botão clicado e adicionar feedback visual
+            const button = event.target.closest('button');
+            const originalContent = button.innerHTML;
+
+            // Animação de loading
+            button.classList.add('btn-loading');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adicionando...';
+            button.disabled = true;
 
             try {
                 const response = await fetch(`/api/premium/cart/${templateId}`, {
@@ -751,15 +838,36 @@
                 });
 
                 const data = await response.json();
-                
+
                 if (data.success) {
                     await loadCart();
+
+                    // Animação de sucesso
+                    button.classList.remove('btn-loading');
+                    button.classList.add('btn-success');
+                    button.innerHTML = '<i class="fas fa-check"></i> Adicionado!';
+
+                    // Volta ao estado normal após 2 segundos
+                    setTimeout(() => {
+                        button.classList.remove('btn-success');
+                        button.innerHTML = originalContent;
+                        button.disabled = false;
+                    }, 2000);
+
                     showSuccessMessage('Template adicionado ao carrinho!');
                 } else {
+                    // Reset do botão em caso de erro
+                    button.classList.remove('btn-loading');
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
                     alert(data.message || 'Erro ao adicionar ao carrinho');
                 }
             } catch (error) {
                 console.error('Erro ao adicionar ao carrinho:', error);
+                // Reset do botão em caso de erro
+                button.classList.remove('btn-loading');
+                button.innerHTML = originalContent;
+                button.disabled = false;
                 alert('Erro ao adicionar ao carrinho');
             }
         }
@@ -845,14 +953,47 @@
         // Toggle carrinho modal
         function toggleCart() {
             if (!userToken) {
-                if (confirm('Você precisa fazer login para acessar o carrinho. Deseja fazer login agora?')) {
-                    window.location.href = '/dashboard';
-                }
+                // Mostrar modal de login em vez de redirecionar
+                showLoginModal();
                 return;
             }
             
             const modal = document.getElementById('cartModal');
             modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+        
+        // Mostrar modal de login
+        function showLoginModal() {
+            const modal = document.createElement('div');
+            modal.className = 'cart-modal';
+            modal.style.display = 'flex';
+            
+            modal.innerHTML = `
+                <div class="cart-content" style="max-width: 400px; text-align: center;">
+                    <div class="cart-header">
+                        <h2 class="cart-title">Login Necessário</h2>
+                        <button class="close-cart" onclick="this.closest('.cart-modal').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div style="margin: 2rem 0;">
+                        <i class="fas fa-user-lock" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                        <p>Você precisa fazer login para acessar seu carrinho e comprar templates premium.</p>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button onclick="this.closest('.cart-modal').remove()" style="background: #6b7280; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer;">
+                            Continuar Navegando
+                        </button>
+                        <button onclick="window.open('/dashboard', '_blank')" style="background: var(--primary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer;">
+                            <i class="fas fa-sign-in-alt"></i> Fazer Login
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
         }
 
         // Preview template

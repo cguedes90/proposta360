@@ -25,40 +25,20 @@ class MercadoPagoService {
           id: item.template_id,
           title: item.name,
           description: item.description,
-          category_id: item.category,
           quantity: 1,
           currency_id: 'BRL',
           unit_price: parseFloat(item.price)
         })),
-        payer: {
-          name: payer.name,
-          surname: payer.surname || '',
-          email: payer.email,
-          phone: {
-            area_code: payer.area_code || '11',
-            number: payer.phone || '999999999'
-          }
-        },
         back_urls: {
-          success: `${process.env.FRONTEND_URL || 'http://localhost:3002'}/marketplace?payment=success`,
-          failure: `${process.env.FRONTEND_URL || 'http://localhost:3002'}/marketplace?payment=failure`,
-          pending: `${process.env.FRONTEND_URL || 'http://localhost:3002'}/marketplace?payment=pending`
+          success: "http://localhost:3000/marketplace?payment=success",
+          failure: "http://localhost:3000/marketplace?payment=failure", 
+          pending: "http://localhost:3000/marketplace?payment=pending"
         },
-        auto_return: 'approved',
-        payment_methods: {
-          excluded_payment_methods: [],
-          excluded_payment_types: [],
-          installments: 12
-        },
-        notification_url: `${process.env.BACKEND_URL || 'http://localhost:3002'}/api/payments/webhook`,
-        external_reference: metadata.order_id,
-        metadata: {
-          user_id: metadata.user_id,
-          order_id: metadata.order_id,
-          templates: metadata.template_ids
-        }
+        notification_url: "http://localhost:3000/api/payments/webhook",
+        external_reference: metadata.order_id
       };
 
+      console.log('Dados da preferência sendo enviados:', JSON.stringify(preferenceData, null, 2));
       const preference = await this.preference.create({ body: preferenceData });
       
       return {

@@ -8,17 +8,17 @@ const { authenticateToken } = require('../middleware/auth');
 // Listar todos os templates (público)
 router.get('/', TemplateController.index);
 
-// Buscar template por ID (público)
-router.get('/:id', TemplateController.show);
+// Buscar categorias disponíveis (público) - deve vir antes de /:id
+router.get('/meta/categories', TemplateController.categories);
 
-// Preview do template (público)
-router.get('/:templateId/preview', TemplateController.preview);
-
-// Buscar por categoria (público)
+// Buscar por categoria (público) - deve vir antes de /:id
 router.get('/category/:category', TemplateController.byCategory);
 
-// Buscar categorias disponíveis (público)
-router.get('/meta/categories', TemplateController.categories);
+// Preview do template (público) - deve vir antes de /:id
+router.get('/:templateId/preview', TemplateController.preview);
+
+// Buscar template por ID (público) - deve vir por último
+router.get('/:id', TemplateController.show);
 
 // Rotas que requerem autenticação
 
