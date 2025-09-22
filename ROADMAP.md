@@ -1,8 +1,8 @@
-# 🚀 PropostasWin - Roadmap de Desenvolvimento
+# 🚀 Proposta 360º - Roadmap de Desenvolvimento
 
 ## 📋 Visão Geral
 
-Este roadmap define as melhorias estratégicas para transformar o PropostasWin na principal plataforma de propostas interativas do Brasil, focando em alta conversão, facilidade de uso e diferenciação competitiva.
+Este roadmap define as melhorias estratégicas para transformar o Proposta 360º na principal plataforma de propostas interativas do Brasil, focando em alta conversão, facilidade de uso e diferenciação competitiva.
 
 ---
 

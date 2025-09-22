@@ -1,6 +1,7 @@
 const MercadoPagoService = require('../services/mercadoPagoService');
 const PremiumTemplate = require('../models/PremiumTemplate');
 const db = require('../config/database');
+const crypto = require('crypto');
 
 class PaymentController {
   constructor() {
@@ -191,10 +192,36 @@ class PaymentController {
     }
   }
 
+  // Validar assinatura do webhook
+  validateWebhookSignature(payload, signature) {
+    const secret = process.env.MERCADO_PAGO_WEBHOOK_SECRET;
+    if (!secret) {
+      console.warn('⚠️ MERCADO_PAGO_WEBHOOK_SECRET não configurado');
+      return true; // Permite continuar se não configurado (para compatibilidade)
+    }
+
+    const expectedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(JSON.stringify(payload))
+      .digest('hex');
+
+    return crypto.timingSafeEqual(
+      Buffer.from(signature, 'hex'),
+      Buffer.from(expectedSignature, 'hex')
+    );
+  }
+
   // Webhook do Mercado Pago
   async webhook(req, res) {
     try {
       console.log('📨 Webhook recebido:', req.body);
+
+      // Validar assinatura do webhook (segurança)
+      const signature = req.headers['x-signature'];
+      if (signature && !this.validateWebhookSignature(req.body, signature)) {
+        console.error('🚨 Assinatura do webhook inválida');
+        return res.status(401).json({ error: 'Assinatura inválida' });
+      }
 
       const webhookResult = await this.mercadoPago.processWebhook(req.body);
 
